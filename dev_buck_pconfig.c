@@ -5,8 +5,8 @@
  * Created on March 12, 2020, 4:31 PM
  */
 
-#include "pwr_control/drivers/drv_buck_pconfig.h"
-#include "pwr_control/devices/drv_buck_typedef.h"
+#include "pwr_control/devices/dev_buck_pconfig.h"
+#include "pwr_control/devices/dev_buck_typedef.h"
 
 /* PRIVATE VARIABLES */
 volatile uint16_t adcore_mask=0;

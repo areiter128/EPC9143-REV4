@@ -13,10 +13,19 @@
 #include "pwr_control/devices/dev_buck_typedef.h"
 #include "pwr_control/devices/dev_buck_converter.h"
 
-volatile uint16_t drvBuckConverter_Initialize(void) {
+volatile uint16_t drvBuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
+    volatile uint16_t fres = 1;
     
-    return(1);
+    buckInstance->v_loop.controller->status.bits.enabled = false; // Disable voltage loop
+    
+    if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) // In current mode...
+        buckInstance->i_loop.controller->status.bits.enabled = false; // Disable current loop
+    
+    buckInstance->status.bits.enabled = false;  // Disable Buck Converter
+    buckInstance->mode = BUCK_STATE_INITIALIZE; // Reset state machine
+    
+    return(fres);
 }
 
 volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {

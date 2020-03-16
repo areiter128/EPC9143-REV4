@@ -43,7 +43,7 @@
 
 // POWER CONVERTER FUNCTION API
 
-extern volatile uint16_t drvBuckConverter_Initialize(void);
+extern volatile uint16_t drvBuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
 extern volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
 extern volatile uint16_t drvBuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
 extern volatile uint16_t drvBuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
