@@ -14,8 +14,8 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>firmware</sourceRootElem>
-                <sourceRootElem>../sources</sourceRootElem>
-                <sourceRootElem>../sources</sourceRootElem>
+                <sourceRootElem>../sources/pwr_control/drivers</sourceRootElem>
+                <sourceRootElem>../sources/pwr_control/devices</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
