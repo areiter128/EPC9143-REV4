@@ -355,10 +355,10 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->CascadeTrigger.CascadedFunction = NULL;
     buck.v_loop.controller->CascadeTrigger.CascadedFunParam = 0;
     
-    // Initialize Advanced Control Settings
-    buck.v_loop.controller->Advanced.GainModulationFactor = 0x1FFF; // Normalized Adaptive Gain Modulation Factor
-    buck.v_loop.controller->Advanced.GainModulationScaler = 0xFFFE; // Normalization Scaler
-    buck.v_loop.controller->Advanced.GainModulationNorm = (0x1BA2 >> 2); // Normalization Bit-Shift Scaler 
+    // Initialize Advanced Control Settings (not used in this code example)
+    buck.v_loop.controller->Advanced.GainModulationFactor = 0x7FFF; // Normalized Adaptive Gain Modulation Factor
+    buck.v_loop.controller->Advanced.GainModulationScaler = 0x0000; // Normalization Scaler
+    buck.v_loop.controller->Advanced.GainModulationNorm = (0x0000); // Normalization Bit-Shift Scaler 
     buck.v_loop.controller->Advanced.AltSourceNormShift = BUCK_VIN_SCALER;
     buck.v_loop.controller->Advanced.SourceNormShift = BUCK_VOUT_SCALER;
         
