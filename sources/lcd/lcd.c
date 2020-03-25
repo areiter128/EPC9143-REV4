@@ -54,9 +54,9 @@ volatile uint16_t appLCD_Execute(void)
         // Input voltage display
         vi = ((buck.data.v_in << 3) * ADC_GRAN);
         if(vi < 10.0)
-            PrintLcd(0, "VIN  [%d]= %2.2f V", buck.v_loop.controller->status.bits.agm_enable, (double)vi);
+            PrintLcd(0, "VIN     = %2.2f V", (double)vi);
         else
-            PrintLcd(0, "VIN  [%d]=%2.2f V", buck.v_loop.controller->status.bits.agm_enable, (double)vi);
+            PrintLcd(0, "VIN     =%2.2f V", (double)vi);
 
         
         // Output voltage display

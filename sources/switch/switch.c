@@ -46,7 +46,6 @@ volatile uint16_t appSwitch_Execute(void)
 		if ((sw_cnt++ > SWITCH_DEBOUNCE_DELAY_DEFAULT) && (!switch_button.status.pressed)){
 			// Add code for switch button event
 			switch_button.status.pressed = true;
-			buck.v_loop.controller->status.bits.agm_enable ^= 1; // Toggle AGM_ENABLE
 		}
 	}
 	else if (SW_USER_PORTx && switch_button.status.pressed) {
