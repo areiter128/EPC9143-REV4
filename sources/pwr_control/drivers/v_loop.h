@@ -1,22 +1,22 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.1.89
+ * z-Domain Control Loop Designer, Version 0.9.3.90
  * ********************************************************************************
  * 3p3z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
  * ********************************************************************************
  *
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
- *  Sampling Frequency: 400000 Hz
+ *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         0.5
  *
  * *******************************************************************************
  * CGS Version:         1.1.5
- * CGS Date:            01/13/2020
+ * CGS Date:            03/25/2020
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           03/10/2020 11:51:51 AM
+ * Date/Time:           03/25/2020 11:24:10 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
@@ -27,7 +27,7 @@
 #include <stdint.h> // include standard integer number data types
 #include <stdbool.h> // include standard boolean data types (true/false)
 
-#include "pwr_control/drivers/npnz16b.h" // include NPNZ library header file
+#include "./pwr_control/drivers/npnz16b.h" // include NPNZ library header file
 
 /* *******************************************************************************
  * Data Arrays:
@@ -54,9 +54,7 @@ typedef struct
     volatile fractional ErrorHistory[4];  // Error History Array
 } __attribute__((packed)) V_LOOP_CONTROL_LOOP_HISTORIES_t;
 
-/* ********************************************************************************
- * Global Declaration of Controller Object
- * ********************************************************************************/
+
 extern volatile cNPNZ16b_t v_loop; // user-controller data object
 
 /* *******************************************************************************
@@ -87,6 +85,7 @@ extern void v_loop_Update( // Calls the 3P3Z controller (Assembly)
 
 
 #endif // end of __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
+
 
 //**********************************************************************************
 // Download latest version of this tool here: https://areiter128.github.io/DCLD

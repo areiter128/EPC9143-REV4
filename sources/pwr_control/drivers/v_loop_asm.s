@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.1.89
-;  AGS Version: Assembly Generator Script v1.3.3 (03/04/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.3.90
+;  AGS Version: Assembly Generator Script v1.3.11 (03/25/2020)
 ;  Author:      M91406
-;  Date/Time:   03/10/2020 11:51:51 AM
+;  Date/Time:   03/25/2020 11:24:10 AM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -19,62 +19,53 @@
 	
 ;------------------------------------------------------------------------------
 ; Define status flags bit positions
-	.equ NPMZ16_STATUS_ENABLE,       15    ; bit position of the ENABLE control bit
-	.equ NPMZ16_STATUS_INVERT_INPUT, 14    ; bit position of the INVERT_INPUT control bit
-	.equ NPMZ16_STATUS_SWAP_SOURCE,  13    ; bit position of the SWAP_SOURCE control bit
-	.equ NPMZ16_STATUS_SWAP_TARGET,  12    ; bit position of the SWAP_TARGET control bit
-	.equ NPMZ16_STATUS_AGM_ENABLE,   11    ; bit position of the AGM_ENABLE control bit
-	.equ NPMZ16_STATUS_USAT,         1    ; bit position of the UPPER_SATURATION_FLAG status bit
-	.equ NPMZ16_STATUS_LSAT,         0    ; bit position of the LOWER_SATURATION_FLAG status bit
+	.equ NPNZ16_STATUS_ENABLE,       15    ; bit position of the ENABLE control bit
+	.equ NPNZ16_STATUS_INVERT_INPUT, 14    ; bit position of the INVERT_INPUT control bit
+	.equ NPNZ16_STATUS_SWAP_SOURCE,  13    ; bit position of the SWAP_SOURCE control bit
+	.equ NPNZ16_STATUS_SWAP_TARGET,  12    ; bit position of the SWAP_TARGET control bit
+	.equ NPNZ16_STATUS_AGM_ENABLE,   11    ; bit position of the AGM_ENABLE control bit
+	.equ NPNZ16_STATUS_USAT,         1    ; bit position of the UPPER_SATURATION_FLAG status bit
+	.equ NPNZ16_STATUS_LSAT,         0    ; bit position of the LOWER_SATURATION_FLAG status bit
 	
 ;------------------------------------------------------------------------------
 ; Address offset declarations for data structure addressing
-	.equ offStatus,                  0    ; status word at address-offset = 0
-    
-	.equ offSourceRegister,          2    ; pointer to source memory address
-	.equ offAltSourceRegister,       4    ; pointer to alternate source memory address
-	.equ offTargetRegister,          6    ; pointer to target memory address
-	.equ offAltTargetRegister,       8    ; pointer to alternate target memory address
-	.equ offControlReference,        10   ; pointer to control reference memory address
-    
-	.equ offACoefficients,           12   ; pointer to A-coefficients array start address
-	.equ offBCoefficients,           14   ; pointer to B-coefficients array start address
-	.equ offControlHistory,          16   ; pointer to control history array start address
-	.equ offErrorHistory,            18   ; pointer to error history array start address
-    
-	.equ offACoeffArraySize,         20   ; size of the A-coefficients array
-	.equ offBCoeffArraySize,         22   ; size of the B-coefficients array
-	.equ offCtrlHistArraySize,       24   ; size of the control history array
-	.equ offErrHistArraySize,        26   ; size of the error history array
-    
-	.equ offPreShift,                28   ; value of input value normalization bit-shift scaler
-	.equ offPostShiftA,              30   ; value of A-term normalization bit-shift scaler
-	.equ offPostShiftB,              32   ; value of B-term normalization bit-shift scaler
-	.equ reserved_1,                 34   ; (reserved)
-    
-	.equ offInputOffset,             36   ; input source offset value
-	.equ offMinOutput,               38   ; minimum clamping value of control output
-	.equ offMaxOutput,               40   ; maximum clamping value of control output
-    
-	.equ offADCTriggerARegister,     42   ; pointer to ADC trigger #1 register memory address
-	.equ offADCTriggerAOffset,       44   ; value of ADC trigger #1 offset
-	.equ offADCTriggerBRegister,     46   ; pointer to ADC trigger #2 register memory address
-	.equ offADCTriggerBOffset,       48   ; value of ADC trigger #2 offset
-    
-	.equ offPtrControlInput,         50   ; pointer to external data buffer of most recent control input
-	.equ offPtrControlError,         52   ; pointer to external data buffer of most recent control error
-	.equ offPtrControlOutput,        54   ; pointer to external data buffer of most recent control output
-    
-	.equ offPtrCascadedFunction,     56   ; pointer to external, cascaded function which will be called from controller
-	.equ offPtrCascadedFunParam,     58   ; 16-bit wide function parameter or pointer to a parameter data structure of cascaded function
+	.equ offStatus,                 0    ; status word at address-offset = 0
+	.equ offSourceRegister,         2    ; pointer to source memory address
+	.equ offAltSourceRegister,      4    ; pointer to alternate source memory address
+	.equ offTargetRegister,         6    ; pointer to target memory address
+	.equ offAltTargetRegister,      8    ; pointer to alternate target memory address
+	.equ offControlReference,       10    ; pointer to control reference memory address
+	.equ offACoefficients,          12    ; pointer to A-coefficients array start address
+	.equ offBCoefficients,          14    ; pointer to B-coefficients array start address
+	.equ offControlHistory,         16    ; pointer to control history array start address
+	.equ offErrorHistory,           18    ; pointer to error history array start address
+	.equ offACoeffArraySize,        20    ; size of the A-coefficients array
+	.equ offBCoeffArraySize,        22    ; size of the B-coefficients array
+	.equ offCtrlHistArraySize,      24    ; size of the control history array
+	.equ offErrHistArraySize,       26    ; size of the error history array
+	.equ offPreShift,               28    ; value of input value normalization bit-shift scaler
+	.equ offPostShiftA,             30    ; value of A-term normalization bit-shift scaler
+	.equ offPostShiftB,             32    ; value of B-term normalization bit-shift scaler
+	.equ reserved_1,                34    ; (reserved)
+	.equ offInputOffset,            36    ; input source offset value
+	.equ offMinOutput,              38    ; minimum clamping value of control output
+	.equ offMaxOutput,              40    ; maximum clamping value of control output
+	.equ offADCTriggerARegister,    42    ; pointer to ADC trigger #1 register memory address
+	.equ offADCTriggerAOffset,      44    ; value of ADC trigger #1 offset
+	.equ offADCTriggerBRegister,    46    ; pointer to ADC trigger #2 register memory address
+	.equ offADCTriggerBOffset,      48    ; value of ADC trigger #2 offset
+	.equ offPtrControlInput,        50    ; pointer to external data buffer of most recent control input
+	.equ offPtrControlError,        52    ; pointer to external data buffer of most recent control error
+	.equ offPtrControlOutput,       54    ; pointer to external data buffer of most recent control output
+	.equ offPtrCascadedFunction,    56    ; pointer to external, cascaded function which will be called from controller
+	.equ offPtrCascadedFunParam,    58    ; 16-bit wide function parameter or pointer to a parameter data structure of cascaded function
+	.equ offSourceNormShift,        60    ; generic 16-bit wide parameter #1 for advanced control options
+	.equ offAltSourceNormShift,     62    ; generic 16-bit wide parameter #2 for advanced control options
+	.equ offGainModFactor,          64    ; generic 16-bit wide parameter #3 for advanced control options
+	.equ offGainModScaler,          66    ; generic 16-bit wide parameter #4 for advanced control options
+	.equ offGainModulationNorm,     68    ; generic 16-bit wide parameter #5 for advanced control options
 	
-    .equ offGainModFactor,           60   ; generic 16-bit wide parameter #1 for advanced control options
-    .equ offGainModScaler,           62   ; generic 16-bit wide parameter #2 for advanced control options
-    .equ offGainModulationNorm,      64   ; generic 16-bit wide parameter #3 for advanced control options
-    .equ offAltSourceNormShift,      66   ; generic 16-bit wide parameter #4 for advanced control options
-    .equ offSourceNormShift,         68   ; generic 16-bit wide parameter #4 for advanced control options
-
-    ;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;local inclusions.
 	.section .text    ; place code in the code section
 	
@@ -90,7 +81,7 @@ _v_loop_Update:    ; provide global scope to routine
 ;------------------------------------------------------------------------------
 ; Check status word for Enable/Disable flag and bypass computation, if disabled
 	mov [w0 + #offStatus], w12
-	btss w12, #NPMZ16_STATUS_ENABLE
+	btss w12, #NPNZ16_STATUS_ENABLE
 	bra V_LOOP_BYPASS_LOOP
 	
 ;------------------------------------------------------------------------------
@@ -120,7 +111,6 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Read data from input source and calculate error input to transfer function
-bclr LATB, #11
 	mov [w0 + #offSourceRegister], w2    ; load pointer to input source register
 	mov [w2], w1    ; move value from input source into working register
 	mov [w0 + #offPtrControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
@@ -129,7 +119,6 @@ bclr LATB, #11
 	subr w1, [w2], w1    ; calculate error (=reference - input)
 	mov [w0 + #offPreShift], w2    ; move error input scaler into working register
 	sl w1, w2, w1    ; normalize error result to fractional number format
-bset LATB, #11
 	
 ;------------------------------------------------------------------------------
 ; Setup pointers to B-Term data arrays
@@ -158,23 +147,6 @@ bset LATB, #11
 	mac w4*w6, b    ; multiply & accumulate last error input with coefficient of the delay line (no more prefetch)
 	
 ;------------------------------------------------------------------------------
-; Adaptive Gain Modulation
-;    nop
-
-	btss w12, #NPMZ16_STATUS_AGM_ENABLE
-	bra V_LOOP_BYPASS_AGM
-    
-    call _v_loop_GetGainFactor
-    
-    mov [w0 + #offGainModFactor], w4   ; load AGC modulation factor
-    mov [w0 + #offGainModScaler], w2   ; load AGC modulation scaler
-    sac.r b, w6                             ; store result of accumulator B
-    mpy w4*w6, b                            ; multiply AGC factor with ACC B result
-    sftac b, w2                             ; shift result by AGC scaler
-
-V_LOOP_BYPASS_AGM:
-    
-;------------------------------------------------------------------------------
 ; Backward normalization of recent result
 	mov [w0 + #offPostShiftB], w6
 	sftac b, w6
@@ -194,7 +166,6 @@ V_LOOP_BYPASS_AGM:
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
-bclr LATB, #11
 	mov [w0 + #offTargetRegister], w8    ; move pointer to target in to working register
 	mov w4, [w8]    ; move control output into target address
 	
@@ -205,7 +176,6 @@ bclr LATB, #11
 	add w6, w8, w10
 	mov [w0 + #offADCTriggerARegister], w8
 	mov w10, [w8]
-bset LATB, #11
 	
 ;------------------------------------------------------------------------------
 ; Load pointer to first element of control history array
@@ -302,52 +272,7 @@ _v_loop_Precharge:
 ; End of routine
 	return
 ;------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------
-; Global function declaration %PREFIXG%_GetGainFactor
-; This function loads user-defined default values into control and error histories
-;------------------------------------------------------------------------------
 	
-	.global _v_loop_GetGainFactor
-_v_loop_GetGainFactor:
-    
-    nop
-;    .equ offGainModFactor,           60   ; generic 16-bit wide parameter #1 for advanced control options
-;    .equ offGainModScaler,           62   ; generic 16-bit wide parameter #2 for advanced control options
-;    .equ offGainModulationNorm,      64   ; generic 16-bit wide parameter #3 for advanced control options
-;    .equ offAltSourceNormShift,      66   ; generic 16-bit wide parameter #4 for advanced control options
-;    .equ offSourceNormShift,         68   ; generic 16-bit wide parameter #4 for advanced control options
-
-    ; determine most recent VL
-    mov [w0 + #offAltSourceRegister], w1    ; load pointer to most recent input voltage register
-    mov [w1], w1                            ; load value into w1
-    mov [w0 + offAltSourceNormShift], w3    ; load most recent input voltage normalization scaler
-    sl  w1, w3, w1                          ; normalize input voltage value
-    mov [w0 + #offSourceRegister], w2       ; load pointer to most recent output voltage register
-    mov [w2], w2                            ; load value into w2
-    mov [w0 + offSourceNormShift], w3       ; load most recent input voltage normalization scaler
-    sl  w2, w2, w2                          ; normalize output voltage value
-    sub w1, w2, w6                          ; calculate most recent VL, place result in w6
-    
-    mov [w0 + #offGainModulationNorm], w4   ; load pointer to nominal VL
-    
-    push w0
-    clr  w0
-    clr  w1
-    repeat #5
-    divf w4, w6 ; divide VL_nom/VL
-    sl w0, #1, w0   ; Normalize to Q15 numbers
-    mov w0, w2
-    pop w0
-    mov w2, [w0 + #offGainModFactor]
-    
-    
-;------------------------------------------------------------------------------
-; End of routine
-	return
-;------------------------------------------------------------------------------
-
-    
 ;------------------------------------------------------------------------------
 ; End of file
 	.end

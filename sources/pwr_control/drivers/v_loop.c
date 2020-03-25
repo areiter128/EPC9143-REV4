@@ -1,25 +1,25 @@
 /* **********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.1.89
+ * z-Domain Control Loop Designer, Version 0.9.3.90
  * **********************************************************************************
  * 3p3z compensation filter coefficients derived for following operating
  * conditions:
  * **********************************************************************************
  *
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
- *  Sampling Frequency: 400000 Hz
+ *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         0.5
  *
  * *********************************************************************************
  * CGS Version:         1.1.5
- * CGS Date:            01/13/2020
+ * CGS Date:            03/25/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           03/10/2020 11:51:51 AM
+ * Date/Time:           03/25/2020 11:24:10 AM
  * ********************************************************************************/
 
-#include "v_loop.h"
+#include "./pwr_control/drivers/v_loop.h"
 
 /* *********************************************************************************
  * Data Arrays:
@@ -49,8 +49,8 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * *********************************************************************************
  *
  *    fP0:    667 Hz
- *    fP1:    99500 Hz
- *    fP2:    200000 Hz
+ *    fP1:    149500 Hz
+ *    fP2:    250000 Hz
  *    fZ1:    3020 Hz
  *    fZ2:    5033 Hz
  *
@@ -59,28 +59,25 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * ********************************************************************************/
 volatile fractional v_loop_ACoefficients [3] =
 {
-    0x7349, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x1035, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0xFC84  // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x6796, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x194F, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0xFF1D  // Coefficient A3 will be multiplied with controller output u(n-3)
 };
 
 volatile fractional v_loop_BCoefficients [4] =
 {
-    0x6600, // Coefficient B0 will be multiplied with error input e(n-0)
-    0xA67D, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x9A5D, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x59E0  // Coefficient B3 will be multiplied with error input e(n-3)
+    0x4588, // Coefficient B0 will be multiplied with error input e(n-0)
+    0xC153, // Coefficient B1 will be multiplied with error input e(n-1)
+    0xBAA2, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x3ED6  // Coefficient B3 will be multiplied with error input e(n-3)
 };
 
 // Coefficient normalization factors
 volatile int16_t v_loop_pre_scaler = 3;
 volatile int16_t v_loop_post_shift_A = 0;
-volatile int16_t v_loop_post_shift_B = -2;
+volatile int16_t v_loop_post_shift_B = -3;
 volatile fractional v_loop_post_scaler = 0x0000;
 
-/* ********************************************************************************
- * Controller Object
- * ********************************************************************************/
 volatile cNPNZ16b_t v_loop; // user-controller data object
 
 /* ********************************************************************************/
@@ -146,8 +143,9 @@ volatile uint16_t v_loop_Initialize(volatile cNPNZ16b_t* controller)
     
     return(1);
 }
- 
+
+
 //**********************************************************************************
 // Download latest version of this tool here: https://areiter128.github.io/DCLD
 //**********************************************************************************
- 
+
