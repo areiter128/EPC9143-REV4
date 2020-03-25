@@ -352,8 +352,8 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->DataProviders.ptrDataProviderControlOutput = NULL;
     
     // Cascaded Function Configuration
-    buck.v_loop.controller->Cascade.CascadedFunction = NULL;
-    buck.v_loop.controller->Cascade.CascadedFunParam = 0;
+    buck.v_loop.controller->CascadeTrigger.CascadedFunction = NULL;
+    buck.v_loop.controller->CascadeTrigger.CascadedFunParam = 0;
     
     // Initialize Advanced Control Settings
     buck.v_loop.controller->Advanced.GainModulationFactor = 0x1FFF; // Normalized Adaptive Gain Modulation Factor
