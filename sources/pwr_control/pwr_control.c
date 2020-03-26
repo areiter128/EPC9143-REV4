@@ -5,6 +5,8 @@
  * Created on March 12, 2020, 11:55 AM
  */
 
+#include <p33CK256MP505.h>
+
 #include "pwr_control/devices/dev_buck_typedef.h"
 #include "pwr_control/devices/dev_buck_converter.h"
 #include "pwr_control/drivers/v_loop.h"
@@ -386,6 +388,7 @@ void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void
 DBGPIN_2_SET;
     buck.status.bits.adc_active = true;
     buck.v_loop.ctrl_Update(buck.v_loop.controller);
+    PG1STATbits.UPDREQ = 1;  // Force PWM timing update
     _BUCK_VLOOP_ISR_IF = 0;  // Clear the ADCANx interrupt flag 
 DBGPIN_2_CLEAR;
 }

@@ -1,5 +1,5 @@
 /* **********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.3.90
+ * z-Domain Control Loop Designer, Version 0.9.3.91
  * **********************************************************************************
  * 3p3z compensation filter coefficients derived for following operating
  * conditions:
@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *********************************************************************************
- * CGS Version:         1.1.6
- * CGS Date:            03/25/2020
+ * CGS Version:         2.0.0
+ * CGS Date:            03/26/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           03/26/2020 12:31:36 AM
+ * Date/Time:           03/26/2020 1:39:24 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -57,19 +57,19 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * *********************************************************************************
  * Filter Coefficients and Parameters:
  * ********************************************************************************/
-volatile fractional v_loop_ACoefficients [3] =
+volatile int32_t v_loop_ACoefficients [3] =
 {
-    0x1F88, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x01F2, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0xFE87  // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x00001F88, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x000001F2, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x0000FE87  // Coefficient A3 will be multiplied with controller output u(n-3)
 };
 
-volatile fractional v_loop_BCoefficients [4] =
+volatile int32_t v_loop_BCoefficients [4] =
 {
-    0x71CB, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x996D, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x8E78, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x66D7  // Coefficient B3 will be multiplied with error input e(n-3)
+    0x000071CB, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0000996D, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x00008E78, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x000066D7  // Coefficient B3 will be multiplied with error input e(n-3)
 };
 
 // Coefficient normalization factors

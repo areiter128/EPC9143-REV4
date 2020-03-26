@@ -1,5 +1,5 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.3.90
+ * z-Domain Control Loop Designer, Version 0.9.3.91
  * ********************************************************************************
  * 3p3z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *******************************************************************************
- * CGS Version:         1.1.6
- * CGS Date:            03/25/2020
+ * CGS Version:         2.0.0
+ * CGS Date:            03/26/2020
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           03/26/2020 12:31:37 AM
+ * Date/Time:           03/26/2020 1:39:24 PM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
@@ -44,8 +44,8 @@
  * ******************************************************************************/
 typedef struct
 {
-    volatile fractional ACoefficients[3]; // A-Coefficients
-    volatile fractional BCoefficients[4]; // B-Coefficients
+    volatile int32_t ACoefficients[3]; // A-Coefficients
+    volatile int32_t BCoefficients[4]; // B-Coefficients
 } __attribute__((packed)) V_LOOP_CONTROL_LOOP_COEFFICIENTS_t;
 
 typedef struct

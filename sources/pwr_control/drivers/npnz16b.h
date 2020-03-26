@@ -1,9 +1,9 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.3.90
+* z-Domain Control Loop Designer, Version 0.9.3.91
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 1.1.6
-* CGS Date:    03/25/2020
+* CGS Version: 2.0.0
+* CGS Date:    03/26/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 #define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -93,81 +93,6 @@ typedef struct {
 
     // Filter coefficients and input/output histories
     struct {
-        volatile fractional* ptrACoefficients; // Pointer to A coefficients located in X-space
-        volatile fractional* ptrBCoefficients; // Pointer to B coefficients located in X-space
-        volatile fractional* ptrControlHistory; // Pointer to n delay-line samples located in Y-space with first sample being the most recent
-        volatile fractional* ptrErrorHistory; // Pointer to n+1 delay-line samples located in Y-space with first sample being the most recent
-
-        // Array size information
-        volatile uint16_t ACoefficientsArraySize; // Size of the A coefficients array in X-space
-        volatile uint16_t BCoefficientsArraySize; // Size of the B coefficients array in X-space
-        volatile uint16_t ControlHistoryArraySize; // Size of the control history array in Y-space
-        volatile uint16_t ErrorHistoryArraySize; // Size of the error history array in Y-space
-
-        // Feedback scaling Input/Output Normalization
-        volatile int16_t normPreShift; // Normalization of ADC-resolution to Q15 (R/W)
-        volatile int16_t normPostShiftA; // Normalization of A-term control output to Q15 (R/W)
-        volatile int16_t normPostShiftB; // Normalization of B-term control output to Q15 (R/W)
-        volatile int16_t normPostScaler; // Control output normalization factor (Q15) (R/W)
-    } __attribute__((packed))Filter; // Filter parameters such as pointer to history and coefficient arrays and number scaling
-
-    // Feedback conditioning
-    struct {
-        volatile int16_t InputOffset; // Control input source offset value (R/W)
-
-        // System clamping/Anti-windup
-        volatile int16_t MinOutput; // Minimum output value used for clamping (R/W)
-        volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
-    } __attribute__((packed))Limits; // Input and output clamping values
-
-    // Voltage/Average Current Mode Control Trigger handling
-    struct {
-        volatile uint16_t* ptrADCTriggerARegister; // Pointer to ADC trigger #1 register (e.g. TRIG1)
-        volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays
-        volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)
-        volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays
-    } __attribute__((packed))TriggerControl; // Automatic ADC trigger placement options for ADC Trigger A and B
-
-    // Data Provider Sources
-    struct {
-        volatile uint16_t* ptrDataProviderControlInput; // Pointer to external data buffer of most recent control input
-        volatile uint16_t* ptrDataProviderControlError; // Pointer to external data buffer of most recent control error
-        volatile uint16_t* ptrDataProviderControlOutput; // Pointer to external data buffer of most recent control output
-    } __attribute__((packed))DataProviders; // Automated data sources pushing data points to user-defined variables
-
-    // Cascaded Function Call Parameters
-    struct {
-        volatile uint16_t CascadedFunction; // Pointer to Function which should be called at the end of the control loop
-        volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
-    } __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
-
-    // Adaptive Gain Modulation
-    struct {
-        volatile uint16_t GainModulationFactor; // Generic 16-bit wide parameter #1 for advanced control options
-        volatile uint16_t GainModulationScaler; // Generic 16-bit wide parameter #2 for advanced control options
-        volatile uint16_t GainModulationNorm;   // Generic 16-bit wide parameter #3 for advanced control options
-        volatile uint16_t AltSourceNormShift;   // Generic 16-bit wide parameter #4 for advanced control options
-        volatile uint16_t SourceNormShift;      // Generic 16-bit wide parameter #5 for advanced control options
-    } __attribute__((packed))Advanced; // Parameter section for advanced control options
-
-} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
-
-
-typedef struct {
-    // External control and monitoring
-    volatile CONTROLLER_STATUS_t status; // Control Loop Status and Control flags
-
-    // Input/Output to controller
-    struct {
-        volatile uint16_t* ptrSource; // Pointer to source register or variable where the input value is read from (e.g. ADCBUFx)
-        volatile uint16_t* ptrAltSource; // Pointer to alternate source register or variable where the alternate input value is read from (e.g. ADCBUFy)
-        volatile uint16_t* ptrTarget; // Pointer to target register or variable where the control output is written to (e.g. PCDx)
-        volatile uint16_t* ptrAltTarget; // Pointer to alternate target register or variable where the alternate control output is written to (e.g. PCDy)
-        volatile uint16_t* ptrControlReference; // Pointer to global variable of input register holding the controller reference value (e.g. uint16_t my_ref)
-    } __attribute__((packed))Ports; // Controller  block input and output port definitions
-
-    // Filter coefficients and input/output histories
-    struct {
         volatile int32_t* ptrACoefficients; // Pointer to A coefficients located in X-space
         volatile int32_t* ptrBCoefficients; // Pointer to B coefficients located in X-space
         volatile fractional* ptrControlHistory; // Pointer to n delay-line samples located in Y-space with first sample being the most recent
@@ -225,7 +150,7 @@ typedef struct {
         volatile uint16_t SourceNormShift;      // Generic 16-bit wide parameter #5 for advanced control options
     } __attribute__((packed))Advanced; // Parameter section for advanced control options
 
-} __attribute__((packed))cNPNZ3216b_t; // Generic nPnZ Controller Object with 32-bit fast floating point coefficients, 16-bit data input and data output
+} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
 
 /* ********************************************************************************/
 #endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section

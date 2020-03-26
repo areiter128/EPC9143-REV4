@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.3.90
-;  AGS Version: Assembly Generator Script v1.3.11 (03/25/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.3.91
+;  AGS Version: Assembly Generator Script v2.0.0 (03/26/2020)
 ;  Author:      M91406
-;  Date/Time:   03/26/2020 12:31:37 AM
+;  Date/Time:   03/26/2020 1:39:24 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Single Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -99,9 +99,9 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Compute compensation filter term
-	clr a, [w8]+=2, w4, [w10]+=2, w6    ; clear accumulator A and prefetch first operands
-	mac w4*w6, a, [w8]+=2, w4, [w10]+=2, w6    ; multiply control output (n-1) from the delay line with coefficient A1
-	mac w4*w6, a, [w8]+=2, w4, [w10]+=2, w6    ; multiply control output (n-2) from the delay line with coefficient A2
+	clr a, [w8]+=4, w4, [w10]+=2, w6    ; clear accumulator A and prefetch first operands
+	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-1) from the delay line with coefficient A1
+	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-2) from the delay line with coefficient A2
 	mac w4*w6, a    ; multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
 	
 ;------------------------------------------------------------------------------
@@ -119,6 +119,7 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Read data from input source and calculate error input to transfer function
+bclr _LATB, #11
 	mov [w0 + #offSourceRegister], w2    ; load pointer to input source register
 	mov [w2], w1    ; move value from input source into working register
 	mov [w0 + #offPtrControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
@@ -127,6 +128,7 @@ _v_loop_Update:    ; provide global scope to routine
 	subr w1, [w2], w1    ; calculate error (=reference - input)
 	mov [w0 + #offPreShift], w2    ; move error input scaler into working register
 	sl w1, w2, w1    ; normalize error result to fractional number format
+bset _LATB, #11
 	
 ;------------------------------------------------------------------------------
 ; Setup pointers to B-Term data arrays
@@ -135,10 +137,10 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Compute compensation filter term
-	movsac a, [w8]+=2, w4, [w10]+=2, w6    ; leave contents accumulator A untouched and prefetch first operands
-	mac w4*w6, a, [w8]+=2, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-0) from the delay line with coefficient B0 and prefetch next operands
-	mac w4*w6, a, [w8]+=2, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-1) from the delay line with coefficient B1 and prefetch next operands
-	mac w4*w6, a, [w8]+=2, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-2) from the delay line with coefficient B2 and prefetch next operands
+	movsac a, [w8]+=4, w4, [w10]+=2, w6    ; leave contents accumulator A untouched and prefetch first operands
+	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-0) from the delay line with coefficient B0 and prefetch next operands
+	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-1) from the delay line with coefficient B1 and prefetch next operands
+	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-2) from the delay line with coefficient B2 and prefetch next operands
 	mac w4*w6, a    ; multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
 	
 ;------------------------------------------------------------------------------
@@ -160,6 +162,7 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
+bclr _LATB, #11
 	mov [w0 + #offTargetRegister], w8    ; move pointer to target in to working register
 	mov w4, [w8]    ; move control output into target address
 	
@@ -170,6 +173,7 @@ _v_loop_Update:    ; provide global scope to routine
 	add w6, w8, w10
 	mov [w0 + #offADCTriggerARegister], w8
 	mov w10, [w8]
+bset _LATB, #11
 	
 ;------------------------------------------------------------------------------
 ; Load pointer to first element of control history array
