@@ -130,7 +130,7 @@ extern "C" {
  * 
  * *************************************************************************************************/
 
-#define SWITCHING_FREQUENCY     (float)400e+3   // Switching frequency in [Hz]
+#define SWITCHING_FREQUENCY     (float)500e+3   // Switching frequency in [Hz]
 #define SWITCHING_PERIOD        (float)(1.0/SWITCHING_FREQUENCY)    // Switching period in [sec]
 
 #define SWITCHING_PHASE_SHIFT   (float)0        // Phase Shift of PWM output in [sec]

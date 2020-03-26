@@ -2,7 +2,7 @@
 * z-Domain Control Loop Designer, Version 0.9.3.90
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 1.1.5
+* CGS Version: 1.1.6
 * CGS Date:    03/25/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -13,11 +13,20 @@
 #include <stdint.h> // include standard integer number data types
 #include <stdbool.h> // include standard boolean data types (true/false)
 
+// Generic macro allowing to identify the file version of  'npnz16b.h'
+// This version key represents the product version of DCLD as integer number
+// of the form [MAJOR][MINOR][REVISION] => version 0.9.03 would be shown as 903
+#ifndef __DCLD_VERSION
+    #define __DCLD_VERSION    903
+#endif  // end of __DCLD_VERSION
+
 /* Status flags (Single Bit) */
 #define NPNZ16_STATUS_LSAT_SET             1
 #define NPNZ16_STATUS_LSAT_CLEAR           0
 #define NPNZ16_STATUS_USAT_SET             1
 #define NPNZ16_STATUS_USAT_CLEAR           0
+#define NPNZ16_STATUS_AGM_ENABLED          1
+#define NPNZ16_STATUS_AGM_DISABLED         0
 #define NPNZ16_STATUS_TARGET_SWAPPED       1
 #define NPNZ16_STATUS_TARGET_NOT_SWAPPED   0
 #define NPNZ16_STATUS_SOURCE_SWAPPED       1
@@ -35,6 +44,8 @@ typedef enum {
     CONTROLLER_STATUS_LSAT_CLEAR      = 0b0000000000000000,
     CONTROLLER_STATUS_USAT_ACTIVE     = 0b0000000000000010,
     CONTROLLER_STATUS_USAT_CLEAR      = 0b0000000000000000,
+    CONTROLLER_STATUS_AGM_DISABLE     = 0b0000000000000000,
+    CONTROLLER_STATUS_AGM_ENABLE      = 0b0000100000000000,
     CONTROLLER_STATUS_TARGET_DEFAULT  = 0b0000000000000000,
     CONTROLLER_STATUS_TARGET_SWAPED   = 0b0001000000000000,
     CONTROLLER_STATUS_SOURCE_DEFAULT  = 0b0000000000000000,
@@ -137,7 +148,7 @@ typedef struct {
         volatile uint16_t GainModulationNorm;   // Generic 16-bit wide parameter #3 for advanced control options
         volatile uint16_t AltSourceNormShift;   // Generic 16-bit wide parameter #4 for advanced control options
         volatile uint16_t SourceNormShift;      // Generic 16-bit wide parameter #5 for advanced control options
-    } __attribute__((packed))Advanced; // Parameter section for advvanced control options
+    } __attribute__((packed))Advanced; // Parameter section for advanced control options
 
 } __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
 

@@ -8,15 +8,15 @@
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       3 - Dual Bit-Shift Scaling
+ *  Scaling Mode:       1 - Single Bit-Shift Scaling
  *  Input Gain:         0.5
  *
  * *********************************************************************************
- * CGS Version:         1.1.5
+ * CGS Version:         1.1.6
  * CGS Date:            03/25/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           03/25/2020 11:24:10 AM
+ * Date/Time:           03/26/2020 12:31:36 AM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -49,7 +49,7 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * *********************************************************************************
  *
  *    fP0:    667 Hz
- *    fP1:    149500 Hz
+ *    fP1:    104500 Hz
  *    fP2:    250000 Hz
  *    fZ1:    3020 Hz
  *    fZ2:    5033 Hz
@@ -59,23 +59,23 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * ********************************************************************************/
 volatile fractional v_loop_ACoefficients [3] =
 {
-    0x6796, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x194F, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0xFF1D  // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x1F88, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x01F2, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0xFE87  // Coefficient A3 will be multiplied with controller output u(n-3)
 };
 
 volatile fractional v_loop_BCoefficients [4] =
 {
-    0x4588, // Coefficient B0 will be multiplied with error input e(n-0)
-    0xC153, // Coefficient B1 will be multiplied with error input e(n-1)
-    0xBAA2, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x3ED6  // Coefficient B3 will be multiplied with error input e(n-3)
+    0x71CB, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x996D, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x8E78, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x66D7  // Coefficient B3 will be multiplied with error input e(n-3)
 };
 
 // Coefficient normalization factors
 volatile int16_t v_loop_pre_scaler = 3;
-volatile int16_t v_loop_post_shift_A = 0;
-volatile int16_t v_loop_post_shift_B = -3;
+volatile int16_t v_loop_post_shift_A = -2;
+volatile int16_t v_loop_post_shift_B = 0;
 volatile fractional v_loop_post_scaler = 0x0000;
 
 volatile cNPNZ16b_t v_loop; // user-controller data object
