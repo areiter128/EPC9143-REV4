@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *********************************************************************************
- * CGS Version:         2.0.4
+ * CGS Version:         2.0.1
  * CGS Date:            03/27/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           03/27/2020 4:44:37 PM
+ * Date/Time:           03/27/2020 6:30:58 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -48,7 +48,7 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    667 Hz
+ *    fP0:    1334 Hz
  *    fP1:    104500 Hz
  *    fP2:    250000 Hz
  *    fZ1:    3020 Hz
@@ -66,10 +66,10 @@ volatile int32_t v_loop_ACoefficients [3] =
 
 volatile int32_t v_loop_BCoefficients [4] =
 {
-    0x71CBFFFE, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x996DFFFE, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x8E78FFFE, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x66D7FFFE  // Coefficient B3 will be multiplied with error input e(n-3)
+    0x71CBFFFD, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x996DFFFD, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x8E78FFFD, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x66D7FFFD  // Coefficient B3 will be multiplied with error input e(n-3)
 };
 
 // Coefficient normalization factors

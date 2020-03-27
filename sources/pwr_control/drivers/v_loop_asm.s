@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.4.94
-;  AGS Version: Assembly Generator Script v2.0.14 (03/27/2020)
+;  AGS Version: Assembly Generator Script v2.0.5 (03/27/2020)
 ;  Author:      M91406
-;  Date/Time:   03/27/2020 4:44:37 PM
+;  Date/Time:   03/27/2020 6:30:58 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
 ; **********************************************************************************
@@ -72,9 +72,9 @@
 	.equ ptrDProvControlOutput,     80    ; parameter group DataProviders: pointer to external variable/register the most recent control output will be pushed to
 	.equ ptrCascadedFunction,       82    ; parameter group CascadeTrigger: pointer to external, cascaded function which will be called by this controller
 	.equ CascadedFunParam,          84    ; parameter group CascadeTrigger: 16-bit wide function parameter or pointer to a parameter data structure of cascaded function
-	.equ agcGainModScaler,          86    ; parameter group GainControl: bit-shift scaler of Adaptive Gain Modulation factor
-	.equ agcGainModFactor,          88    ; parameter group GainControl: Q15 value of Adaptive Gain Modulation factor
-	.equ GainModNominalState,       90    ; parameter group GainControl: Q15 value of Adaptive Gain Modulation norminal operating point
+	.equ agcGainModScaler,          86    ; parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
+	.equ agcGainModFactor,          88    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
+	.equ agcGainModMedian,          90    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
 	.equ AdvParam1,                 92    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
 	.equ AdvParam2,                 94    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
 	.equ AdvParam3,                 96    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
@@ -95,14 +95,14 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Check status word for Enable/Disable flag and bypass computation, if disabled
-	mov [w0 + #Status], w12
-	btss w12, #NPNZ16_STATUS_ENABLED
-	bra V_LOOP_BYPASS_LOOP
+	mov [w0 + #Status], w12    ; load value of status word into working register
+	btss w12, #NPNZ16_STATUS_ENABLED    ; check ENABLED bit state, skip (do not execute) next instruction if set
+	bra V_LOOP_BYPASS_LOOP    ; if ENABLED bit is cleared, jump to end of control code
 	
 ;------------------------------------------------------------------------------
 ; Configure DSP for fractional operation with normal saturation (Q1.31 format)
-	mov #0x00E4, w4
-	mov w4, _CORCON
+	mov #0x00E4, w4    ; load default value of DSP core configuration enabling saturation and signed fractional multiply
+	mov w4, _CORCON    ; load default configuration into CORCON register
 	
 ;------------------------------------------------------------------------------
 ; Setup pointers to A-Term data arrays
@@ -197,11 +197,11 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Update ADC trigger A position
-	asr w4, #1, w6
-	mov [w0 + #ADCTriggerAOffset], w8
-	add w6, w8, w10
-	mov [w0 + #ptrADCTriggerARegister], w8
-	mov w10, [w8]
+	asr w4, #1, w6    ; half control output by shifting value one bit to the right
+	mov [w0 + #ADCTriggerAOffset], w8    ; load user-defined ADC trigger A offset value into working register
+	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
+	mov [w0 + #ptrADCTriggerARegister], w8    ; load pointer to ADC trigger A register into working register
+	mov w10, [w8]    ; push new ADC trigger value to ADC trigger A register
 	
 ;------------------------------------------------------------------------------
 ; Load pointer to first element of control history array
@@ -232,7 +232,7 @@ _v_loop_Update:    ; provide global scope to routine
 ;------------------------------------------------------------------------------
 	
 ;------------------------------------------------------------------------------
-; Global function declaration %PREFIXG%_Reset
+; Global function declaration _v_loop_Reset
 ; This function clears control and error histories enforcing a reset
 ;------------------------------------------------------------------------------
 	
@@ -241,22 +241,22 @@ _v_loop_Reset:
 	
 ;------------------------------------------------------------------------------
 ; Clear control history array
-	push w0    ; Set pointer to the base address of control history array
-	mov  [w0 + #ptrControlHistory], w0
-	clr [w0++]    ; Clear next address of control history array
-	clr [w0++]    ; Clear next address of control history array
-	clr [w0]    ; Clear last address of control history array
-	pop w0
+	push w0    ; save contents of working register WREG0
+	mov  [w0 + #ptrControlHistory], w0    ; set pointer to the base address of control history array
+	clr [w0++]    ; clear next address of control history array
+	clr [w0++]    ; clear next address of control history array
+	clr [w0]    ; clear last address of control history array
+	pop w0    ; restore contents of working register WREG0
 	
 ;------------------------------------------------------------------------------
 ; Clear error history array
-	push w0    ; Set pointer to the base address of error history array
-	mov [w0 + #ptrErrorHistory], w0
+	push w0    ; save contents of working register WREG0
+	mov [w0 + #ptrErrorHistory], w0    ; set pointer to the base address of error history array
 	clr [w0++]    ; Clear next address of error history array
 	clr [w0++]    ; Clear next address of error history array
 	clr [w0++]    ; Clear next address of error history array
-	clr [w0]    ; Clear last address of error history array
-	pop w0
+	clr [w0]    ; clear last address of error history array
+	pop w0    ; restore contents of working register WREG0
 	
 ;------------------------------------------------------------------------------
 ; End of routine
@@ -264,7 +264,7 @@ _v_loop_Reset:
 ;------------------------------------------------------------------------------
 	
 ;------------------------------------------------------------------------------
-; Global function declaration %PREFIXG%_Precharge
+; Global function declaration _v_loop_Precharge
 ; This function loads user-defined default values into control and error histories
 ;------------------------------------------------------------------------------
 	
@@ -273,26 +273,26 @@ _v_loop_Precharge:
 	
 ;------------------------------------------------------------------------------
 ; Charge error history array with defined value
-	push w0    ; Set pointer to the base address of error history array
-	push w1
-	mov  [w0 + #ptrErrorHistory], w0
+	push w0    ; save contents of working register WREG0
+	push w1    ; save contents of working register WREG1
+	mov  [w0 + #ptrErrorHistory], w0    ; set pointer to the base address of error history array
 	mov w1, [w0++]    ; Load user value into next address of error history array
 	mov w1, [w0++]    ; Load user value into next address of error history array
 	mov w1, [w0++]    ; Load user value into next address of error history array
-	mov w1, [w0]    ; Load user value into last address of error history array
-	pop w1
-	pop w0
+	mov w1, [w0]    ; load user value into last address of error history array
+	pop w1    ; restore contents of working register WREG1
+	pop w0    ; restore contents of working register WREG0
 	
 ;------------------------------------------------------------------------------
 ; Charge control history array with defined value
-	push w0    ; Set pointer to the base address of control history array
-	push w2
-	mov  [w0 + #ptrControlHistory], w0
+	push w0    ; save contents of working register WREG0
+	push w2    ; save contents of working register WREG2
+	mov  [w0 + #ptrControlHistory], w0    ; set pointer to the base address of control history array
 	mov w2, [w0++]    ; Load user value into next address of control history array
 	mov w2, [w0++]    ; Load user value into next address of control history array
 	mov w2, [w0]    ; Load user value into last address of control history array
-	pop w2
-	pop w0
+	pop w2    ; restore contents of working register WREG2
+	pop w0    ; restore contents of working register WREG0
 	
 ;------------------------------------------------------------------------------
 ; End of routine

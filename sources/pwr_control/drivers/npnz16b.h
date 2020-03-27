@@ -2,7 +2,7 @@
 * z-Domain Control Loop Designer, Version 0.9.4.94
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 2.0.4
+* CGS Version: 2.0.1
 * CGS Date:    03/27/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -118,7 +118,7 @@ typedef struct {
         volatile int16_t normPostScaler; // Control output normalization factor (Q15) (R/W)
     } __attribute__((packed))Filter; // Filter parameters such as pointer to history and coefficient arrays and number scaling
 
-        // System clamping/Anti-windup
+    // System clamping/Anti-windup
     struct {
         volatile int16_t MinOutput; // Minimum output value used for clamping (R/W)
         volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
