@@ -1,9 +1,9 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.3.91
+* z-Domain Control Loop Designer, Version 0.9.4.94
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 2.0.0
-* CGS Date:    03/26/2020
+* CGS Version: 2.0.4
+* CGS Date:    03/27/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 #define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -25,8 +25,8 @@
 #define NPNZ16_STATUS_LSAT_CLEAR           0
 #define NPNZ16_STATUS_USAT_SET             1
 #define NPNZ16_STATUS_USAT_CLEAR           0
-#define NPNZ16_STATUS_AGM_ENABLED          1
-#define NPNZ16_STATUS_AGM_DISABLED         0
+#define NPNZ16_STATUS_AGC_ENABLED          1
+#define NPNZ16_STATUS_AGC_DISABLED         0
 #define NPNZ16_STATUS_TARGET_SWAPPED       1
 #define NPNZ16_STATUS_TARGET_NOT_SWAPPED   0
 #define NPNZ16_STATUS_SOURCE_SWAPPED       1
@@ -44,8 +44,8 @@ typedef enum {
     CONTROLLER_STATUS_LSAT_CLEAR      = 0b0000000000000000,
     CONTROLLER_STATUS_USAT_ACTIVE     = 0b0000000000000010,
     CONTROLLER_STATUS_USAT_CLEAR      = 0b0000000000000000,
-    CONTROLLER_STATUS_AGM_DISABLE     = 0b0000000000000000,
-    CONTROLLER_STATUS_AGM_ENABLE      = 0b0000100000000000,
+    CONTROLLER_STATUS_AGC_DISABLE     = 0b0000000000000000,
+    CONTROLLER_STATUS_AGC_ENABLED     = 0b0000100000000000,
     CONTROLLER_STATUS_TARGET_DEFAULT  = 0b0000000000000000,
     CONTROLLER_STATUS_TARGET_SWAPED   = 0b0001000000000000,
     CONTROLLER_STATUS_SOURCE_DEFAULT  = 0b0000000000000000,
@@ -69,7 +69,7 @@ typedef union {
         volatile unsigned : 1; // Bit 8: reserved
         volatile unsigned : 1; // Bit 9: reserved
         volatile unsigned : 1; // Bit 11: reserved
-        volatile unsigned agm_enable: 1; // Bit 11: when set, Adaptive Gain Modulation is enabled
+        volatile unsigned agc_enabled: 1; // Bit 11: when set, Adaptive Gain Control Modulation is enabled
         volatile unsigned swap_target: 1; // Bit 12: when set, AltTarget is used as data output of controller
         volatile unsigned swap_source: 1; // Bit 13: when set, AltSource is used as data input to controller
         volatile unsigned invert_input: 1; // Bit 14: when set, most recent error input value to controller is inverted
@@ -79,17 +79,24 @@ typedef union {
 } __attribute__((packed))CONTROLLER_STATUS_t; // Controller status data structure
 
 typedef struct {
+    volatile uint16_t* ptrAddress; // Pointer to register or variable where the value is read from (e.g. ADCBUFx) or written to (e.g. PGxDC)
+    volatile uint16_t  NormScaler; // Bit-shift scaler of the Q15 normalization factor
+    volatile fractional NormFactor; // Q15 normalization factor
+    volatile uint16_t  Offset; // Value/signal offset of this port
+} __attribute__((packed))CONTROLLER_PORT_t;
+
+typedef struct {
     // External control and monitoring
     volatile CONTROLLER_STATUS_t status; // Control Loop Status and Control flags
 
     // Input/Output to controller
     struct {
-        volatile uint16_t* ptrSource; // Pointer to source register or variable where the input value is read from (e.g. ADCBUFx)
-        volatile uint16_t* ptrAltSource; // Pointer to alternate source register or variable where the alternate input value is read from (e.g. ADCBUFy)
-        volatile uint16_t* ptrTarget; // Pointer to target register or variable where the control output is written to (e.g. PCDx)
-        volatile uint16_t* ptrAltTarget; // Pointer to alternate target register or variable where the alternate control output is written to (e.g. PCDy)
+        volatile CONTROLLER_PORT_t Source; // Primary data input port declaration
+        volatile CONTROLLER_PORT_t AltSource; // Secondary data input port declaration
+        volatile CONTROLLER_PORT_t Target; // Primary data output port declaration
+        volatile CONTROLLER_PORT_t AltTarget; // Secondary data output port declaration
         volatile uint16_t* ptrControlReference; // Pointer to global variable of input register holding the controller reference value (e.g. uint16_t my_ref)
-    } __attribute__((packed))Ports; // Controller  block input and output port definitions
+    } __attribute__((packed))Ports; // Controller block input and output port definitions
 
     // Filter coefficients and input/output histories
     struct {
@@ -111,13 +118,12 @@ typedef struct {
         volatile int16_t normPostScaler; // Control output normalization factor (Q15) (R/W)
     } __attribute__((packed))Filter; // Filter parameters such as pointer to history and coefficient arrays and number scaling
 
-    // Feedback conditioning
-    struct {
-        volatile int16_t InputOffset; // Control input source offset value (R/W)
-
         // System clamping/Anti-windup
+    struct {
         volatile int16_t MinOutput; // Minimum output value used for clamping (R/W)
         volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
+        volatile int16_t AltMinOutput; // Alternate minimum output value used for clamping (R/W)
+        volatile int16_t AltMaxOutput; // Alternate maximum output value used for clamping (R/W)
     } __attribute__((packed))Limits; // Input and output clamping values
 
     // Voltage/Average Current Mode Control Trigger handling
@@ -130,9 +136,9 @@ typedef struct {
 
     // Data Provider Sources
     struct {
-        volatile uint16_t* ptrDataProviderControlInput; // Pointer to external data buffer of most recent control input
-        volatile uint16_t* ptrDataProviderControlError; // Pointer to external data buffer of most recent control error
-        volatile uint16_t* ptrDataProviderControlOutput; // Pointer to external data buffer of most recent control output
+        volatile uint16_t* ptrDProvControlInput; // Pointer to external data buffer of most recent control input
+        volatile uint16_t* ptrDProvControlError; // Pointer to external data buffer of most recent control error
+        volatile uint16_t* ptrDProvControlOutput; // Pointer to external data buffer of most recent control output
     } __attribute__((packed))DataProviders; // Automated data sources pushing data points to user-defined variables
 
     // Cascaded Function Call Parameters
@@ -141,13 +147,19 @@ typedef struct {
         volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
     } __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
 
-    // Adaptive Gain Modulation
+    // Adaptive Gain Control Modulation
     struct {
-        volatile uint16_t GainModulationFactor; // Generic 16-bit wide parameter #1 for advanced control options
-        volatile uint16_t GainModulationScaler; // Generic 16-bit wide parameter #2 for advanced control options
-        volatile uint16_t GainModulationNorm;   // Generic 16-bit wide parameter #3 for advanced control options
-        volatile uint16_t AltSourceNormShift;   // Generic 16-bit wide parameter #4 for advanced control options
-        volatile uint16_t SourceNormShift;      // Generic 16-bit wide parameter #5 for advanced control options
+        volatile uint16_t agcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
+        volatile fractional agcFactor; // Q15 value of Adaptive Gain Modulation factor
+        volatile fractional agcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
+    } __attribute__((packed))GainControl; // Parameter section for advanced control options
+
+    // User Data Space for Advanced Control Functions
+    struct {
+        volatile uint16_t advParam1; // generic 16-bit wide, user-defined parameter #1 for advanced control options
+        volatile uint16_t advParam2; // generic 16-bit wide, user-defined parameter #2 for advanced control options
+        volatile uint16_t advParam3; // generic 16-bit wide, user-defined parameter #3 for advanced control options
+        volatile uint16_t advParam4; // generic 16-bit wide, user-defined parameter #4 for advanced control options
     } __attribute__((packed))Advanced; // Parameter section for advanced control options
 
 } __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output

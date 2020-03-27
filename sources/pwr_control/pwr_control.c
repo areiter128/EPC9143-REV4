@@ -330,17 +330,36 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     // Configure Voltage Loop Controller Object
     buck.v_loop.ctrl_Initialization(&v_loop);   // Call Initialization Routine setting histories and scaling
     
-    // Configure controller input/output ports
-    buck.v_loop.controller->Ports.ptrSource = &BUCK_VOUT_ADCBUF; // Output Voltage is Common Source
-    buck.v_loop.controller->Ports.ptrAltSource = &BUCK_VIN_ADCBUF; // Input Voltage Is Alternate Source
-    buck.v_loop.controller->Ports.ptrTarget = &BUCK_PWM_PDC; // PWM Duty Cycle is Control Target
-    buck.v_loop.controller->Ports.ptrAltTarget = NULL; // No alternate target used
+    // Configure controller input ports
+    buck.v_loop.controller->Ports.Source.ptrAddress = &BUCK_VOUT_ADCBUF; // Output Voltage is Common Source
+    buck.v_loop.controller->Ports.Source.Offset = buck.v_loop.feedback_offset; // Output Voltage feedback signal offset 
+    buck.v_loop.controller->Ports.Source.NormScaler = BUCK_VOUT_NORM_SCALER; // Output voltage normalization factor bit-shift scaler 
+    buck.v_loop.controller->Ports.Source.NormFactor = BUCK_VOUT_NORM_FACTOR; // Output voltage normalization factor fractional
+    
+    buck.v_loop.controller->Ports.AltSource.ptrAddress = &BUCK_VIN_ADCBUF; // Input Voltage Is Alternate Source
+    buck.v_loop.controller->Ports.AltSource.Offset = BUCK_VIN_OFFSET; // Input Voltage feedback signal offset 
+    buck.v_loop.controller->Ports.AltSource.NormScaler = BUCK_VIN_NORM_SCALER; // Input voltage normalization factor bit-shift scaler 
+    buck.v_loop.controller->Ports.AltSource.NormFactor = BUCK_VIN_NORM_FACTOR; // Input voltage normalization factor fractional
+
+    // Configure controller output ports
+    buck.v_loop.controller->Ports.Target.ptrAddress = &BUCK_PWM_PDC; // PWM Duty Cycle is Control Target
+    buck.v_loop.controller->Ports.Target.Offset = 0; // Static primary output value offset
+    buck.v_loop.controller->Ports.Target.NormScaler = 0; // Primary control output normalization factor bit-shift scaler 
+    buck.v_loop.controller->Ports.Target.NormFactor = 0x7FFF; // Primary control output normalization factor fractional 
+
+    buck.v_loop.controller->Ports.AltTarget.ptrAddress = NULL; // No alternate target used
+    buck.v_loop.controller->Ports.AltTarget.Offset = 0; // Static secondary output value offset
+    buck.v_loop.controller->Ports.AltTarget.NormScaler = 0; // Secondary control output normalization factor bit-shift scaler
+    buck.v_loop.controller->Ports.AltTarget.NormFactor = 0x7FFF; // Secondary control output normalization factor fractional 
+    
+    // Configure controller control ports
     buck.v_loop.controller->Ports.ptrControlReference = &buck.set_values.v_ref; // Set pointer to Reference
     
     // Data Input/Output Limit Configuration
-    buck.v_loop.controller->Limits.InputOffset = buck.v_loop.feedback_offset;
     buck.v_loop.controller->Limits.MinOutput = buck.v_loop.minimum;
     buck.v_loop.controller->Limits.MaxOutput = buck.v_loop.maximum;
+    buck.v_loop.controller->Limits.AltMinOutput = 0; // not used
+    buck.v_loop.controller->Limits.AltMaxOutput = 0; // not used
 
     // ADC Trigger Control Configuration
     buck.v_loop.controller->TriggerControl.ptrADCTriggerARegister = &BUCK_VOUT_ADCTRIG;
@@ -349,21 +368,25 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->TriggerControl.ADCTriggerBOffset = 0;
     
     // Data Provider Configuration
-    buck.v_loop.controller->DataProviders.ptrDataProviderControlInput = &buck.data.v_out;
-    buck.v_loop.controller->DataProviders.ptrDataProviderControlError = NULL;
-    buck.v_loop.controller->DataProviders.ptrDataProviderControlOutput = NULL;
+    buck.v_loop.controller->DataProviders.ptrDProvControlInput = &buck.data.v_out;
+    buck.v_loop.controller->DataProviders.ptrDProvControlError = NULL;
+    buck.v_loop.controller->DataProviders.ptrDProvControlOutput = NULL;
     
     // Cascaded Function Configuration
     buck.v_loop.controller->CascadeTrigger.CascadedFunction = NULL;
     buck.v_loop.controller->CascadeTrigger.CascadedFunParam = 0;
     
     // Initialize Advanced Control Settings (not used in this code example)
-    buck.v_loop.controller->Advanced.GainModulationFactor = 0x7FFF; // Normalized Adaptive Gain Modulation Factor
-    buck.v_loop.controller->Advanced.GainModulationScaler = 0x0000; // Normalization Scaler
-    buck.v_loop.controller->Advanced.GainModulationNorm = (0x0000); // Normalization Bit-Shift Scaler 
-    buck.v_loop.controller->Advanced.AltSourceNormShift = BUCK_VIN_SCALER;
-    buck.v_loop.controller->Advanced.SourceNormShift = BUCK_VOUT_SCALER;
-        
+    buck.v_loop.controller->GainControl.agcFactor = 0x7FFF; // Adaptive Gain Control factor fractional
+    buck.v_loop.controller->GainControl.agcScaler = 0x0000; // Adaptive Gain Control factor bit-shift scaler
+    buck.v_loop.controller->GainControl.agcMedian = 0x0000; // Q15 number representing normalized Nominal Operating Point
+
+    // Custom Advanced Control Settings
+    buck.v_loop.controller->Advanced.advParam1 = 0; // No additional advanced control options used
+    buck.v_loop.controller->Advanced.advParam2 = 0; // No additional advanced control options used
+    buck.v_loop.controller->Advanced.advParam3 = 0; // No additional advanced control options used
+    buck.v_loop.controller->Advanced.advParam4 = 0; // No additional advanced control options used
+    
     // Reset Controller Status
     buck.v_loop.controller->status.bits.enabled = false; // Keep controller disabled
     buck.v_loop.controller->status.bits.swap_source = false; // use SOURCE as major control input
@@ -371,7 +394,7 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->status.bits.invert_input = false; // Do not invert input value
     buck.v_loop.controller->status.bits.flt_clamp_min = false; // Reset Anti-Windup Minimum Status bit
     buck.v_loop.controller->status.bits.flt_clamp_max = false; // Reset Anti-Windup Minimum Status bits
-    buck.v_loop.controller->status.bits.agm_enable = true;   // Enable Adaptive Gain Modulation by default
+    buck.v_loop.controller->status.bits.agc_enabled = false;   // Enable Adaptive Gain Modulation by default
 
     // ~~~ VOLTAGE LOOP CONFIGURATION END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
