@@ -28,7 +28,7 @@ volatile uint16_t appLCD_Initialize(void)
     
     Dev_Lcd_Init();
     Dev_Lcd_WriteStringXY(0,0,"==== DPSK-3 ====");
-    Dev_Lcd_WriteStringXY(0,1," CE201  VMC+AGC ");
+    Dev_Lcd_WriteStringXY(0,1," CE200 BUCK VMC ");
 
     lcd_cnt = 0;
     lcd.enabled = true;
