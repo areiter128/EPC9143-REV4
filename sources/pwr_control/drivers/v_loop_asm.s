@@ -298,7 +298,92 @@ _v_loop_Precharge:
 ; End of routine
 	return
 ;------------------------------------------------------------------------------
+
 	
+;------------------------------------------------------------------------------
+; Global function declaration _v_loop_PControl
+; This P-Control loop is for plant measurements only. This control loop 
+; uses source and target settings of the most recent control loop. No
+; further parameters are required.
+;------------------------------------------------------------------------------
+	
+	.global _v_loop_PControl
+_v_loop_PControl:
+
+; Original Equation: y[n] = x[n] + 0.5 y[n-1]
+
+    
+;------------------------------------------------------------------------------
+; Read data from input source and calculate error input to transfer function
+	mov [w0 + #ptrSourceRegister], w2    ; load pointer to input source register
+	mov [w2], w1    ; move value from input source into working register
+	mov [w0 + #ptrDProvControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
+	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
+
+;------------------------------------------------------------------------------
+; Check status word for Enable/Disable flag and bypass computation, if disabled
+	mov [w0 + #Status], w12    ; load value of status word into working register
+	btss w12, #NPNZ16_STATUS_ENABLED    ; check ENABLED bit state, skip (do not execute) next instruction if set
+	bra V_LOOP_PCONTROL_LOOP_BYPASS    ; if ENABLED bit is cleared, jump to end of control code
+	
+;------------------------------------------------------------------------------
+; Configure DSP for fractional operation with normal saturation (Q1.31 format)
+	mov #0x00E4, w4    ; load default value of DSP core configuration enabling saturation and signed fractional multiply
+	mov w4, _CORCON    ; load default configuration into CORCON register
+	    
+;------------------------------------------------------------------------------
+; Calculate error
+    mov [w0 + #ptrCtrlReference], w2    ; move pointer to control reference into working register
+	subr w1, [w2], w1    ; calculate error (=reference - input)
+	mov [w0 + #PreShift], w2    ; move error input scaler into working register
+	sl w1, w2, w1    ; normalize error result to fractional number format
+	
+;------------------------------------------------------------------------------
+; Load previous control output value
+    
+	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target in to working register
+	mov [w8], w4                ; move control output into working register
+    mov [w0 + #AdvParam1], w6   ; move P-coefficient into working register
+    
+    ; calculate P-control result
+	mpy w4*w6, a        ; multiply last control output with P-coefficient
+    sac.r a, w4         ; store accumulator result to working register
+    add w4, w1, w4      ; add error to previous result
+    
+;------------------------------------------------------------------------------
+; Controller Anti-Windup (control output value clamping)
+	; Check for upper limit violation
+	mov [w0 + #MaxOutput], w6    ; load upper limit value
+	cpslt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output < upper limit)
+	mov w6, w4    ; override controller output
+	; Check for lower limit violation
+	mov [w0 + #MinOutput], w6    ; load lower limit value
+	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > lower limit)
+	mov w6, w4    ; override controller output
+	
+;------------------------------------------------------------------------------
+; Write control output value to target
+	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target in to working register
+	mov w4, [w8]    ; move control output into target address
+	
+;------------------------------------------------------------------------------
+; Update ADC trigger A position
+	asr w4, #1, w6    ; half control output by shifting value one bit to the right
+	mov [w0 + #ADCTriggerAOffset], w8    ; load user-defined ADC trigger A offset value into working register
+	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
+	mov [w0 + #ptrADCTriggerARegister], w8    ; load pointer to ADC trigger A register into working register
+	mov w10, [w8]    ; push new ADC trigger value to ADC trigger A register
+	    
+    
+V_LOOP_PCONTROL_LOOP_BYPASS:    
+;    pop _CORCON
+    
+;------------------------------------------------------------------------------
+; End of routine
+	return
+;------------------------------------------------------------------------------
+    
+    
 ;------------------------------------------------------------------------------
 ; End of file
 	.end

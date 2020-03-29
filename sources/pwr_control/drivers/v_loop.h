@@ -83,6 +83,10 @@ extern void v_loop_Update( // Calls the 3P3Z controller (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
+// Calls the v_loop P-controller 
+extern void v_loop_PControl( // Calls the P-controller (Assembly)
+        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+    );
 
 #endif // end of __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
 
