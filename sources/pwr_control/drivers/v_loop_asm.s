@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.4.94
-;  AGS Version: Assembly Generator Script v2.0.5 (03/27/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.5.95
+;  AGS Version: Assembly Generator Script v2.0.2 (03/30/2020)
 ;  Author:      M91406
-;  Date/Time:   03/27/2020 6:30:58 PM
+;  Date/Time:   03/30/2020 1:46:12 AM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
 ; **********************************************************************************
@@ -56,17 +56,17 @@
 	.equ CtrlHistArraySize,         48    ; parameter group Filter: size of the control history array
 	.equ ErrHistArraySize,          50    ; parameter group Filter: size of the error history array
 	.equ PreShift,                  52    ; parameter group Filter: value of input value normalization bit-shift scaler
-	.equ reserved_0,                54    ; parameter group Filter: value of A-term normalization bit-shift scaler
+	.equ reserved_0,                54    ; parameter group Filter: (reserved)
 	.equ reserved_1,                56    ; parameter group Filter: (reserved)
 	.equ reserved_2,                58    ; parameter group Filter: (reserved)
 	.equ MinOutput,                 60    ; parameter group Limits: minimum clamping value of primary control output
 	.equ MaxOutput,                 62    ; parameter group Limits: maximum clamping value of primary control output
 	.equ AltMinOutput,              64    ; parameter group Limits: minimum clamping value of alternate control output
 	.equ AltMaxOutput,              66    ; parameter group Limits: maximum clamping value of alternate control output
-	.equ ptrADCTriggerARegister,    68    ; parameter group TriggerControl: pointer to ADC trigger A register memory address
-	.equ ADCTriggerAOffset,         70    ; parameter group TriggerControl: value of ADC trigger A offset
-	.equ ptrADCTriggerBRegister,    72    ; parameter group TriggerControl: pointer to ADC trigger B register memory address
-	.equ ADCTriggerBOffset,         74    ; parameter group TriggerControl: value of ADC trigger B offset
+	.equ ptrADCTriggerARegister,    68    ; parameter group ADCTriggerControl: pointer to ADC trigger A register memory address
+	.equ ADCTriggerAOffset,         70    ; parameter group ADCTriggerControl: value of ADC trigger A offset
+	.equ ptrADCTriggerBRegister,    72    ; parameter group ADCTriggerControl: pointer to ADC trigger B register memory address
+	.equ ADCTriggerBOffset,         74    ; parameter group ADCTriggerControl: value of ADC trigger B offset
 	.equ ptrDProvControlInput,      76    ; parameter group DataProviders: pointer to external variable/register the most recent control input will be pushed to
 	.equ ptrDProvControlError,      78    ; parameter group DataProviders: pointer to external variable/register the most recent control error will be pushed to
 	.equ ptrDProvControlOutput,     80    ; parameter group DataProviders: pointer to external variable/register the most recent control output will be pushed to

@@ -362,10 +362,10 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->Limits.AltMaxOutput = 0; // not used
 
     // ADC Trigger Control Configuration
-    buck.v_loop.controller->TriggerControl.ptrADCTriggerARegister = &BUCK_VOUT_ADCTRIG;
-    buck.v_loop.controller->TriggerControl.ADCTriggerAOffset = buck.v_loop.trigger_offset;
-    buck.v_loop.controller->TriggerControl.ptrADCTriggerBRegister = NULL;
-    buck.v_loop.controller->TriggerControl.ADCTriggerBOffset = 0;
+    buck.v_loop.controller->ADCTriggerControl.ptrADCTriggerARegister = &BUCK_VOUT_ADCTRIG;
+    buck.v_loop.controller->ADCTriggerControl.ADCTriggerAOffset = buck.v_loop.trigger_offset;
+    buck.v_loop.controller->ADCTriggerControl.ptrADCTriggerBRegister = NULL;
+    buck.v_loop.controller->ADCTriggerControl.ADCTriggerBOffset = 0;
     
     // Data Provider Configuration
     buck.v_loop.controller->DataProviders.ptrDProvControlInput = &buck.data.v_out;
