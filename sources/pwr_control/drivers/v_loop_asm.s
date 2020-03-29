@@ -3,7 +3,7 @@
 ;  SDK Version: z-Domain Control Loop Designer v0.9.5.95
 ;  AGS Version: Assembly Generator Script v2.0.2 (03/30/2020)
 ;  Author:      M91406
-;  Date/Time:   03/30/2020 1:37:21 AM
+;  Date/Time:   03/30/2020 1:46:12 AM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
 ; **********************************************************************************
@@ -56,7 +56,7 @@
 	.equ CtrlHistArraySize,         48    ; parameter group Filter: size of the control history array
 	.equ ErrHistArraySize,          50    ; parameter group Filter: size of the error history array
 	.equ PreShift,                  52    ; parameter group Filter: value of input value normalization bit-shift scaler
-	.equ reserved_0,                54    ; parameter group Filter: value of A-term normalization bit-shift scaler
+	.equ reserved_0,                54    ; parameter group Filter: (reserved)
 	.equ reserved_1,                56    ; parameter group Filter: (reserved)
 	.equ reserved_2,                58    ; parameter group Filter: (reserved)
 	.equ MinOutput,                 60    ; parameter group Limits: minimum clamping value of primary control output
