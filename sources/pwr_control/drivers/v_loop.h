@@ -1,5 +1,5 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.4.94
+ * z-Domain Control Loop Designer, Version 0.9.5.95
  * ********************************************************************************
  * 3p3z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *******************************************************************************
- * CGS Version:         2.0.1
- * CGS Date:            03/27/2020
+ * CGS Version:         2.0.2
+ * CGS Date:            03/30/2020
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           03/27/2020 6:30:58 PM
+ * Date/Time:           03/30/2020 1:46:12 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
