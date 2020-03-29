@@ -1,9 +1,9 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.4.94
+* z-Domain Control Loop Designer, Version 0.9.5.95
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 2.0.1
-* CGS Date:    03/27/2020
+* CGS Version: 2.0.2
+* CGS Date:    03/30/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 #define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -132,7 +132,7 @@ typedef struct {
         volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays
         volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)
         volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays
-    } __attribute__((packed))TriggerControl; // Automatic ADC trigger placement options for ADC Trigger A and B
+    } __attribute__((packed))ADCTriggerControl; // Automatic ADC trigger placement options for ADC Trigger A and B
 
     // Data Provider Sources
     struct {
