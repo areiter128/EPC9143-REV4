@@ -398,6 +398,10 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
 
     // ~~~ VOLTAGE LOOP CONFIGURATION END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    // P-Controller Dummy
+    buck.v_loop.controller->Advanced.advParam4 = 0x0004;    // Set to 0.5
+    
+    
     return(fres);
 }
 
@@ -410,7 +414,8 @@ void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void
 {
 DBGPIN_2_SET;
     buck.status.bits.adc_active = true;
-    buck.v_loop.ctrl_Update(buck.v_loop.controller);
+//    buck.v_loop.ctrl_Update(buck.v_loop.controller);
+    v_loop_PControl(&v_loop);
     PG1STATbits.UPDREQ = 1;  // Force PWM timing update
     _BUCK_VLOOP_ISR_IF = 0;  // Clear the ADCANx interrupt flag 
 DBGPIN_2_CLEAR;
