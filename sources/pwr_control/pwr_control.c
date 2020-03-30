@@ -399,7 +399,8 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     // ~~~ VOLTAGE LOOP CONFIGURATION END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     // P-Controller Dummy
-    buck.v_loop.controller->Advanced.advParam4 = 0x0004;    // Set to 0.5
+    buck.v_loop.controller->Advanced.advParam3 = 0x1800;    // Set to ~0.25
+    buck.v_loop.controller->Advanced.advParam4 = 0xFFFE;    // Set to -2
     
     
     return(fres);
