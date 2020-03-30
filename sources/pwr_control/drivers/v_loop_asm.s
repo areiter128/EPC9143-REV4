@@ -341,14 +341,15 @@ _v_loop_PControl:
 ;------------------------------------------------------------------------------
 ; Load previous control output value
     
-	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target in to working register
-	mov [w8], w4                ; move control output into working register
-    mov [w0 + #AdvParam1], w6   ; move P-coefficient into working register
+    mov [w0 + #AdvParam3], w6   ; move P-coefficient into working register
+    mov [w0 + #AdvParam4], w5   ; move P-coefficient bit-shift scaler into working register
+    mov w1, w4                  ; move error to MPY register
     
     ; calculate P-control result
-	mpy w4*w6, a        ; multiply last control output with P-coefficient
+	mpy w4*w6, a        ; multiply most recent error with P-coefficient
+    sftac a, w5         ; shift accumulator to post-scale floating number
     sac.r a, w4         ; store accumulator result to working register
-    add w4, w1, w4      ; add error to previous result
+;    add w4, w5, w4      ; add last control output to previous result
     
 ;------------------------------------------------------------------------------
 ; Controller Anti-Windup (control output value clamping)
