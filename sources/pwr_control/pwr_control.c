@@ -90,7 +90,7 @@ volatile uint16_t appPowerSupply_Execute(void)
     // and while being tied to a valid reference
     if(buck.mode >= BUCK_STATE_V_RAMP_UP) {
         fltobj_BuckRegErr.ref_obj = buck.v_loop.controller->Ports.ptrControlReference;
-        fltobj_BuckRegErr.status.bits.enabled = buck.v_loop.controller->status.bits.enabled;
+//        fltobj_BuckRegErr.status.bits.enabled = buck.v_loop.controller->status.bits.enabled;
     }
     else {
         fltobj_BuckRegErr.status.bits.enabled = false;
