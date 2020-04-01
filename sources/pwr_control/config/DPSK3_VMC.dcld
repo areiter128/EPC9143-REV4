@@ -1,13 +1,13 @@
 [GUI]
 CreateDate=03/02/2020 10:13:13 PM
-SaveDate=03/30/2020 1:47:29 AM
+SaveDate=04/01/2020 9:56:06 AM
 Name=z-Domain Control Loop Designer
-Version=0.9.5.95
+Version=0.9.5.96
 AGS Version=2.0.2
 CGS Version=2.0.2
 WindoWState=Normal
-Top=82
-Left=-1598
+Top=78
+Left=78
 Height=894
 Width=1424
 TabHeight=284
@@ -90,6 +90,7 @@ AddAntiWindupMaximumClamping=1
 AddAntiWindupMaximumClampingStatusFlag=0
 AddAntiWindupMinimumClamping=1
 AddAntiWindupMinimumClampingStatusFlag=0
+AddPTermLoop=0
 [CodeGenerationPaths]
 ExportASMSource=1
 ExportCSource=1
@@ -103,6 +104,11 @@ CHeaderPath=.\pwr_control\drivers\
 CLibPath=.\pwr_control\drivers\
 IncludeCHeaderPathInCSource=1
 IncludeCLibPathInCHeader=1
+[BodePlot]
+XScale-NyquistShannonLimit=0
+XScale-SamplingFrequency=1
+XScale-FullScale=0
+YScale-UnwrapPhase=1
 [TimingGraph]
 ControlLoopOptimization=0
 CPUClock=100

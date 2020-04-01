@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.5.95
-;  AGS Version: Assembly Generator Script v2.0.2 (03/30/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.6.97
+;  AGS Version: Assembly Generator Script v2.0.3 (03/31/2020)
 ;  Author:      M91406
-;  Date/Time:   03/30/2020 1:46:12 AM
+;  Date/Time:   03/31/2020 5:32:23 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
 ; **********************************************************************************
@@ -97,7 +97,7 @@ _v_loop_Update:    ; provide global scope to routine
 ; Check status word for Enable/Disable flag and bypass computation, if disabled
 	mov [w0 + #Status], w12    ; load value of status word into working register
 	btss w12, #NPNZ16_STATUS_ENABLED    ; check ENABLED bit state, skip (do not execute) next instruction if set
-	bra V_LOOP_BYPASS_LOOP    ; if ENABLED bit is cleared, jump to end of control code
+	bra V_LOOP_LOOP_BYPASS    ; if ENABLED bit is cleared, jump to end of control code
 	
 ;------------------------------------------------------------------------------
 ; Configure DSP for fractional operation with normal saturation (Q1.31 format)
@@ -217,13 +217,13 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target with dummy read of source buffer
-	goto V_LOOP_EXIT_LOOP    ; when enabled, step over dummy read and go straight to EXIT
-	V_LOOP_BYPASS_LOOP:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
+	goto V_LOOP_LOOP_EXIT    ; when enabled, step over dummy read and go straight to EXIT
+	V_LOOP_LOOP_BYPASS:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
 	mov [w0 + #ptrSourceRegister], w2    ; load pointer to input source register
 	mov [w2], w1    ; move value from input source into working register
 	mov [w0 + #ptrDProvControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
 	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
-	V_LOOP_EXIT_LOOP:    ; Exit control loop branch target
+	V_LOOP_LOOP_EXIT:    ; Exit control loop branch target
 	pop w12    ; restore working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
@@ -298,59 +298,49 @@ _v_loop_Precharge:
 ; End of routine
 	return
 ;------------------------------------------------------------------------------
-
 	
 ;------------------------------------------------------------------------------
-; Global function declaration _v_loop_PControl
-; This P-Control loop is for plant measurements only. This control loop 
-; uses source and target settings of the most recent control loop. No
-; further parameters are required.
+; Global function declaration _v_loop_PTermUpdate
+; This function executes a P-term based control loop used for plant measurements only.
+; THIS LOOP IS NOT SUITED FOR STABLE OPERATION
 ;------------------------------------------------------------------------------
 	
-	.global _v_loop_PControl
-_v_loop_PControl:
-
-; Original Equation: y[n] = x[n] + 0.5 y[n-1]
-
-    
+	.global _v_loop_PTermUpdate
+_v_loop_PTermUpdate:
+	push w12    ; save working register used for status flag tracking
+	
+;------------------------------------------------------------------------------
+; Check status word for Enable/Disable flag and bypass computation when disabled
+	mov [w0 + #Status], w12    ; load value of status word into working register
+	btss w12, #NPNZ16_STATUS_ENABLED    ; check ENABLED bit state, skip (do not execute) next instruction if set
+	bra V_LOOP_PTERM_LOOP_BYPASS    ; if ENABLED bit is cleared, jump to end of control code
+	
+;------------------------------------------------------------------------------
+; Configure DSP for fractional operation with normal saturation (Q1.31 format)
+	mov #0x00E4, w4    ; load default value of DSP core configuration enabling saturation and signed fractional multiply
+	mov w4, _CORCON    ; load default configuration into CORCON register
+	
 ;------------------------------------------------------------------------------
 ; Read data from input source and calculate error input to transfer function
 	mov [w0 + #ptrSourceRegister], w2    ; load pointer to input source register
 	mov [w2], w1    ; move value from input source into working register
 	mov [w0 + #ptrDProvControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
 	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
-
-;------------------------------------------------------------------------------
-; Check status word for Enable/Disable flag and bypass computation, if disabled
-	mov [w0 + #Status], w12    ; load value of status word into working register
-	btss w12, #NPNZ16_STATUS_ENABLED    ; check ENABLED bit state, skip (do not execute) next instruction if set
-	bra V_LOOP_PCONTROL_LOOP_BYPASS    ; if ENABLED bit is cleared, jump to end of control code
-	
-;------------------------------------------------------------------------------
-; Configure DSP for fractional operation with normal saturation (Q1.31 format)
-	mov #0x00E4, w4    ; load default value of DSP core configuration enabling saturation and signed fractional multiply
-	mov w4, _CORCON    ; load default configuration into CORCON register
-	    
-;------------------------------------------------------------------------------
-; Calculate error
-    mov [w0 + #ptrCtrlReference], w2    ; move pointer to control reference into working register
+	mov [w0 + #ptrCtrlReference], w2    ; move pointer to control reference into working register
 	subr w1, [w2], w1    ; calculate error (=reference - input)
 	mov [w0 + #PreShift], w2    ; move error input scaler into working register
 	sl w1, w2, w1    ; normalize error result to fractional number format
 	
 ;------------------------------------------------------------------------------
-; Load previous control output value
-    
-    mov [w0 + #AdvParam3], w6   ; move P-coefficient into working register
-    mov [w0 + #AdvParam4], w5   ; move P-coefficient bit-shift scaler into working register
-    mov w1, w4                  ; move error to MPY register
-    
-    ; calculate P-control result
-	mpy w4*w6, a        ; multiply most recent error with P-coefficient
-    sftac a, w5         ; shift accumulator to post-scale floating number
-    sac.r a, w4         ; store accumulator result to working register
-;    add w4, w5, w4      ; add last control output to previous result
-    
+; Load P-gain factor from data structure
+	mov [w0 + #AdvParam1], w6    ; move P-coefficient fractional into working register
+	mov [w0 + #AdvParam2], w5    ; move P-coefficient scaler into working register
+	mov w1, w4    ; move error to MPY working register
+	; calculate P-control result
+	mpy w4*w6, a    ; multiply most recent error with P-coefficient
+	sftac a, w5    ; shift accumulator to post-scale floating number
+	sac.r a, w4    ; store accumulator result to working register
+	
 ;------------------------------------------------------------------------------
 ; Controller Anti-Windup (control output value clamping)
 	; Check for upper limit violation
@@ -374,17 +364,23 @@ _v_loop_PControl:
 	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
 	mov [w0 + #ptrADCTriggerARegister], w8    ; load pointer to ADC trigger A register into working register
 	mov w10, [w8]    ; push new ADC trigger value to ADC trigger A register
-	    
-    
-V_LOOP_PCONTROL_LOOP_BYPASS:    
-;    pop _CORCON
-    
+	
+;------------------------------------------------------------------------------
+; Enable/Disable bypass branch target with dummy read of source buffer
+	goto V_LOOP_PTERM_LOOP_EXIT    ; when enabled, step over dummy read and go straight to EXIT
+	V_LOOP_PTERM_LOOP_BYPASS:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
+	mov [w0 + #ptrSourceRegister], w2    ; load pointer to input source register
+	mov [w2], w1    ; move value from input source into working register
+	mov [w0 + #ptrDProvControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
+	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
+	V_LOOP_PTERM_LOOP_EXIT:    ; Exit P-Term control loop branch target
+	pop w12    ; restore working register used for status flag tracking
+	
 ;------------------------------------------------------------------------------
 ; End of routine
 	return
 ;------------------------------------------------------------------------------
-    
-    
+	
 ;------------------------------------------------------------------------------
 ; End of file
 	.end

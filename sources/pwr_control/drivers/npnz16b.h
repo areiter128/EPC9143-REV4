@@ -1,9 +1,9 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.5.95
+* z-Domain Control Loop Designer, Version 0.9.6.97
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 2.0.2
-* CGS Date:    03/30/2020
+* CGS Version: 2.0.3
+* CGS Date:    03/31/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 #define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -143,7 +143,7 @@ typedef struct {
 
     // Cascaded Function Call Parameters
     struct {
-        volatile uint16_t CascadedFunction; // Pointer to Function which should be called at the end of the control loop
+        volatile uint16_t ptrCascadedFunction; // Pointer to Function which should be called at the end of the control loop
         volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
     } __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
 
