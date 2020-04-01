@@ -32,6 +32,8 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void);
 volatile uint16_t appPowerSupply_ControllerInitialize(void);
 volatile uint16_t appPowerSupply_PeripheralsInitialize(void);
 
+/* CUSTOM RUNTIME OPTIONS */
+#define PLANT_MEASUREMENT   true
 
 /* *************************************************************************************************
  * PUBLIC FUNCTIONS
@@ -90,7 +92,9 @@ volatile uint16_t appPowerSupply_Execute(void)
     // and while being tied to a valid reference
     if(buck.mode >= BUCK_STATE_V_RAMP_UP) {
         fltobj_BuckRegErr.ref_obj = buck.v_loop.controller->Ports.ptrControlReference;
-//        fltobj_BuckRegErr.status.bits.enabled = buck.v_loop.controller->status.bits.enabled;
+        #if (PLANT_MEASUREMENT == false)
+        fltobj_BuckRegErr.status.bits.enabled = buck.v_loop.controller->status.bits.enabled;
+        #endif
     }
     else {
         fltobj_BuckRegErr.status.bits.enabled = false;
@@ -241,7 +245,7 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
 
     // ~~~ TEMPERATURE FEEDBACK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    buck.feedback.ad_temp.enabled = false;   // Use this channel
+    buck.feedback.ad_temp.enabled = true;   // Use this channel
 
     buck.feedback.ad_temp.adc_input = BUCK_TEMP_ADCIN;
     buck.feedback.ad_temp.adc_core = BUCK_TEMP_ADCCORE;
@@ -373,7 +377,7 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->DataProviders.ptrDProvControlOutput = NULL;
     
     // Cascaded Function Configuration
-    buck.v_loop.controller->CascadeTrigger.CascadedFunction = NULL;
+    buck.v_loop.controller->CascadeTrigger.ptrCascadedFunction = NULL;
     buck.v_loop.controller->CascadeTrigger.CascadedFunParam = 0;
     
     // Initialize Advanced Control Settings (not used in this code example)
@@ -400,8 +404,8 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     
     // P-Controller Dummy
 	// 
-    buck.v_loop.controller->Advanced.advParam3 = 0x5BA9;    // Set to 0.716145
-    buck.v_loop.controller->Advanced.advParam4 = 0xFFFF;    // Set to -1
+    buck.v_loop.controller->Advanced.advParam1 = 0x5BA9;    // Set to 0.716145
+    buck.v_loop.controller->Advanced.advParam2 = 0xFFFF;    // Set to -1
     
     
     return(fres);
@@ -415,11 +419,16 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
 void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void)
 {
 DBGPIN_2_SET;
+
     buck.status.bits.adc_active = true;
-//    buck.v_loop.ctrl_Update(buck.v_loop.controller);
-    v_loop_PControl(&v_loop);
+    #if (PLANT_MEASUREMENT == false)
+    buck.v_loop.ctrl_Update(buck.v_loop.controller);
+    #else
+    v_loop_PTermUpdate(&v_loop);
+    #endif
     PG1STATbits.UPDREQ = 1;  // Force PWM timing update
     _BUCK_VLOOP_ISR_IF = 0;  // Clear the ADCANx interrupt flag 
+
 DBGPIN_2_CLEAR;
 }
 
