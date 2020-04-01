@@ -12,7 +12,7 @@
 #include "pwr_control/drivers/v_loop.h"
 #include "config/dpsk3_hwdescr.h"
 
-#include "fault_handler/faults.h"
+#include "fault_handler/app_faults.h"
 
 /*!BUCK_POWER_CONTROLLER_t data structure
  * *************************************************************************************************

@@ -4,7 +4,22 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f4" displayName="apps" projectFiles="true">
+      <logicalFolder name="f3" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="init" projectFiles="true">
+          <itemPath>../sources/config/init/init_fosc.h</itemPath>
+          <itemPath>../sources/config/init/init_gpio.h</itemPath>
+          <itemPath>../sources/config/init/init_timer1.h</itemPath>
+        </logicalFolder>
+        <itemPath>../sources/config/dpsk3_hwdescr.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="tasks" projectFiles="true">
+        <logicalFolder name="f3" displayName="app" projectFiles="true">
+          <itemPath>../sources/fault_handler/app_faults.h</itemPath>
+          <itemPath>../sources/lcd/app_lcd.h</itemPath>
+          <itemPath>../sources/led/app_led.h</itemPath>
+          <itemPath>../sources/switch/app_switch.h</itemPath>
+          <itemPath>../sources/pwr_control/app_power_control.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="f1" displayName="devices" projectFiles="true">
           <logicalFolder name="f2" displayName="fault_handler" projectFiles="true">
           </logicalFolder>
@@ -34,21 +49,6 @@
             <itemPath>../sources/switch/drivers/drv_switch.h</itemPath>
           </logicalFolder>
         </logicalFolder>
-        <logicalFolder name="f3" displayName="tasks" projectFiles="true">
-          <itemPath>../sources/fault_handler/faults.h</itemPath>
-          <itemPath>../sources/lcd/lcd.h</itemPath>
-          <itemPath>../sources/led/led.h</itemPath>
-          <itemPath>../sources/pwr_control/pwr_control.h</itemPath>
-          <itemPath>../sources/switch/switch.h</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="f3" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="init" projectFiles="true">
-          <itemPath>../sources/config/init/init_fosc.h</itemPath>
-          <itemPath>../sources/config/init/init_gpio.h</itemPath>
-          <itemPath>../sources/config/init/init_timer1.h</itemPath>
-        </logicalFolder>
-        <itemPath>../sources/config/dpsk3_hwdescr.h</itemPath>
       </logicalFolder>
       <itemPath>../sources/main.h</itemPath>
       <itemPath>../sources/globals.h</itemPath>
@@ -60,7 +60,23 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f4" displayName="apps" projectFiles="true">
+      <logicalFolder name="f3" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="init" projectFiles="true">
+          <itemPath>../sources/config/init/init_fosc.c</itemPath>
+          <itemPath>../sources/config/init/init_gpio.c</itemPath>
+          <itemPath>../sources/config/init/init_timer1.c</itemPath>
+        </logicalFolder>
+        <itemPath>../sources/config/config_bits.c</itemPath>
+        <itemPath>../sources/config/dpsk3_hwdescr.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="tasks" projectFiles="true">
+        <logicalFolder name="f3" displayName="app" projectFiles="true">
+          <itemPath>../sources/fault_handler/app_faults.c</itemPath>
+          <itemPath>../sources/lcd/app_lcd.c</itemPath>
+          <itemPath>../sources/led/app_led.c</itemPath>
+          <itemPath>../sources/pwr_control/app_power_control.c</itemPath>
+          <itemPath>../sources/switch/app_switch.c</itemPath>
+        </logicalFolder>
         <logicalFolder name="f2" displayName="devices" projectFiles="true">
           <logicalFolder name="f1" displayName="lcd" projectFiles="true">
             <itemPath>../sources/lcd/devices/dev_lcd.c</itemPath>
@@ -87,22 +103,6 @@
             <itemPath>../sources/switch/drivers/drv_switch.c</itemPath>
           </logicalFolder>
         </logicalFolder>
-        <logicalFolder name="f3" displayName="tasks" projectFiles="true">
-          <itemPath>../sources/fault_handler/faults.c</itemPath>
-          <itemPath>../sources/lcd/lcd.c</itemPath>
-          <itemPath>../sources/led/led.c</itemPath>
-          <itemPath>../sources/pwr_control/pwr_control.c</itemPath>
-          <itemPath>../sources/switch/switch.c</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="f3" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="init" projectFiles="true">
-          <itemPath>../sources/config/init/init_fosc.c</itemPath>
-          <itemPath>../sources/config/init/init_gpio.c</itemPath>
-          <itemPath>../sources/config/init/init_timer1.c</itemPath>
-        </logicalFolder>
-        <itemPath>../sources/config/config_bits.c</itemPath>
-        <itemPath>../sources/config/dpsk3_hwdescr.c</itemPath>
       </logicalFolder>
       <itemPath>../sources/main.c</itemPath>
     </logicalFolder>

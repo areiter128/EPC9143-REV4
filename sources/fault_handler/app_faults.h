@@ -20,7 +20,7 @@
  */
 
 /* 
- * File:   faults.h
+ * File:   app_faults.h
  * Author: M91406
  * Comments: global fault handler application layer API
  * Revision history: 

@@ -9,7 +9,7 @@
 
 #include "drivers/drv_fault_handler.h"
 #include "config/dpsk3_hwdescr.h"
-#include "pwr_control/pwr_control.h"
+#include "pwr_control/app_power_control.h"
 
 
 // Define fault objects

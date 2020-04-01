@@ -20,7 +20,7 @@
  */
 
 /* 
- * File:   pwr_control.h
+ * File:   app_power_control.h
  * Author: M91406
  * Comments: Power control application layer
  * Revision history: 

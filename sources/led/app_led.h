@@ -20,41 +20,44 @@
  */
 
 /* 
- * File:   led.h
+ * File:   app_led.h
  * Author: M91406
- * Comments: LCD application layer
+ * Comments: LED application layer
  * Revision history: 
  */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_LAYER_SWITCH_BUTTON_H
-#define	APPLICATION_LAYER_SWITCH_BUTTON_H
+#ifndef APPLICATION_LAYER_DEBUGGING_LED_H
+#define	APPLICATION_LAYER_DEBUGGING_LED_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h> // include standard integer data types
 #include <stdbool.h> // include standard boolean data types
 #include <stddef.h> // include standard definition data types
 
-#include "switch/drivers/drv_switch.h"
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
+
+// CUSTOM DECLARATIONS
+#define DBGLED_PERIOD_FAST      2499
+#define DBGLED_PERIOD_DEFAULT   4999
+#define DBGLED_PERIOD_STANDBY   9999
+    
+// CUSTOM DATA TYPE DECLARATIONS
+typedef struct {
+    volatile uint16_t period;
+}DEBUGGING_LED_t;    
     
 // PUBLIC VARIABLE DECLARATION
-extern volatile SWITCH_OBJECT_t switch_button;
-    
-// PUBLIC FUNCTION PROTOTYPE DECLARATION
-extern volatile uint16_t appSwitch_Initialize(void);
-extern volatile uint16_t appSwitch_Execute(void);
-extern volatile uint16_t appSwitch_Dispose(void);
+extern volatile DEBUGGING_LED_t debug_led;
 
-// Switch Button Events
-extern volatile uint16_t appSwitch_EventButtonDown(void);
-extern volatile uint16_t appSwitch_EventButtonPressed(void);
-extern volatile uint16_t appSwitch_EventButtonLongPress(void);
-extern volatile uint16_t appSwitch_EventButtonUp(void);
+// PUBLIC FUNCTION PROTOTYPE DECLARATION
+extern volatile uint16_t appLED_Initialize(void);
+extern volatile uint16_t appLED_Execute(void);
+extern volatile uint16_t appLED_Dispose(void);
 
 #ifdef	__cplusplus
 }

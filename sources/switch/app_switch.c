@@ -6,10 +6,10 @@
  */
 
 
-#include "switch.h"
 #include "config/dpsk3_hwdescr.h"
-#include "pwr_control/pwr_control.h"
-#include "lcd/lcd.h"
+#include "app_switch.h" 
+#include "pwr_control/app_power_control.h"
+#include "lcd/app_lcd.h"
 
 // PRIVATE VARIABLE DELARATIONS
 

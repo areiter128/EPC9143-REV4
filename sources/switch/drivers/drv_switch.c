@@ -6,7 +6,7 @@
  */
 
 
-#include "switch/switch.h"
+#include "switch/app_switch.h"
 #include "config/dpsk3_hwdescr.h"
 
 // PRIVATE VARIABLE DELARATIONS

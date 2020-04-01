@@ -20,7 +20,7 @@
  */
 
 /* 
- * File:   led.h
+ * File:   app_lcd.h
  * Author: M91406
  * Comments: LCD application layer
  * Revision history: 
@@ -28,40 +28,39 @@
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_LAYER_DEBUGGING_LED_H
-#define	APPLICATION_LAYER_DEBUGGING_LED_H
+#ifndef APPLICATION_LAYER_LC_DISPLAY_H
+#define	APPLICATION_LAYER_LC_DISPLAY_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h> // include standard integer data types
 #include <stdbool.h> // include standard boolean data types
 #include <stddef.h> // include standard definition data types
 
+#include "lcd/devices/dev_lcd.h"
+
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-// CUSTOM DECLARATIONS
-#define DBGLED_PERIOD_FAST      2499
-#define DBGLED_PERIOD_DEFAULT   4999
-#define DBGLED_PERIOD_STANDBY   9999
-    
-// CUSTOM DATA TYPE DECLARATIONS
+// PUBLIC TYPE DECLARATIONS
 typedef struct {
-    volatile uint16_t period;
-}DEBUGGING_LED_t;    
+    volatile bool enabled;
+    volatile uint16_t refresh;
+    volatile uint16_t screen;
+}LCD_t;
     
 // PUBLIC VARIABLE DECLARATION
-extern volatile DEBUGGING_LED_t debug_led;
-
+extern volatile LCD_t lcd;
+    
 // PUBLIC FUNCTION PROTOTYPE DECLARATION
-extern volatile uint16_t appLED_Initialize(void);
-extern volatile uint16_t appLED_Execute(void);
-extern volatile uint16_t appLED_Dispose(void);
+extern volatile uint16_t appLCD_Initialize(void);
+extern volatile uint16_t appLCD_Execute(void);
+extern volatile uint16_t appLCD_Dispose(void);
 
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* APPLICATION_LAYER_DEBUGGING_LED_H */
+#endif	/* APPLICATION_LAYER_LC_DISPLAY_H */
 

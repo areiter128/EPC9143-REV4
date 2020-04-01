@@ -1,17 +1,17 @@
 /*
- * File:   lcd.c
+ * File:   app_lcd.c
  * Author: M91406
  *
  * Created on March 12, 2020, 12:10 PM
  */
 
-#include "lcd/lcd.h"
+#include "lcd/app_lcd.h"
 #include <math.h>
 
 // Additional header files required by this app
 #include "config/dpsk3_hwdescr.h"
-#include "pwr_control/pwr_control.h"
-#include "fault_handler/faults.h"
+#include "pwr_control/app_power_control.h"
+#include "fault_handler/app_faults.h"
 
 // PRIVATE VARIABLE DELARATIONS
 volatile uint16_t lcd_cnt = 0;  // local counter determining LCD refresh rate
