@@ -31,6 +31,7 @@
             <itemPath>../sources/pwr_control/drivers/npnz16b.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f5" displayName="switch" projectFiles="true">
+            <itemPath>../sources/switch/drivers/drv_switch.h</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="f3" displayName="tasks" projectFiles="true">
@@ -83,6 +84,7 @@
             <itemPath>../sources/pwr_control/drivers/v_loop_asm.s</itemPath>
           </logicalFolder>
           <logicalFolder name="f5" displayName="switch" projectFiles="true">
+            <itemPath>../sources/switch/drivers/drv_switch.c</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="f3" displayName="tasks" projectFiles="true">
@@ -116,6 +118,7 @@
     <Elem>firmware</Elem>
     <Elem>../sources/pwr_control/drivers</Elem>
     <Elem>../sources/pwr_control/devices</Elem>
+    <Elem>../sources/switch/drivers</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -1050,7 +1053,7 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-2beff"/>
         <property key="programmerToGoFilePath"
-                  value="D:/Firmware/CodeExamples/P33C_CE201/dpsk_vmc.X/debug/DPSK3_BUCK/dpsk_vmc_ptg"/>
+                  value="D:/Firmware/CodeExamples/P33C_CE200/dpsk_vmc.X/debug/DPSK3_BUCK/dpsk_vmc_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
