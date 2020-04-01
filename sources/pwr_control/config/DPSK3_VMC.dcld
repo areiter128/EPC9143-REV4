@@ -1,17 +1,17 @@
 [GUI]
 CreateDate=03/02/2020 10:13:13 PM
-SaveDate=04/01/2020 9:56:06 AM
+SaveDate=04/01/2020 12:04:12 PM
 Name=z-Domain Control Loop Designer
-Version=0.9.5.96
-AGS Version=2.0.2
-CGS Version=2.0.2
+Version=0.9.6.97
+AGS Version=2.0.3
+CGS Version=2.0.3
 WindoWState=Normal
-Top=78
-Left=78
+Top=83
+Left=-1622
 Height=894
 Width=1424
 TabHeight=284
-VersionKey=905
+VersionKey=906
 [ControlSetup]
 ControlType=2
 ScalingMode=3
@@ -90,7 +90,7 @@ AddAntiWindupMaximumClamping=1
 AddAntiWindupMaximumClampingStatusFlag=0
 AddAntiWindupMinimumClamping=1
 AddAntiWindupMinimumClampingStatusFlag=0
-AddPTermLoop=0
+AddPTermLoop=1
 [CodeGenerationPaths]
 ExportASMSource=1
 ExportCSource=1
