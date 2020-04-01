@@ -189,7 +189,7 @@ extern "C" {
 #define BUCK_VIN_NORM_FCT       (float)(BUCK_VOUT_FB_GAIN / BUCK_VIN_FB_GAIN)   // VIN-2-VOUT Normalization Factor
 #define BUCK_AGC_VL_NOMINAL     (float)(VIN_NOMINAL - BUCK_VOUT_NOMINAL)
     
-#define BUCK_AGC_VL_NOM         (uint16_t)(BUCK_AGC_VL_NOMINAL / ADC_GRAN)
+#define BUCK_AGC_VL_NOM         (uint16_t)(BUCK_AGC_VL_NOMINAL / ADC_GRAN) // Common Volt-Seconds ratio at VIN=9V/VOUT=3.§V
 //#define BUCK_AGC_VL_FCT         (uint16_t)(pow(2.0, -15) * BUCK_AGC_VL_NOM)
 
 #define BUCK_VIN_NORM_SCALER    3 // VIN normalization  
@@ -207,6 +207,15 @@ extern "C" {
 #define BUCK_IOUT_OCL           (uint16_t)(BUCK_IOUT_MAXIMUM * BUCK_IOUT_FB_GAIN / ADC_GRAN)  // Over Current Limit
 #define BUCK_IOUT_REF           (uint16_t)(BUCK_IOUT_REFERENCE * BUCK_IOUT_FB_GAIN / ADC_GRAN)  // Output Current Reference
 
+
+
+#define BUCK_TEMPCAL_ZERO       (float) 0.500   // Temperature sense signal zero point voltage in [V]
+#define BUCK_TEMPCAL_SLOPE      (float) 0.010   // Temperature sense signal slope in [V/K]
+    
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#define BUCK_FB_TEMP_ZERO       (uint16_t)(BUCK_TEMPCAL_ZERO / ADC_GRAN)
+#define BUCK_FB_TEMP_SLOPE      (float)(BUCK_TEMPCAL_SLOPE / ADC_GRAN)
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 /*!Startup Behavior
  * *************************************************************************************************
