@@ -47,6 +47,7 @@ extern "C" {
 typedef struct {
     volatile bool enabled;
     volatile uint16_t refresh;
+    volatile uint16_t screen;
 }LCD_t;
     
 // PUBLIC VARIABLE DECLARATION

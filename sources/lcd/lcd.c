@@ -6,6 +6,7 @@
  */
 
 #include "lcd/lcd.h"
+#include <math.h>
 
 // Additional header files required by this app
 #include "config/dpsk3_hwdescr.h"
@@ -39,7 +40,7 @@ volatile uint16_t appLCD_Initialize(void)
 volatile uint16_t appLCD_Execute(void) 
 {
     volatile uint16_t fres = 1;
-    volatile float vi=0.0, vo=0.0;
+    volatile float vi=0.0, vo=0.0, temp=0.0;
     
     // IF LCD output is disabled, exit here
     if(!lcd.enabled)
@@ -51,25 +52,43 @@ volatile uint16_t appLCD_Execute(void)
     // If REFRESH period has expired, update LCD contents
     if(lcd_cnt == lcd.refresh) {
         
+        // Calculate output values
+        temp = ((float)(buck.data.temp - BUCK_FB_TEMP_ZERO) / BUCK_FB_TEMP_SLOPE); // Scale ADC value to physical unit
+        temp = (float)(int)(100.0 * temp);  // Rounding operation required to prevent display 
+        temp /= 100.0;                      // rounding issues around 9.99 and 10.0 V
+        vi = ((buck.data.v_in << 3) * ADC_GRAN); // Scale ADC value to physical unit
+        vi = (float)(int)(100.0 * vi);      // Rounding operation required to prevent display
+        vi /= 100.0;                        // rounding issues around 9.99 and 10.0 ° C
+        vo = ((buck.data.v_out << 1) * ADC_GRAN); // Scale ADC value to physical unit
+        
         // Input voltage display
-        vi = ((buck.data.v_in << 3) * ADC_GRAN);
-        if(vi < 10.0)
+        if((double)vi < 10.000)
             PrintLcd(0, "VIN     = %2.2f V", (double)vi);
         else
-            PrintLcd(0, "VIN     =%2.2f V", (double)vi);
+            PrintLcd(0, "VIN     = %2.1f V", (double)vi);
 
-        
-        // Output voltage display
-        vo = ((buck.data.v_out << 1) * ADC_GRAN);
-        if (!buck.status.bits.fault_active)
-            PrintLcd(1, "VOUT    = %2.2f V", (double)vo);
-        else {
-            if (fltobj_BuckUVLO.status.bits.fault_status)
-                PrintLcd(1, "VOUT(UV)= %2.2f V", (double)vo);
-            else if (fltobj_BuckOVLO.status.bits.fault_status)
-                PrintLcd(1, "VOUT(OV)= %2.2f V", (double)vo);
-            else if (fltobj_BuckRegErr.status.bits.fault_status)
-                PrintLcd(1, "VOUT(RE)= %2.2f V", (double)vo);
+        switch (lcd.screen)
+        {
+            case 1:     // Show Temperature Output
+                if((double)temp < 10.000)
+                    PrintLcd(1, "TEMP    = %2.2f C", (double)temp);
+                else
+                    PrintLcd(1, "TEMP    = %2.1f C", (double)temp);
+                break;
+            
+            default:    // Output voltage display
+                
+                if (!buck.status.bits.fault_active)
+                    PrintLcd(1, "VOUT    = %2.2f V", (double)vo);
+                else {
+                    if (fltobj_BuckUVLO.status.bits.fault_status)
+                        PrintLcd(1, "VOUT(UV)= %2.2f V", (double)vo);
+                    else if (fltobj_BuckOVLO.status.bits.fault_status)
+                        PrintLcd(1, "VOUT(OV)= %2.2f V", (double)vo);
+                    else if (fltobj_BuckRegErr.status.bits.fault_status)
+                        PrintLcd(1, "VOUT(RE)= %2.2f V", (double)vo);
+                }
+                break;
         }
         
         lcd.refresh = LCD_REFRESH;
