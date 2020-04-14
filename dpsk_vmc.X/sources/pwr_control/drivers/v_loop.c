@@ -8,15 +8,15 @@
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       4 - Fast Floating Point Coefficient Scaling
+ *  Scaling Mode:       1 - Single Bit-Shift Scaling
  *  Input Gain:         0.5
  *
  * *********************************************************************************
- * CGS Version:         2.0.3
- * CGS Date:            03/31/2020
+ * CGS Version:         2.0.4
+ * CGS Date:            04/03/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           03/31/2020 5:32:23 PM
+ * Date/Time:           04/14/2020 11:38:41 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -59,24 +59,28 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * ********************************************************************************/
 volatile int32_t v_loop_ACoefficients [3] =
 {
-    0x7E1E0000, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x7C700004, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0xA1BD0004  // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x00000FC4, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x000000F9, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x0000FF44  // Coefficient A3 will be multiplied with controller output u(n-3)
 };
 
 volatile int32_t v_loop_BCoefficients [4] =
 {
-    0x71CBFFFD, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x996DFFFD, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x8E78FFFD, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x66D7FFFD  // Coefficient B3 will be multiplied with error input e(n-3)
+    0x000071CB, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0000996D, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x00008E78, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x000066D7  // Coefficient B3 will be multiplied with error input e(n-3)
 };
 
 // Coefficient normalization factors
 volatile int16_t v_loop_pre_scaler = 3;
-volatile int16_t v_loop_post_shift_A = 0;
+volatile int16_t v_loop_post_shift_A = -3;
 volatile int16_t v_loop_post_shift_B = 0;
 volatile fractional v_loop_post_scaler = 0x0000;
+
+// P-Term Coefficient for Plant Measurements
+volatile int16_t v_loop_pterm_factor = 0x5BA7;
+volatile int16_t v_loop_pterm_scaler = 0xFFFF;
 
 volatile cNPNZ16b_t v_loop; // user-controller data object
 
@@ -140,6 +144,10 @@ volatile uint16_t v_loop_Initialize(volatile cNPNZ16b_t* controller)
 
     // Clear error and control histories of the 3P3Z controller
     v_loop_Reset(&v_loop);
+    
+    // Load P-Term factor and scaler into data structure
+    controller->Filter.PTermFactor = v_loop_pterm_factor;;
+    controller->Filter.PTermScaler = v_loop_pterm_scaler;
     
     return(1);
 }

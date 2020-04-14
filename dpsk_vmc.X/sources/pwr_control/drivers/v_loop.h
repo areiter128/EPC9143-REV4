@@ -8,15 +8,15 @@
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       4 - Fast Floating Point Coefficient Scaling
+ *  Scaling Mode:       1 - Single Bit-Shift Scaling
  *  Input Gain:         0.5
  *
  * *******************************************************************************
- * CGS Version:         2.0.3
- * CGS Date:            03/31/2020
+ * CGS Version:         2.0.4
+ * CGS Date:            04/03/2020
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           03/31/2020 5:32:23 PM
+ * Date/Time:           04/14/2020 11:38:42 PM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__

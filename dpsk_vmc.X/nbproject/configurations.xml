@@ -6,52 +6,52 @@
                    projectFiles="true">
       <logicalFolder name="f3" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="init" projectFiles="true">
-          <itemPath>../sources/config/init/init_fosc.h</itemPath>
-          <itemPath>../sources/config/init/init_gpio.h</itemPath>
-          <itemPath>../sources/config/init/init_timer1.h</itemPath>
+          <itemPath>sources/config/init/init_fosc.h</itemPath>
+          <itemPath>sources/config/init/init_gpio.h</itemPath>
+          <itemPath>sources/config/init/init_timer1.h</itemPath>
         </logicalFolder>
-        <itemPath>../sources/config/dpsk3_hwdescr.h</itemPath>
+        <itemPath>sources/config/dpsk3_hwdescr.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="tasks" projectFiles="true">
         <logicalFolder name="f3" displayName="app" projectFiles="true">
-          <itemPath>../sources/fault_handler/app_faults.h</itemPath>
-          <itemPath>../sources/lcd/app_lcd.h</itemPath>
-          <itemPath>../sources/led/app_led.h</itemPath>
-          <itemPath>../sources/switch/app_switch.h</itemPath>
-          <itemPath>../sources/pwr_control/app_power_control.h</itemPath>
+          <itemPath>sources/fault_handler/app_faults.h</itemPath>
+          <itemPath>sources/lcd/app_lcd.h</itemPath>
+          <itemPath>sources/led/app_led.h</itemPath>
+          <itemPath>sources/switch/app_switch.h</itemPath>
+          <itemPath>sources/pwr_control/app_power_control.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="devices" projectFiles="true">
           <logicalFolder name="f2" displayName="fault_handler" projectFiles="true">
           </logicalFolder>
           <logicalFolder name="f3" displayName="lcd" projectFiles="true">
-            <itemPath>../sources/lcd/devices/dev_lcd.h</itemPath>
+            <itemPath>sources/lcd/devices/dev_lcd.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f1" displayName="pwr_control" projectFiles="true">
-            <itemPath>../sources/pwr_control/devices/dev_buck_converter.h</itemPath>
-            <itemPath>../sources/pwr_control/devices/dev_buck_pconfig.h</itemPath>
-            <itemPath>../sources/pwr_control/devices/dev_buck_typedef.h</itemPath>
+            <itemPath>sources/pwr_control/devices/dev_buck_converter.h</itemPath>
+            <itemPath>sources/pwr_control/devices/dev_buck_pconfig.h</itemPath>
+            <itemPath>sources/pwr_control/devices/dev_buck_typedef.h</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="f2" displayName="drivers" projectFiles="true">
           <logicalFolder name="f2" displayName="fault_handler" projectFiles="true">
-            <itemPath>../sources/fault_handler/drivers/drv_fault_handler.h</itemPath>
+            <itemPath>sources/fault_handler/drivers/drv_fault_handler.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="lcd" projectFiles="true">
-            <itemPath>../sources/lcd/drivers/drv_lcd_interface.h</itemPath>
+            <itemPath>sources/lcd/drivers/drv_lcd_interface.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="led" projectFiles="true">
           </logicalFolder>
           <logicalFolder name="f1" displayName="pwr_control" projectFiles="true">
-            <itemPath>../sources/pwr_control/drivers/v_loop.h</itemPath>
-            <itemPath>../sources/pwr_control/drivers/npnz16b.h</itemPath>
+            <itemPath>sources/pwr_control/drivers/v_loop.h</itemPath>
+            <itemPath>sources/pwr_control/drivers/npnz16b.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f5" displayName="switch" projectFiles="true">
-            <itemPath>../sources/switch/drivers/drv_switch.h</itemPath>
+            <itemPath>sources/switch/drivers/drv_switch.h</itemPath>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../sources/main.h</itemPath>
-      <itemPath>../sources/globals.h</itemPath>
+      <itemPath>sources/main.h</itemPath>
+      <itemPath>sources/globals.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -62,56 +62,56 @@
                    projectFiles="true">
       <logicalFolder name="f3" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="init" projectFiles="true">
-          <itemPath>../sources/config/init/init_fosc.c</itemPath>
-          <itemPath>../sources/config/init/init_gpio.c</itemPath>
-          <itemPath>../sources/config/init/init_timer1.c</itemPath>
+          <itemPath>sources/config/init/init_fosc.c</itemPath>
+          <itemPath>sources/config/init/init_gpio.c</itemPath>
+          <itemPath>sources/config/init/init_timer1.c</itemPath>
         </logicalFolder>
-        <itemPath>../sources/config/config_bits.c</itemPath>
-        <itemPath>../sources/config/dpsk3_hwdescr.c</itemPath>
+        <itemPath>sources/config/config_bits.c</itemPath>
+        <itemPath>sources/config/dpsk3_hwdescr.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="tasks" projectFiles="true">
         <logicalFolder name="f3" displayName="app" projectFiles="true">
-          <itemPath>../sources/fault_handler/app_faults.c</itemPath>
-          <itemPath>../sources/lcd/app_lcd.c</itemPath>
-          <itemPath>../sources/led/app_led.c</itemPath>
-          <itemPath>../sources/pwr_control/app_power_control.c</itemPath>
-          <itemPath>../sources/switch/app_switch.c</itemPath>
+          <itemPath>sources/fault_handler/app_faults.c</itemPath>
+          <itemPath>sources/lcd/app_lcd.c</itemPath>
+          <itemPath>sources/led/app_led.c</itemPath>
+          <itemPath>sources/pwr_control/app_power_control.c</itemPath>
+          <itemPath>sources/switch/app_switch.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="devices" projectFiles="true">
           <logicalFolder name="f1" displayName="lcd" projectFiles="true">
-            <itemPath>../sources/lcd/devices/dev_lcd.c</itemPath>
+            <itemPath>sources/lcd/devices/dev_lcd.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="pwr_control" projectFiles="true">
-            <itemPath>../sources/pwr_control/devices/dev_buck_converter.c</itemPath>
-            <itemPath>../sources/pwr_control/devices/dev_buck_pconfig.c</itemPath>
+            <itemPath>sources/pwr_control/devices/dev_buck_converter.c</itemPath>
+            <itemPath>sources/pwr_control/devices/dev_buck_pconfig.c</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="f1" displayName="drivers" projectFiles="true">
           <logicalFolder name="f3" displayName="fault_handler" projectFiles="true">
-            <itemPath>../sources/fault_handler/drivers/drv_fault_handler.c</itemPath>
+            <itemPath>sources/fault_handler/drivers/drv_fault_handler.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="lcd" projectFiles="true">
-            <itemPath>../sources/lcd/drivers/drv_lcd_interface.c</itemPath>
+            <itemPath>sources/lcd/drivers/drv_lcd_interface.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="led" projectFiles="true">
           </logicalFolder>
           <logicalFolder name="f1" displayName="pwr_control" projectFiles="true">
-            <itemPath>../sources/pwr_control/drivers/v_loop.c</itemPath>
-            <itemPath>../sources/pwr_control/drivers/v_loop_asm.s</itemPath>
+            <itemPath>sources/pwr_control/drivers/v_loop.c</itemPath>
+            <itemPath>sources/pwr_control/drivers/v_loop_asm.s</itemPath>
           </logicalFolder>
           <logicalFolder name="f5" displayName="switch" projectFiles="true">
-            <itemPath>../sources/switch/drivers/drv_switch.c</itemPath>
+            <itemPath>sources/switch/drivers/drv_switch.c</itemPath>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../sources/main.c</itemPath>
+      <itemPath>sources/main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
       <itemPath>short_description</itemPath>
-      <itemPath>../sources/pwr_control/config/DPSK3_VMC.dcld</itemPath>
+      <itemPath>sources/pwr_control/config/DPSK3_VMC.dcld</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -119,6 +119,9 @@
     <Elem>../sources/pwr_control/drivers</Elem>
     <Elem>../sources/pwr_control/devices</Elem>
     <Elem>../sources/switch/drivers</Elem>
+    <Elem>sources/pwr_control/drivers</Elem>
+    <Elem>sources/pwr_control/devices</Elem>
+    <Elem>sources/switch/drivers</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -175,7 +178,7 @@
         <property key="enable-short-double" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
-        <property key="extra-include-directories" value=""/>
+        <property key="extra-include-directories" value="sources"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
@@ -192,7 +195,7 @@
         <property key="oXC16gcc-sfr-warn" value="false"/>
         <property key="oXC16gcc-smar-io-lvl" value="1"/>
         <property key="oXC16gcc-smart-io-fmt" value=""/>
-        <property key="optimization-level" value="0"/>
+        <property key="optimization-level" value="1"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value=""/>
@@ -260,7 +263,7 @@
         <property key="oXC16ld-nostdlib" value="false"/>
         <property key="oXC16ld-stackguard" value="16"/>
         <property key="preprocessor-macros" value=""/>
-        <property key="remove-unused-sections" value="false"/>
+        <property key="remove-unused-sections" value="true"/>
         <property key="report-memory-usage" value="true"/>
         <property key="secure-eeprom" value="no_eeprom"/>
         <property key="secure-flash" value="no_flash"/>
@@ -272,7 +275,7 @@
         <property key="warn-section-align" value="false"/>
       </C30-LD>
       <C30Global>
-        <property key="common-include-directories" value="..\sources"/>
+        <property key="common-include-directories" value=""/>
         <property key="dual-boot-partition" value="0"/>
         <property key="fast-math" value="false"/>
         <property key="generic-16-bit" value="false"/>
@@ -281,7 +284,7 @@
         <property key="oXC16glb-macros" value="_DPSK3_BUCK_"/>
         <property key="omit-pack-options" value="1"/>
         <property key="output-file-format" value="elf"/>
-        <property key="preserve-all" value="false"/>
+        <property key="preserve-all" value="true"/>
         <property key="preserve-file" value=""/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
@@ -1052,8 +1055,6 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-2beff"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/Firmware/CodeExamples/P33C_CE200/dpsk_vmc.X/debug/DPSK3_BUCK/dpsk_vmc_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>

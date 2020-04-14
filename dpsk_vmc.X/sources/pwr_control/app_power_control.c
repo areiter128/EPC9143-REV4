@@ -5,11 +5,8 @@
  * Created on March 12, 2020, 11:55 AM
  */
 
-#include <p33CK256MP505.h>
-
-#include "pwr_control/devices/dev_buck_typedef.h"
-#include "pwr_control/devices/dev_buck_converter.h"
-#include "pwr_control/drivers/v_loop.h"
+#include "./pwr_control/devices/dev_buck_typedef.h"
+#include "devices/dev_buck_converter.h"
 #include "config/dpsk3_hwdescr.h"
 
 #include "fault_handler/app_faults.h"
@@ -33,7 +30,7 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void);
 volatile uint16_t appPowerSupply_PeripheralsInitialize(void);
 
 /* CUSTOM RUNTIME OPTIONS */
-#define PLANT_MEASUREMENT   true
+#define PLANT_MEASUREMENT   false
 
 /* *************************************************************************************************
  * PUBLIC FUNCTIONS
@@ -86,7 +83,7 @@ volatile uint16_t appPowerSupply_Execute(void)
         );
     
     // Execute buck converter state machine
-    fres &= drvBuckConverter_Execute(&buck);
+    fres &= drv_BuckConverter_Execute(&buck);
 
     // Buck regulation error is only active while controller is running
     // and while being tied to a valid reference
@@ -401,11 +398,6 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->status.bits.agc_enabled = false;   // Enable Adaptive Gain Modulation by default
 
     // ~~~ VOLTAGE LOOP CONFIGURATION END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    // P-Controller Dummy
-	// 
-    buck.v_loop.controller->Advanced.advParam1 = 0x5BA9;    // Set to 0.716145
-    buck.v_loop.controller->Advanced.advParam2 = 0xFFFF;    // Set to -1
     
     
     return(fres);
