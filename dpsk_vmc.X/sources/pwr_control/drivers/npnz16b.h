@@ -1,5 +1,5 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.6.97
+* z-Domain Control Loop Designer, Version 0.9.7.99
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
 * CGS Version: 2.0.4
@@ -87,7 +87,7 @@ typedef struct {
 
 typedef struct {
     // External control and monitoring
-    volatile CONTROLLER_STATUS_t status; // Control Loop Status and Control flags
+    volatile CONTROLLER_STATUS_t Status; // Control Loop Status and Control flags
 
     // Input/Output to controller
     struct {

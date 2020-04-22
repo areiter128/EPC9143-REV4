@@ -1,5 +1,5 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.6.97
+ * z-Domain Control Loop Designer, Version 0.9.7.99
  * ********************************************************************************
  * 3p3z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -8,7 +8,7 @@
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       1 - Single Bit-Shift Scaling
+ *  Scaling Mode:       4 - Fast Floating Point Coefficient Scaling
  *  Input Gain:         0.5
  *
  * *******************************************************************************
@@ -16,7 +16,7 @@
  * CGS Date:            04/03/2020
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           04/14/2020 11:38:42 PM
+ * Date/Time:           04/21/2020 10:07:02 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
@@ -54,7 +54,16 @@ typedef struct
     volatile fractional ErrorHistory[4];  // Error History Array
 } __attribute__((packed)) V_LOOP_CONTROL_LOOP_HISTORIES_t;
 
+// P-Term Coefficient for Plant Measurements
+extern volatile int16_t v_loop_pterm_factor;
+extern volatile int16_t v_loop_pterm_scaler;
 
+//Adaptive Gain Control Coefficient
+extern volatile int16_t v_loop_agc_factor_default;
+extern volatile int16_t v_loop_agc_scaler_default;
+
+
+// User-defined cNPNZ_t controller data object
 extern volatile cNPNZ16b_t v_loop; // user-controller data object
 
 /* *******************************************************************************
