@@ -38,6 +38,6 @@ Makefile-genesis.properties
 # Misc
 .svn
 *.bak
-
+test_results/
 
 
