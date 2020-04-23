@@ -52,6 +52,14 @@ User Input:
     USER      = Switches between Voltage and Temperature output on LCD
     BUCK_LOAD = Switches between 0%, 25%, 50% and 100% load @ nominal VOUT of 3.3V
 
+
+Tool-Chain:
+-----------
+
+    MPLAB X IDE v5.35:   http://www.microchip.com/mplabx
+    MPLAB X XC16 v1.50:  https://www.microchip.com/mplab/compilers
+    MPLAB DPSK3 v3.0:    http://www.microchip.com/DM330017-3
+
 _________________________________________________
 
 FIRMWARE QUICK-START GUIDE
