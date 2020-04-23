@@ -1,10 +1,10 @@
-/* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.7.99
-* ********************************************************************************
-* Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 2.0.5
-* CGS Date:    04/21/2020
-* ********************************************************************************/
+/* *********************************************************************************
+ * z-Domain Control Loop Designer, Version 0.9.7.99
+ * *********************************************************************************
+ * Generic library header for z-domain compensation filter assembly functions
+ * CGS Version: 2.0.6
+ * CGS Date:    04/23/2020
+ * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 #define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 
@@ -15,9 +15,9 @@
 
 // Generic macro allowing to identify the file version of  'npnz16b.h'
 // This version key represents the product version of DCLD as integer number
-// of the form [MAJOR][MINOR][REVISION] => version 0.9.03 would be shown as 903
+// of the form [MAJOR][MINOR][REVISION] => version 0.9.3.xxx would be shown as 903
 #ifndef __DCLD_VERSION
-    #define __DCLD_VERSION    903
+    #define __DCLD_VERSION    907
 #endif  // end of __DCLD_VERSION
 
 /* Status flags (Single Bit) */

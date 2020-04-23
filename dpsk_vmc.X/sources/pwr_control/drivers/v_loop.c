@@ -1,9 +1,9 @@
-/* **********************************************************************************
+/* *********************************************************************************
  * z-Domain Control Loop Designer, Version 0.9.7.99
- * **********************************************************************************
- * 3p3z compensation filter coefficients derived for following operating
- * conditions:
- * **********************************************************************************
+ * *********************************************************************************
+ * 3p3z controller function declarations and compensation filter coefficients
+ * derived for following operating conditions:
+ * *********************************************************************************
  *
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
  *  Sampling Frequency: 500000 Hz
@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *********************************************************************************
- * CGS Version:         2.0.5
- * CGS Date:            04/21/2020
+ * CGS Version:         2.0.6
+ * CGS Date:            04/23/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           04/23/2020 12:56:01 AM
+ * Date/Time:           04/23/2020 3:26:48 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -33,7 +33,7 @@
  *
  * The following declarations are used to define the array data contents, their
  * length and memory location. These declarations are made publicly accessible
- * through defines in source file v_loop.c
+ * through extern declarations in header file v_loop.h
  * ********************************************************************************/
 
 volatile V_LOOP_CONTROL_LOOP_COEFFICIENTS_t __attribute__((space(xmemory), near)) v_loop_coefficients; // A/B-Coefficients
