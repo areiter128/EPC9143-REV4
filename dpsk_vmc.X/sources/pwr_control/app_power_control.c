@@ -5,14 +5,11 @@
  * Created on March 12, 2020, 11:55 AM
  */
 
-#include <p33CK256MP505.h>
-
-#include "pwr_control/devices/dev_buck_typedef.h"
-#include "pwr_control/devices/dev_buck_converter.h"
-#include "pwr_control/drivers/v_loop.h"
+#include "./pwr_control/devices/dev_buck_typedef.h"
+#include "devices/dev_buck_converter.h"
 #include "config/dpsk3_hwdescr.h"
 
-#include "fault_handler/faults.h"
+#include "fault_handler/app_faults.h"
 
 /*!BUCK_POWER_CONTROLLER_t data structure
  * *************************************************************************************************
@@ -32,6 +29,8 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void);
 volatile uint16_t appPowerSupply_ControllerInitialize(void);
 volatile uint16_t appPowerSupply_PeripheralsInitialize(void);
 
+/* CUSTOM RUNTIME OPTIONS */
+#define PLANT_MEASUREMENT   false
 
 /* *************************************************************************************************
  * PUBLIC FUNCTIONS
@@ -84,13 +83,15 @@ volatile uint16_t appPowerSupply_Execute(void)
         );
     
     // Execute buck converter state machine
-    fres &= drvBuckConverter_Execute(&buck);
+    fres &= drv_BuckConverter_Execute(&buck);
 
     // Buck regulation error is only active while controller is running
     // and while being tied to a valid reference
     if(buck.mode >= BUCK_STATE_V_RAMP_UP) {
         fltobj_BuckRegErr.ref_obj = buck.v_loop.controller->Ports.ptrControlReference;
+        #if (PLANT_MEASUREMENT == false)
         fltobj_BuckRegErr.status.bits.enabled = buck.v_loop.controller->status.bits.enabled;
+        #endif
     }
     else {
         fltobj_BuckRegErr.status.bits.enabled = false;
@@ -241,7 +242,7 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
 
     // ~~~ TEMPERATURE FEEDBACK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    buck.feedback.ad_temp.enabled = false;   // Use this channel
+    buck.feedback.ad_temp.enabled = true;   // Use this channel
 
     buck.feedback.ad_temp.adc_input = BUCK_TEMP_ADCIN;
     buck.feedback.ad_temp.adc_core = BUCK_TEMP_ADCCORE;
@@ -373,13 +374,13 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->DataProviders.ptrDProvControlOutput = NULL;
     
     // Cascaded Function Configuration
-    buck.v_loop.controller->CascadeTrigger.CascadedFunction = NULL;
+    buck.v_loop.controller->CascadeTrigger.ptrCascadedFunction = NULL;
     buck.v_loop.controller->CascadeTrigger.CascadedFunParam = 0;
     
     // Initialize Advanced Control Settings (not used in this code example)
-    buck.v_loop.controller->GainControl.agcFactor = 0x7FFF; // Adaptive Gain Control factor fractional
-    buck.v_loop.controller->GainControl.agcScaler = 0x0000; // Adaptive Gain Control factor bit-shift scaler
-    buck.v_loop.controller->GainControl.agcMedian = 0x0000; // Q15 number representing normalized Nominal Operating Point
+    buck.v_loop.controller->GainControl.AgcFactor = 0x7FFF; // Adaptive Gain Control factor fractional
+    buck.v_loop.controller->GainControl.AgcScaler = 0x0000; // Adaptive Gain Control factor bit-shift scaler
+    buck.v_loop.controller->GainControl.AgcMedian = 0x0000; // Q15 number representing normalized Nominal Operating Point
 
     // Custom Advanced Control Settings
     buck.v_loop.controller->Advanced.advParam1 = 0; // No additional advanced control options used
@@ -398,6 +399,7 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
 
     // ~~~ VOLTAGE LOOP CONFIGURATION END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    
     return(fres);
 }
 
@@ -409,10 +411,16 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
 void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void)
 {
 DBGPIN_2_SET;
+
     buck.status.bits.adc_active = true;
+    #if (PLANT_MEASUREMENT == false)
     buck.v_loop.ctrl_Update(buck.v_loop.controller);
+    #else
+    v_loop_PTermUpdate(&v_loop);
+    #endif
     PG1STATbits.UPDREQ = 1;  // Force PWM timing update
     _BUCK_VLOOP_ISR_IF = 0;  // Clear the ADCANx interrupt flag 
+
 DBGPIN_2_CLEAR;
 }
 

@@ -38,11 +38,11 @@
 #include <stddef.h> // include standard definition data types
 
 // APPLICATION LAYER HEADER FILES
-#include "fault_handler/faults.h"
-#include "pwr_control/pwr_control.h"
-#include "lcd/lcd.h"
-#include "led/led.h"
-#include "switch/switch.h"
+#include "fault_handler/app_faults.h"
+#include "pwr_control/app_power_control.h"
+#include "led/app_led.h"
+#include "lcd/app_lcd.h"
+#include "switch/app_switch.h"
 
 #ifdef	__cplusplus
 extern "C" {

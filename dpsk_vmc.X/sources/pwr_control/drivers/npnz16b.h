@@ -1,9 +1,9 @@
 /* ********************************************************************************
-* z-Domain Control Loop Designer, Version 0.9.5.95
+* z-Domain Control Loop Designer, Version 0.9.7.99
 * ********************************************************************************
 * Generic library header for z-domain compensation filter assembly functions
-* CGS Version: 2.0.2
-* CGS Date:    03/30/2020
+* CGS Version: 2.0.5
+* CGS Date:    04/21/2020
 * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 #define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -116,6 +116,10 @@ typedef struct {
         volatile int16_t normPostShiftA; // Normalization of A-term control output to Q15 (R/W)
         volatile int16_t normPostShiftB; // Normalization of B-term control output to Q15 (R/W)
         volatile int16_t normPostScaler; // Control output normalization factor (Q15) (R/W)
+
+        // P-Term Coefficients (for plant measurements only)
+        volatile int16_t PTermScaler; // Q15 P-Term Coefficient Bit-Shift Scaler (R/W)
+        volatile int16_t PTermFactor; // Q15 P-Term Coefficient Factor (R/W)
     } __attribute__((packed))Filter; // Filter parameters such as pointer to history and coefficient arrays and number scaling
 
     // System clamping/Anti-windup
@@ -143,15 +147,16 @@ typedef struct {
 
     // Cascaded Function Call Parameters
     struct {
-        volatile uint16_t CascadedFunction; // Pointer to Function which should be called at the end of the control loop
+        volatile uint16_t ptrCascadedFunction; // Pointer to Function which should be called at the end of the control loop
         volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
     } __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
 
     // Adaptive Gain Control Modulation
     struct {
-        volatile uint16_t agcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
-        volatile fractional agcFactor; // Q15 value of Adaptive Gain Modulation factor
-        volatile fractional agcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
+        volatile uint16_t AgcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
+        volatile fractional AgcFactor; // Q15 value of Adaptive Gain Modulation factor
+        volatile fractional AgcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
+        volatile uint16_t* ptrAgcObserverFunction; // Function Pointer to Observer function updating the AGC modulation factor
     } __attribute__((packed))GainControl; // Parameter section for advanced control options
 
     // User Data Space for Advanced Control Functions

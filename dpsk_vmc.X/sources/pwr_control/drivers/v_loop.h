@@ -1,5 +1,5 @@
 /* ********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.5.95
+ * z-Domain Control Loop Designer, Version 0.9.7.99
  * ********************************************************************************
  * 3p3z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *******************************************************************************
- * CGS Version:         2.0.2
- * CGS Date:            03/30/2020
+ * CGS Version:         2.0.5
+ * CGS Date:            04/21/2020
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           03/30/2020 1:46:12 AM
+ * Date/Time:           04/23/2020 12:56:02 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
@@ -54,7 +54,12 @@ typedef struct
     volatile fractional ErrorHistory[4];  // Error History Array
 } __attribute__((packed)) V_LOOP_CONTROL_LOOP_HISTORIES_t;
 
+// P-Term Coefficient for Plant Measurements
+extern volatile int16_t v_loop_pterm_factor;
+extern volatile int16_t v_loop_pterm_scaler;
 
+
+// User-defined cNPNZ_t controller data object
 extern volatile cNPNZ16b_t v_loop; // user-controller data object
 
 /* *******************************************************************************
@@ -78,8 +83,16 @@ extern void v_loop_Precharge( // v_loop history pre-charge function call (Assemb
         volatile fractional ctrl_output // user-defined, constant control output history value
     );
 
-// Calls the v_loop controller object
+// Calls the v_loop control loop
 extern void v_loop_Update( // Calls the 3P3Z controller (Assembly)
+        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+    );
+
+// Calls the v_loop P-Term controller during measurements of plant transfer functions
+// THIS CONTROLLER IS USED FOR MEASUREMENTS OF THE PLANT TRANSFER FUNCTION ONLY.
+// THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
+// DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
+extern void v_loop_PTermUpdate( // Calls the P-Term controller (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 

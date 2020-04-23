@@ -20,46 +20,42 @@
  */
 
 /* 
- * File:   lcd.h
+ * File:   app_power_control.h
  * Author: M91406
- * Comments: LCD application layer
+ * Comments: Power control application layer
  * Revision history: 
  */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_LAYER_LC_DISPLAY_H
-#define	APPLICATION_LAYER_LC_DISPLAY_H
+#ifndef APPLICATION_LAYER_POWER_CONTROL_H
+#define	APPLICATION_LAYER_POWER_CONTROL_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h> // include standard integer data types
 #include <stdbool.h> // include standard boolean data types
 #include <stddef.h> // include standard definition data types
 
-#include "lcd/devices/dev_lcd.h"
-
+#include "pwr_control/devices/dev_buck_typedef.h"
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-// PUBLIC TYPE DECLARATIONS
-typedef struct {
-    volatile bool enabled;
-    volatile uint16_t refresh;
-}LCD_t;
-    
-// PUBLIC VARIABLE DECLARATION
-extern volatile LCD_t lcd;
     
 // PUBLIC FUNCTION PROTOTYPE DECLARATION
-extern volatile uint16_t appLCD_Initialize(void);
-extern volatile uint16_t appLCD_Execute(void);
-extern volatile uint16_t appLCD_Dispose(void);
+extern volatile uint16_t appPowerSupply_Initialize(void);
+extern volatile uint16_t appPowerSupply_Dispose(void);
+extern volatile uint16_t appPowerSupply_Execute(void);
+extern volatile uint16_t appPowerSupply_Suspend(void);
+extern volatile uint16_t appPowerSupply_Resume(void);
+
 
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* APPLICATION_LAYER_LC_DISPLAY_H */
+#else
+#pragma message "drv_buck_converter.h has been recalled"
+#endif	/* APPLICATION_LAYER_POWER_CONTROL_H */
 

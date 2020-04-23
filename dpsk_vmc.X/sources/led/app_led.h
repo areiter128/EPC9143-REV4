@@ -20,9 +20,9 @@
  */
 
 /* 
- * File:   led.h
+ * File:   app_led.h
  * Author: M91406
- * Comments: LCD application layer
+ * Comments: LED application layer
  * Revision history: 
  */
 

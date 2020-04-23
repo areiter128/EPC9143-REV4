@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.5.95
-;  AGS Version: Assembly Generator Script v2.0.2 (03/30/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.7.99
+;  AGS Version: Assembly Generator Script v2.0.8 (04/21/2020)
 ;  Author:      M91406
-;  Date/Time:   03/30/2020 1:46:12 AM
+;  Date/Time:   04/23/2020 12:56:02 AM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
 ; **********************************************************************************
@@ -59,26 +59,29 @@
 	.equ reserved_0,                54    ; parameter group Filter: (reserved)
 	.equ reserved_1,                56    ; parameter group Filter: (reserved)
 	.equ reserved_2,                58    ; parameter group Filter: (reserved)
-	.equ MinOutput,                 60    ; parameter group Limits: minimum clamping value of primary control output
-	.equ MaxOutput,                 62    ; parameter group Limits: maximum clamping value of primary control output
-	.equ AltMinOutput,              64    ; parameter group Limits: minimum clamping value of alternate control output
-	.equ AltMaxOutput,              66    ; parameter group Limits: maximum clamping value of alternate control output
-	.equ ptrADCTriggerARegister,    68    ; parameter group ADCTriggerControl: pointer to ADC trigger A register memory address
-	.equ ADCTriggerAOffset,         70    ; parameter group ADCTriggerControl: value of ADC trigger A offset
-	.equ ptrADCTriggerBRegister,    72    ; parameter group ADCTriggerControl: pointer to ADC trigger B register memory address
-	.equ ADCTriggerBOffset,         74    ; parameter group ADCTriggerControl: value of ADC trigger B offset
-	.equ ptrDProvControlInput,      76    ; parameter group DataProviders: pointer to external variable/register the most recent control input will be pushed to
-	.equ ptrDProvControlError,      78    ; parameter group DataProviders: pointer to external variable/register the most recent control error will be pushed to
-	.equ ptrDProvControlOutput,     80    ; parameter group DataProviders: pointer to external variable/register the most recent control output will be pushed to
-	.equ ptrCascadedFunction,       82    ; parameter group CascadeTrigger: pointer to external, cascaded function which will be called by this controller
-	.equ CascadedFunParam,          84    ; parameter group CascadeTrigger: 16-bit wide function parameter or pointer to a parameter data structure of cascaded function
-	.equ agcGainModScaler,          86    ; parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
-	.equ agcGainModFactor,          88    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
-	.equ agcGainModMedian,          90    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
-	.equ AdvParam1,                 92    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
-	.equ AdvParam2,                 94    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
-	.equ AdvParam3,                 96    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
-	.equ AdvParam4,                 98    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
+	.equ pterm_scaler,              60    ; parameter group Filter: P-Term coefficient scaler
+	.equ pterm_factor,              62    ; parameter group Filter: P-Term coefficient fractional factor
+	.equ MinOutput,                 64    ; parameter group Limits: minimum clamping value of primary control output
+	.equ MaxOutput,                 66    ; parameter group Limits: maximum clamping value of primary control output
+	.equ AltMinOutput,              68    ; parameter group Limits: minimum clamping value of alternate control output
+	.equ AltMaxOutput,              70    ; parameter group Limits: maximum clamping value of alternate control output
+	.equ ptrADCTriggerARegister,    72    ; parameter group ADCTriggerControl: pointer to ADC trigger A register memory address
+	.equ ADCTriggerAOffset,         74    ; parameter group ADCTriggerControl: value of ADC trigger A offset
+	.equ ptrADCTriggerBRegister,    76    ; parameter group ADCTriggerControl: pointer to ADC trigger B register memory address
+	.equ ADCTriggerBOffset,         78    ; parameter group ADCTriggerControl: value of ADC trigger B offset
+	.equ ptrDProvControlInput,      80    ; parameter group DataProviders: pointer to external variable/register the most recent control input will be pushed to
+	.equ ptrDProvControlError,      82    ; parameter group DataProviders: pointer to external variable/register the most recent control error will be pushed to
+	.equ ptrDProvControlOutput,     84    ; parameter group DataProviders: pointer to external variable/register the most recent control output will be pushed to
+	.equ ptrCascadedFunction,       86    ; parameter group CascadeTrigger: pointer to external, cascaded function which will be called by this controller
+	.equ CascadedFunParam,          88    ; parameter group CascadeTrigger: 16-bit wide function parameter or pointer to a parameter data structure of cascaded function
+	.equ agcGainModScaler,          90    ; parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
+	.equ agcGainModFactor,          92    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
+	.equ agcGainModMedian,          94    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
+	.equ ptrAgcObserverFunction,    96    ; parameter group GainControl: function pointer to observer function updating the AGC modulation factor
+	.equ AdvParam1,                 98    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
+	.equ AdvParam2,                 100    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
+	.equ AdvParam3,                 102    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
+	.equ AdvParam4,                 104    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
 	
 ;------------------------------------------------------------------------------
 ;local inclusions.
@@ -91,18 +94,12 @@
 	
 	.global _v_loop_Update
 _v_loop_Update:    ; provide global scope to routine
-	push w12    ; save working register used for status flag tracking
 	
 ;------------------------------------------------------------------------------
 ; Check status word for Enable/Disable flag and bypass computation, if disabled
 	mov [w0 + #Status], w12    ; load value of status word into working register
 	btss w12, #NPNZ16_STATUS_ENABLED    ; check ENABLED bit state, skip (do not execute) next instruction if set
-	bra V_LOOP_BYPASS_LOOP    ; if ENABLED bit is cleared, jump to end of control code
-	
-;------------------------------------------------------------------------------
-; Configure DSP for fractional operation with normal saturation (Q1.31 format)
-	mov #0x00E4, w4    ; load default value of DSP core configuration enabling saturation and signed fractional multiply
-	mov w4, _CORCON    ; load default configuration into CORCON register
+	bra V_LOOP_LOOP_BYPASS    ; if ENABLED bit is cleared, jump to end of control code
 	
 ;------------------------------------------------------------------------------
 ; Setup pointers to A-Term data arrays
@@ -129,6 +126,19 @@ _v_loop_Update:    ; provide global scope to routine
 	add b    ; adding accumulator b to a
 	
 ;------------------------------------------------------------------------------
+; Setup pointer to first element of error history array
+	mov [w0 + #ptrErrorHistory], w10    ; load pointer address into wreg
+	
+;------------------------------------------------------------------------------
+; Update error history (move error one tick along the delay line)
+	mov [w10 + #4], w6    ; move entry (n-3) into buffer
+	mov w6, [w10 + #6]    ; move buffered value one tick down the delay line
+	mov [w10 + #2], w6    ; move entry (n-2) into buffer
+	mov w6, [w10 + #4]    ; move buffered value one tick down the delay line
+	mov [w10 + #0], w6    ; move entry (n-1) into buffer
+	mov w6, [w10 + #2]    ; move buffered value one tick down the delay line
+	
+;------------------------------------------------------------------------------
 ; Read data from input source and calculate error input to transfer function
 	mov [w0 + #ptrSourceRegister], w2    ; load pointer to input source register
 	mov [w2], w1    ; move value from input source into working register
@@ -142,19 +152,6 @@ _v_loop_Update:    ; provide global scope to routine
 ;------------------------------------------------------------------------------
 ; Setup pointers to B-Term data arrays
 	mov [w0 + #ptrBCoefficients], w8    ; load pointer to first index of B coefficients array
-	
-;------------------------------------------------------------------------------
-; Setup pointer to first element of error history array
-	mov [w0 + #ptrErrorHistory], w10    ; load pointer address into wreg
-	
-;------------------------------------------------------------------------------
-; Update error history (move error one tick along the delay line)
-	mov [w10 + #4], w6    ; move entry (n-3) into buffer
-	mov w6, [w10 + #6]    ; move buffered value one tick down the delay line
-	mov [w10 + #2], w6    ; move entry (n-2) into buffer
-	mov w6, [w10 + #4]    ; move buffered value one tick down the delay line
-	mov [w10 + #0], w6    ; move entry (n-1) into buffer
-	mov w6, [w10 + #2]    ; move buffered value one tick down the delay line
 	mov w1, [w10]    ; add most recent error input to history array
 	
 ;------------------------------------------------------------------------------
@@ -185,10 +182,12 @@ _v_loop_Update:    ; provide global scope to routine
 	mov [w0 + #MaxOutput], w6    ; load upper limit value
 	cpslt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output < upper limit)
 	mov w6, w4    ; override controller output
+	V_LOOP_CLAMP_MAX_EXIT:
 	; Check for lower limit violation
 	mov [w0 + #MinOutput], w6    ; load lower limit value
 	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > lower limit)
 	mov w6, w4    ; override controller output
+	V_LOOP_CLAMP_MIN_EXIT:
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
@@ -216,15 +215,18 @@ _v_loop_Update:    ; provide global scope to routine
 	mov w4, [w10]    ; add most recent control output to history
 	
 ;------------------------------------------------------------------------------
+; Update status flag bitfield
+	mov w12, [w0 + #Status]    ; update value of the status word in data structure
+	
+;------------------------------------------------------------------------------
 ; Enable/Disable bypass branch target with dummy read of source buffer
-	goto V_LOOP_EXIT_LOOP    ; when enabled, step over dummy read and go straight to EXIT
-	V_LOOP_BYPASS_LOOP:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
+	goto V_LOOP_LOOP_EXIT    ; when enabled, step over dummy read and go straight to EXIT
+	V_LOOP_LOOP_BYPASS:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
 	mov [w0 + #ptrSourceRegister], w2    ; load pointer to input source register
 	mov [w2], w1    ; move value from input source into working register
 	mov [w0 + #ptrDProvControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
 	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
-	V_LOOP_EXIT_LOOP:    ; Exit control loop branch target
-	pop w12    ; restore working register used for status flag tracking
+	V_LOOP_LOOP_EXIT:    ; Exit control loop branch target
 	
 ;------------------------------------------------------------------------------
 ; End of routine
@@ -293,6 +295,87 @@ _v_loop_Precharge:
 	mov w2, [w0]    ; Load user value into last address of control history array
 	pop w2    ; restore contents of working register WREG2
 	pop w0    ; restore contents of working register WREG0
+	
+;------------------------------------------------------------------------------
+; End of routine
+	return
+;------------------------------------------------------------------------------
+	
+;------------------------------------------------------------------------------
+; Global function declaration _v_loop_PTermUpdate
+; This function executes a P-term based control loop used for plant measurements only.
+; THIS LOOP IS NOT SUITED FOR STABLE OPERATION
+;------------------------------------------------------------------------------
+	
+	.global _v_loop_PTermUpdate
+_v_loop_PTermUpdate:
+	
+;------------------------------------------------------------------------------
+; Check status word for Enable/Disable flag and bypass computation when disabled
+	mov [w0 + #Status], w12    ; load value of status word into working register
+	btss w12, #NPNZ16_STATUS_ENABLED    ; check ENABLED bit state, skip (do not execute) next instruction if set
+	bra V_LOOP_PTERM_LOOP_BYPASS    ; if ENABLED bit is cleared, jump to end of control code
+	
+;------------------------------------------------------------------------------
+; Read data from input source and calculate error input to transfer function
+	mov [w0 + #ptrSourceRegister], w2    ; load pointer to input source register
+	mov [w2], w1    ; move value from input source into working register
+	mov [w0 + #ptrDProvControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
+	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
+	mov [w0 + #ptrCtrlReference], w2    ; move pointer to control reference into working register
+	subr w1, [w2], w1    ; calculate error (=reference - input)
+	mov [w0 + #PreShift], w2    ; move error input scaler into working register
+	sl w1, w2, w1    ; normalize error result to fractional number format
+	
+;------------------------------------------------------------------------------
+; Load P-gain factor from data structure
+	mov [w0 + #pterm_factor], w6    ; move P-coefficient fractional into working register
+	mov [w0 + #pterm_scaler], w5    ; move P-coefficient scaler into working register
+	mov w1, w4    ; move error to MPY working register
+	; calculate P-control result
+	mpy w4*w6, a    ; multiply most recent error with P-coefficient
+	sftac a, w5    ; shift accumulator to post-scale floating number
+	sac.r a, w4    ; store accumulator result to working register
+	
+;------------------------------------------------------------------------------
+; Controller Anti-Windup (control output value clamping)
+	; Check for upper limit violation
+	mov [w0 + #MaxOutput], w6    ; load upper limit value
+	cpslt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output < upper limit)
+	mov w6, w4    ; override controller output
+	V_LOOP_PTERM_CLAMP_MAX_EXIT:
+	; Check for lower limit violation
+	mov [w0 + #MinOutput], w6    ; load lower limit value
+	cpsgt w4, w6    ; compare values and skip next instruction if control output is within operating range (control output > lower limit)
+	mov w6, w4    ; override controller output
+	V_LOOP_PTERM_CLAMP_MIN_EXIT:
+	
+;------------------------------------------------------------------------------
+; Write control output value to target
+	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target in to working register
+	mov w4, [w8]    ; move control output into target address
+	
+;------------------------------------------------------------------------------
+; Update ADC trigger A position
+	asr w4, #1, w6    ; half control output by shifting value one bit to the right
+	mov [w0 + #ADCTriggerAOffset], w8    ; load user-defined ADC trigger A offset value into working register
+	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
+	mov [w0 + #ptrADCTriggerARegister], w8    ; load pointer to ADC trigger A register into working register
+	mov w10, [w8]    ; push new ADC trigger value to ADC trigger A register
+	
+;------------------------------------------------------------------------------
+; Update status flag bitfield
+	mov w12, [w0 + #Status]    ; update value of the status word in data structure
+	
+;------------------------------------------------------------------------------
+; Enable/Disable bypass branch target with dummy read of source buffer
+	goto V_LOOP_PTERM_LOOP_EXIT    ; when enabled, step over dummy read and go straight to EXIT
+	V_LOOP_PTERM_LOOP_BYPASS:    ; Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
+	mov [w0 + #ptrSourceRegister], w2    ; load pointer to input source register
+	mov [w2], w1    ; move value from input source into working register
+	mov [w0 + #ptrDProvControlInput], w2    ; load pointer address of target buffer of most recent controller input from data structure
+	mov w1, [w2]    ; copy most recent controller input value to given data buffer target
+	V_LOOP_PTERM_LOOP_EXIT:    ; Exit P-Term control loop branch target
 	
 ;------------------------------------------------------------------------------
 ; End of routine

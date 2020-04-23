@@ -18,7 +18,7 @@
 
 
 #define TMR1_TIMEOUT        30000   // Timeout protection for Timer1 interrupt flag bit
-volatile bool LOW_PRIO_GO = false;  // Flag allowing low priority tasks to be executed
+volatile bool LOW_PRIORITY_GO = false;  // Flag allowing low priority tasks to be executed
 
 int main(void) {
 
@@ -50,8 +50,8 @@ int main(void) {
     while (1) {
 
         // wait for timer1 to overrun
-        while ((!LOW_PRIO_GO) && (timeout++ < TMR1_TIMEOUT));
-        LOW_PRIO_GO = false;
+        while ((!LOW_PRIORITY_GO) && (timeout++ < TMR1_TIMEOUT));
+        LOW_PRIORITY_GO = false;
         timeout = 0;    // Reset timeout counter
 
         DBGPIN_3_SET; // Set DEBUG-PIN
@@ -77,7 +77,7 @@ void __attribute__((__interrupt__, auto_psv)) _T1Interrupt(void)
     appPowerSupply_Execute();
     appFaults_Execute();
     
-    LOW_PRIO_GO = true; // Set GO trigger for low priority tasks
+    LOW_PRIORITY_GO = true; // Set GO trigger for low priority tasks
     
     _T1IF = 0;
     DBGPIN_1_CLEAR; // Clear DEBUG-PIN

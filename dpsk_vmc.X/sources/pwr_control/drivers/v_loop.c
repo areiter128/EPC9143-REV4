@@ -1,5 +1,5 @@
 /* **********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.5.95
+ * z-Domain Control Loop Designer, Version 0.9.7.99
  * **********************************************************************************
  * 3p3z compensation filter coefficients derived for following operating
  * conditions:
@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *********************************************************************************
- * CGS Version:         2.0.2
- * CGS Date:            03/30/2020
+ * CGS Version:         2.0.5
+ * CGS Date:            04/21/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           03/30/2020 1:46:12 AM
+ * Date/Time:           04/23/2020 12:56:01 AM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -78,6 +78,12 @@ volatile int16_t v_loop_post_shift_A = 0;
 volatile int16_t v_loop_post_shift_B = 0;
 volatile fractional v_loop_post_scaler = 0x0000;
 
+// P-Term Coefficient for Plant Measurements
+volatile int16_t v_loop_pterm_factor = 0x65D7;
+volatile int16_t v_loop_pterm_scaler = 0xFFFF;
+
+
+// User-defined cNPNZ_t controller data object
 volatile cNPNZ16b_t v_loop; // user-controller data object
 
 /* ********************************************************************************/
@@ -140,6 +146,10 @@ volatile uint16_t v_loop_Initialize(volatile cNPNZ16b_t* controller)
 
     // Clear error and control histories of the 3P3Z controller
     v_loop_Reset(&v_loop);
+    
+    // Load P-Term factor and scaler into data structure
+    controller->Filter.PTermFactor = v_loop_pterm_factor;;
+    controller->Filter.PTermScaler = v_loop_pterm_scaler;
     
     return(1);
 }

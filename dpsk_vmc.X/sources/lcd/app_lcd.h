@@ -20,7 +20,7 @@
  */
 
 /* 
- * File:   led.h
+ * File:   app_lcd.h
  * Author: M91406
  * Comments: LCD application layer
  * Revision history: 
@@ -28,55 +28,39 @@
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_LAYER_SWITCH_BUTTON_H
-#define	APPLICATION_LAYER_SWITCH_BUTTON_H
+#ifndef APPLICATION_LAYER_LC_DISPLAY_H
+#define	APPLICATION_LAYER_LC_DISPLAY_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h> // include standard integer data types
 #include <stdbool.h> // include standard boolean data types
 #include <stddef.h> // include standard definition data types
 
+#include "lcd/devices/dev_lcd.h"
+
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-typedef struct{
-    volatile unsigned     :1;   // Bit 0:  (reserved)
-    volatile unsigned     :1;   // Bit 1:  (reserved)
-    volatile unsigned     :1;   // Bit 2:  (reserved)
-    volatile unsigned     :1;   // Bit 3:  (reserved)
-    volatile unsigned     :1;   // Bit 4:  (reserved)
-    volatile unsigned     :1;   // Bit 5:  (reserved)
-    volatile unsigned     :1;   // Bit 6:  (reserved)
-    volatile unsigned     :1;   // Bit 7:  (reserved)
-    volatile unsigned     :1;   // Bit 8:  (reserved)
-    volatile unsigned     :1;   // Bit 9:  (reserved)
-    volatile unsigned     :1;   // Bit 10: (reserved)
-    volatile unsigned     :1;   // Bit 11: (reserved)
-    volatile unsigned     :1;   // Bit 12: (reserved)
-    volatile unsigned     :1;   // Bit 13: (reserved)
-    volatile bool pressed :1;   // Bit 14: Indicates if the button is pressed or not
-    volatile bool enabled :1;   // Bit 15: Enables/disables the Switch button object
-}__attribute__((packed)) SWITCH_STATUS_t;
-    
-// PUBLIC DATA TYPE DECLARATION
+// PUBLIC TYPE DECLARATIONS
 typedef struct {
-    volatile SWITCH_STATUS_t status;    // Status word of the switch object
-    volatile uint16_t debounce_delay;   // Number of call cycles until a switch event is triggered
-}SWITCH_OBJECT_t;
+    volatile bool enabled;
+    volatile uint16_t refresh;
+    volatile uint16_t screen;
+}LCD_t;
     
 // PUBLIC VARIABLE DECLARATION
-extern volatile SWITCH_OBJECT_t switch_button;
+extern volatile LCD_t lcd;
     
 // PUBLIC FUNCTION PROTOTYPE DECLARATION
-extern volatile uint16_t appSwitch_Initialize(void);
-extern volatile uint16_t appSwitch_Execute(void);
-extern volatile uint16_t appSwitch_Dispose(void);
+extern volatile uint16_t appLCD_Initialize(void);
+extern volatile uint16_t appLCD_Execute(void);
+extern volatile uint16_t appLCD_Dispose(void);
 
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* APPLICATION_LAYER_DEBUGGING_LED_H */
+#endif	/* APPLICATION_LAYER_LC_DISPLAY_H */
 

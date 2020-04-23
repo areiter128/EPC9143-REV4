@@ -20,42 +20,45 @@
  */
 
 /* 
- * File:   pwr_control.h
+ * File:   app_switch.h
  * Author: M91406
- * Comments: Power control application layer
+ * Comments: switch button application layer
  * Revision history: 
  */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_LAYER_POWER_CONTROL_H
-#define	APPLICATION_LAYER_POWER_CONTROL_H
+#ifndef APPLICATION_LAYER_SWITCH_BUTTON_H
+#define	APPLICATION_LAYER_SWITCH_BUTTON_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h> // include standard integer data types
 #include <stdbool.h> // include standard boolean data types
 #include <stddef.h> // include standard definition data types
 
-#include "pwr_control/devices/dev_buck_typedef.h"
+#include "switch/drivers/drv_switch.h"
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
-
+    
+// PUBLIC VARIABLE DECLARATION
+extern volatile SWITCH_OBJECT_t switch_button;
     
 // PUBLIC FUNCTION PROTOTYPE DECLARATION
-extern volatile uint16_t appPowerSupply_Initialize(void);
-extern volatile uint16_t appPowerSupply_Dispose(void);
-extern volatile uint16_t appPowerSupply_Execute(void);
-extern volatile uint16_t appPowerSupply_Suspend(void);
-extern volatile uint16_t appPowerSupply_Resume(void);
+extern volatile uint16_t appSwitch_Initialize(void);
+extern volatile uint16_t appSwitch_Execute(void);
+extern volatile uint16_t appSwitch_Dispose(void);
 
+// Switch Button Events
+extern volatile uint16_t appSwitch_EventButtonDown(void);
+extern volatile uint16_t appSwitch_EventButtonPressed(void);
+extern volatile uint16_t appSwitch_EventButtonLongPress(void);
+extern volatile uint16_t appSwitch_EventButtonUp(void);
 
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#else
-#pragma message "drv_buck_converter.h has been recalled"
-#endif	/* APPLICATION_LAYER_POWER_CONTROL_H */
+#endif	/* APPLICATION_LAYER_DEBUGGING_LED_H */
 

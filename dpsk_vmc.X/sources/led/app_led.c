@@ -6,7 +6,7 @@
  */
 
 
-#include "led/led.h"
+#include "led/app_led.h"
 #include "config/dpsk3_hwdescr.h"
 
 // PRIVATE VARIABLE DELARATIONS
