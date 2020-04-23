@@ -35,6 +35,21 @@ Hardware:
     TP37 = Current Sense Transformer Feedback
     TP39 = Current Sense Amplifier Feedback (optional component, may be not populated by default)
     
+    DPSK3 Test Point-Overview (DM330017-3, Rev3.0):
+
+        -------------------------------------------
+       |  |          | |_| |  |               TP12 |
+       |  |          |     |__|                    |
+       |   ----------        TP1                   |
+       |           TP33                            |
+       |           TP34   TP11         <BUCK_LOAD> |
+       |           TP30                            |
+       |           TP31               <BOOST_LOAD> |
+       |   TP50-53                                 |
+       |                                           |
+       |          <USER>                           |
+        -------------------------------------------
+
 Software Debugging:
 
     TP50 = Power Control State Machine Execution debugging Pin    
@@ -209,7 +224,7 @@ PLEASE NOTE:
 ============
 PROPORTIONAL CONTROLLERS ARE BY DEFAULT UNSTABLE AND NOT SUITED TO REGULATE THE OUTPUT
 OF  POWER SUPPLY UNDER NORMAL OPERATING CONDITIONS. PLEASE READ THE SECTIONS IN THE 
-DCLD USER GUIDE FOR MORE INFORMATION ABOUT HOW TO CONDUCT A POWER PLANT MEASUREMENT:
+DCLD USER GUIDE FOR MORE INFORMATION ABOUT HOW TO CONDUCT A POWER PLANT MEASUREMENT.
 
 _________________________________________________
 (c) 2020, Microchip Technology Inc.
