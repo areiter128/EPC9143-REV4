@@ -378,9 +378,9 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->CascadeTrigger.CascadedFunParam = 0;
     
     // Initialize Advanced Control Settings (not used in this code example)
-    buck.v_loop.controller->GainControl.agcFactor = 0x7FFF; // Adaptive Gain Control factor fractional
-    buck.v_loop.controller->GainControl.agcScaler = 0x0000; // Adaptive Gain Control factor bit-shift scaler
-    buck.v_loop.controller->GainControl.agcMedian = 0x0000; // Q15 number representing normalized Nominal Operating Point
+    buck.v_loop.controller->GainControl.AgcFactor = 0x7FFF; // Adaptive Gain Control factor fractional
+    buck.v_loop.controller->GainControl.AgcScaler = 0x0000; // Adaptive Gain Control factor bit-shift scaler
+    buck.v_loop.controller->GainControl.AgcMedian = 0x0000; // Q15 number representing normalized Nominal Operating Point
 
     // Custom Advanced Control Settings
     buck.v_loop.controller->Advanced.advParam1 = 0; // No additional advanced control options used

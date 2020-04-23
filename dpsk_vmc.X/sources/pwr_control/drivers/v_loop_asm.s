@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.7.99
-;  AGS Version: Assembly Generator Script v2.0.7 (04/14/2020)
+;  AGS Version: Assembly Generator Script v2.0.8 (04/21/2020)
 ;  Author:      M91406
-;  Date/Time:   04/21/2020 10:07:03 AM
+;  Date/Time:   04/23/2020 12:56:02 AM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
 ; **********************************************************************************
@@ -77,10 +77,11 @@
 	.equ agcGainModScaler,          90    ; parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
 	.equ agcGainModFactor,          92    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
 	.equ agcGainModMedian,          94    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
-	.equ AdvParam1,                 96    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
-	.equ AdvParam2,                 98    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
-	.equ AdvParam3,                 100    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
-	.equ AdvParam4,                 102    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
+	.equ ptrAgcObserverFunction,    96    ; parameter group GainControl: function pointer to observer function updating the AGC modulation factor
+	.equ AdvParam1,                 98    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
+	.equ AdvParam2,                 100    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
+	.equ AdvParam3,                 102    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
+	.equ AdvParam4,                 104    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
 	
 ;------------------------------------------------------------------------------
 ;local inclusions.
@@ -172,14 +173,6 @@ _v_loop_Update:    ; provide global scope to routine
 	mpy w4*w6, a    ; multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
 	sftac a, w5    ; shift accumulator to post-scale floating number
 	add b    ; adding accumulator b to a
-	
-;------------------------------------------------------------------------------
-; Adaptive Loop Gain Modulation
-	mov [w0 + #agcGainModFactor], w4    ; load AGC modulation factor into working register
-	mov [w0 + #agcGainModScaler], w2    ; load AGC modulation factor scaler into working register
-	sac.r b, w6    ; store result of accumulator B in working register
-	mpy w4*w6, b    ; multiply accumulator B result with AGC modulation factor
-	sftac b, w2    ; shift result by AGC scaler
 	; Backwards normalization of the controller output
 	sac.r b, w4    ; store most recent accumulator result in working register
 	

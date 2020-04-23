@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *******************************************************************************
- * CGS Version:         2.0.4
- * CGS Date:            04/03/2020
+ * CGS Version:         2.0.5
+ * CGS Date:            04/21/2020
  * *******************************************************************************
  * User:                M91406
- * Date/Time:           04/21/2020 10:07:02 AM
+ * Date/Time:           04/23/2020 12:56:02 AM
  * *******************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
@@ -57,10 +57,6 @@ typedef struct
 // P-Term Coefficient for Plant Measurements
 extern volatile int16_t v_loop_pterm_factor;
 extern volatile int16_t v_loop_pterm_scaler;
-
-//Adaptive Gain Control Coefficient
-extern volatile int16_t v_loop_agc_factor_default;
-extern volatile int16_t v_loop_agc_scaler_default;
 
 
 // User-defined cNPNZ_t controller data object

@@ -12,11 +12,11 @@
  *  Input Gain:         0.5
  *
  * *********************************************************************************
- * CGS Version:         2.0.4
- * CGS Date:            04/03/2020
+ * CGS Version:         2.0.5
+ * CGS Date:            04/21/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           04/21/2020 10:07:02 AM
+ * Date/Time:           04/23/2020 12:56:01 AM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -81,10 +81,6 @@ volatile fractional v_loop_post_scaler = 0x0000;
 // P-Term Coefficient for Plant Measurements
 volatile int16_t v_loop_pterm_factor = 0x65D7;
 volatile int16_t v_loop_pterm_scaler = 0xFFFF;
-
-//Adaptive Gain Control Coefficient
-volatile int16_t v_loop_agc_factor_default = 0x7FFF;
-volatile int16_t v_loop_agc_scaler_default = 0x0000;
 
 
 // User-defined cNPNZ_t controller data object
@@ -154,10 +150,6 @@ volatile uint16_t v_loop_Initialize(volatile cNPNZ16b_t* controller)
     // Load P-Term factor and scaler into data structure
     controller->Filter.PTermFactor = v_loop_pterm_factor;;
     controller->Filter.PTermScaler = v_loop_pterm_scaler;
-    
-    // Load initial AGC factor and scaler into data structure
-    controller->GainControl.agcFactor = v_loop_agc_factor_default;
-    controller->GainControl.agcScaler = v_loop_agc_scaler_default;
     
     return(1);
 }
