@@ -13,7 +13,7 @@
 #include "pwr_control/devices/dev_buck_typedef.h"
 #include "pwr_control/devices/dev_buck_converter.h"
 
-volatile uint16_t drvBuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
+volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
     volatile uint16_t fres = 1;
     
@@ -28,7 +28,7 @@ volatile uint16_t drvBuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* 
     return(fres);
 }
 
-volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
+volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
     volatile uint16_t fres = 1;
     volatile float fdummy = 0.0;
@@ -101,7 +101,7 @@ volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buc
             // Disable voltage loop controller and reset control loop histories
             buckInstance->v_loop.controller->status.bits.enabled = false; // disable voltage control loop
             buckInstance->v_loop.ctrl_Reset(buckInstance->v_loop.controller); // Reset control histories of outer voltage controller
-            *buckInstance->v_loop.controller->Ports.ptrTarget = 
+            *buckInstance->v_loop.controller->Ports.Target.ptrAddress = 
                 buckInstance->v_loop.controller->Limits.MinOutput;
             
             // Disable current loop controller and reset control loop histories
@@ -109,7 +109,7 @@ volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buc
             {   // Disable all current control loops and reset control loop histories
                 buckInstance->i_loop.controller->status.bits.enabled = false; 
                 buckInstance->i_loop.ctrl_Reset(buckInstance->i_loop.controller); 
-                *buckInstance->i_loop.controller->Ports.ptrTarget = 
+                *buckInstance->i_loop.controller->Ports.Target.ptrAddress = 
                     buckInstance->i_loop.controller->Limits.MinOutput;
             }
                 
@@ -220,7 +220,7 @@ volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buc
                 { int_dummy = buckInstance->v_loop.maximum; }
 
                 buckInstance->v_loop.ctrl_Precharge(buckInstance->v_loop.controller, 0, int_dummy);
-                *buckInstance->v_loop.controller->Ports.ptrTarget = int_dummy; // set initial PWM duty ratio
+                *buckInstance->v_loop.controller->Ports.Target.ptrAddress = int_dummy; // set initial PWM duty ratio
 
             }
             else if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) 
@@ -234,7 +234,7 @@ volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buc
                             buckInstance->i_loop.controller, 0, int_dummy
                         );
 
-                *buckInstance->i_loop.controller->Ports.ptrTarget = int_dummy; // set initial PWM duty ratio
+                *buckInstance->i_loop.controller->Ports.Target.ptrAddress = int_dummy; // set initial PWM duty ratio
 
             }
 
@@ -435,7 +435,7 @@ volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buc
     return(fres);
 }
 
-volatile uint16_t drvBuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
+volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
     volatile uint16_t fres=1;
     
@@ -456,7 +456,7 @@ volatile uint16_t drvBuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckI
     return(fres);
 }
 
-volatile uint16_t drvBuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
+volatile uint16_t drv_BuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
     volatile uint16_t fres=1;
     
@@ -474,22 +474,22 @@ volatile uint16_t drvBuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckIn
     return(fres);
 }
 
-volatile uint16_t drvBuckConverter_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
+volatile uint16_t drv_BuckConverter_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
     volatile uint16_t fres=1;
     
     buckInstance->mode = BUCK_STATE_SUSPEND;
-    fres &= drvBuckConverter_Execute(buckInstance);
+    fres &= drv_BuckConverter_Execute(buckInstance);
     
     return(fres);
 }
 
-volatile uint16_t drvBuckConverter_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
+volatile uint16_t drv_BuckConverter_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
     volatile uint16_t fres=1;
     
     buckInstance->mode = BUCK_STATE_RESET;
-    fres &= drvBuckConverter_Execute(buckInstance);
+    fres &= drv_BuckConverter_Execute(buckInstance);
     
     return(fres);
 }
