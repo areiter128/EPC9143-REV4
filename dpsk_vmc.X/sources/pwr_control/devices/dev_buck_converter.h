@@ -43,12 +43,12 @@
 
 // POWER CONVERTER FUNCTION API
 
-extern volatile uint16_t drvBuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drvBuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drvBuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drvBuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drvBuckConverter_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drvBuckConverter_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
 
 // POWER CONVERTER PERIPHERAL CONFIGURATION ROUTINES
     

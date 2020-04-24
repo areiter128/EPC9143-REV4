@@ -5,6 +5,7 @@
  * Created on March 12, 2020, 11:55 AM
  */
 
+#include "./pwr_control/drivers/v_loop.h"
 #include "./pwr_control/devices/dev_buck_typedef.h"
 #include "devices/dev_buck_converter.h"
 #include "config/dpsk3_hwdescr.h"
@@ -18,7 +19,7 @@
  * 
  * Description:
  * The 'buck' data object holds all status, control and monitoring values of the BUCK power 
- * controller. The BUCK_POWER_CONTROLLER_t data structure is defined in drv_buck_converter.h.
+ * controller. The BUCK_POWER_CONTROLLER_t data structure is defined in dev_buck_converter.h.
  * Please refer to the comments on top of this file for further information.
  *  
  * *************************************************************************************************/
