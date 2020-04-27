@@ -190,15 +190,11 @@ extern "C" {
 #define BUCK_AGC_VL_NOMINAL     (float)(VIN_NOMINAL - BUCK_VOUT_NOMINAL)
     
 #define BUCK_AGC_VL_NOM         (uint16_t)(BUCK_AGC_VL_NOMINAL / ADC_GRAN) // Common Volt-Seconds ratio at VIN=9V/VOUT=3.§V
-//#define BUCK_AGC_VL_FCT         (uint16_t)(pow(2.0, -15) * BUCK_AGC_VL_NOM)
 
 #define BUCK_VIN_NORM_SCALER    3 // VIN normalization  
 #define BUCK_VIN_NORM_FACTOR    0x7FFF // VIN normalization factor (Q15)
 #define BUCK_VOUT_NORM_SCALER   1 // VOUT normalization  
 #define BUCK_VOUT_NORM_FACTOR   0x7FFF // VOUT normalization factor (Q15)
-//#define BUCK_VOUT_INV           0x1FFF //438D // Nominal AGC factor = 0x7FFF * Scaled AGC Number Range
-//#define BUCK_AGC_NOM            0x1FFF //438D // Nominal AGC factor = 0x7FFF * Scaled AGC Number Range
-//#define BUCK_AGC_SCALER         0xFFFE // Factor scaler is -2
 
 #define BUCK_IOUT_FB_GAIN       (float) 0.2     // Current Gain in V/A
 #define BUCK_IOUT_MAXIMUM       (float) 2.500   // absolute maximum output current (average)
