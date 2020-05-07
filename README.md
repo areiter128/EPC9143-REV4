@@ -18,7 +18,7 @@ The control loop is based on a digital type III compensator (3P3Z controller).
   * Output Voltage: 3.3 V
   * Switching Frequency:	500 kHz
   * Control Frequency:	500 kHz
-  * Cross-Over Frequency: ~15 kHz (depends on VIN and if AGM is on/off)
+  * Cross-Over Frequency: ~15 kHz (depends on VIN and if AGC is on/off)
   * Phase Margin: ~ 50°
 
 **Required Hardware:** 
@@ -40,7 +40,7 @@ The control loop is based on a digital type III compensator (3P3Z controller).
 **Software Tools:**
   * DCLD - Digital Control Library Designer, version v0.9.7.99 or higher
   * [Download Digital Control Library SDK for Windows here](https://areiter128.github.io/DCLD/)
-    (Using previous versions will result in naming conflicts of labels and function names.)
+    (Using previous versions will result in naming conflicts of labels and function names)
 
 **Development Tools:**
   * MPLAB X v5.35
