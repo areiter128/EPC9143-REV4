@@ -1,3 +1,5 @@
+<p><a href="https://www.microchip.com" rel="nofollow"><img src="https://www.microchip.com/ResourcePackages/Microchip/assets/dist/images/logo.png" alt="Microchip Technology" style="max-width:100%;"></a></p>
+
 ## P33C_CE200: Simple Control Loop Implementation
 **Synchronous Buck Converter in Voltage Mode Control**
 
@@ -36,7 +38,7 @@ The control loop is based on a digital type III compensator (3P3Z controller).
   * [FUNLIB_FAULT_HANDLER](https://bitbucket.microchip.com/projects/MCU16ASMPSL/repos/funlib_faulthandler/browse) - Generic Fault Handler Template
 
 **Software Tools:**
-  * DCLD - Digital Control Library Designer, version v0.9.3.90 or higher
+  * DCLD - Digital Control Library Designer, version v0.9.7.99 or higher
   * [Download Digital Control Library SDK for Windows here](https://areiter128.github.io/DCLD/)
     (Using previous versions will result in naming conflicts of labels and function names.)
 
