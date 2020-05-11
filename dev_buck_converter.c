@@ -1,5 +1,5 @@
 /*
- * File:   pwr_control.c
+ * File:   dev_buck_converter.c
  * Author: M91406
  *
  * Created on July 9, 2019, 1:10 PM
