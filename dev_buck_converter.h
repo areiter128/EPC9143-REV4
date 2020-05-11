@@ -20,7 +20,7 @@
  */
 
 /* 
- * File:   pwr_control.h
+ * File:   dev_buck_converter.h
  * Author: M91406
  * Comments: power controller functions for buck converter
  * Revision history: 

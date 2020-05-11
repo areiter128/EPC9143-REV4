@@ -133,7 +133,7 @@ typedef enum {
     BUCK_STATE_PWRGOOD_DELAY  = 7,  // power converter control state #7: Output reached regulation point but waits until things have settled
     BUCK_STATE_ONLINE         = 8,  // power converter control state #8: Output in regulation and power is OK (normal continuous operation)
     BUCK_STATE_SUSPEND        = 9   // power converter control state #9: state machine will be reset without POD and PG delays
-} BUCK_MODE_STATE_t;
+} BUCK_MODE_STATE_e;
 
 
 /*!BUCK_STARTUP_SETTINGS_t
@@ -188,10 +188,10 @@ typedef enum {
     BUCK_CONTROL_MODE_VMC = 0,  // Voltage Mode Control
 //    BUCK_CONTROL_MODE_PCMC = 1, // Peak Current Mode Control (not supported yet)
     BUCK_CONTROL_MODE_ACMC = 2  // Average Current Mode Control
-} BUCK_CONTROL_MODE_t;
+} BUCK_CONTROL_MODE_e;
 
 typedef struct {
-    volatile BUCK_CONTROL_MODE_t control_mode; // Fundamental control mode 
+    volatile BUCK_CONTROL_MODE_e control_mode; // Fundamental control mode 
     volatile uint16_t v_ref; // User reference setting used to control the power converter controller
     volatile uint16_t i_ref; // User reference setting used to control the power converter controller
 } BUCK_CONVERTER_CONTROL_t;
@@ -293,7 +293,7 @@ typedef struct {
 typedef struct {
     
     volatile BUCK_CONVERTER_STATUS_t status; // BUCK operation status bits
-    volatile BUCK_MODE_STATE_t mode; // BUCK state machine state
+    volatile BUCK_MODE_STATE_e mode; // BUCK state machine state
     volatile BUCK_CONVERTER_STARTUP_t startup; // BUCK startup timing settings 
     volatile BUCK_CONVERTER_CONTROL_t set_values; // Control field for global access to references
     volatile BUCK_CONVERTER_DATA_t data;     // BUCK runtime data
