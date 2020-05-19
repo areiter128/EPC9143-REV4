@@ -16,12 +16,33 @@
 #include "config/init/init_timer1.h"
 #include "config/init/init_gpio.h"
 
+#include "config/init/init_opa.h"
+#include "config/init/init_dac.h"
 
-#define TMR1_TIMEOUT        30000   // Timeout protection for Timer1 interrupt flag bit
+
+#define  TMR1_TIMEOUT 30000   // Timeout protection for Timer1 interrupt flag bit
 volatile bool LOW_PRIORITY_GO = false;  // Flag allowing low priority tasks to be executed
 
 int main(void) {
 
+    volatile uint16_t test=0;
+    
+    Nop();
+    Nop();
+    Nop();
+    
+    test = BUCK_VIN_NORM_FACTOR;
+
+    Nop();
+    Nop();
+    Nop();
+
+    test = BUCK_VIN_NORM_SCALER;
+
+    Nop();
+    Nop();
+    Nop();
+    
     volatile uint16_t timeout = 0;
     
     init_fosc();        // Set up system oscillator for 100 MIPS operation
@@ -29,6 +50,12 @@ int main(void) {
     init_timer1();      // Set up Timer1 as scheduler time base
     init_gpio();        // Initialize common device GPIOs
     
+    
+    init_opa(); // Initialize op-amp #2 used to drive the reference voltage for current sense amplifiers
+    
+    init_dac_module();  // Initialize DAC module
+    init_dac_channel(1); // Initialize DAC #1 used to generate the reference voltage for current sense amplifiers
+    init_dac_enable();
     
     appPowerSupply_Initialize(); // Initialize BUCK converter object and state machine
     appFaults_Initialize(); // Initialize fault objects and fault handler task
@@ -42,7 +69,7 @@ int main(void) {
     _T1IE = 1;  // Disable Timer1 interrupt
     
     DBGPIN_2_CLEAR;
-    DBGPIN_3_CLEAR;
+
     
     while (1) {
 
@@ -51,13 +78,15 @@ int main(void) {
         LOW_PRIORITY_GO = false;
         timeout = 0;    // Reset timeout counter
 
-        DBGPIN_3_SET; // Set DEBUG-PIN
+//        DBGPIN_2_SET; // Set DEBUG-PIN
 
+        DBGPIN_2_TOGGLE;
+        
         // Execute non-time critical, low-priority tasks
         /* PLACE LOW_PRIORITY TASKS CALLS HERE */
 
         
-        DBGPIN_3_CLEAR; // Clear DEBUG-PIN
+//        DBGPIN_2_CLEAR; // Clear DEBUG-PIN
         Nop();
     }
 
@@ -67,16 +96,18 @@ int main(void) {
 
 void __attribute__((__interrupt__, auto_psv)) _T1Interrupt(void)
 {
-    DBGPIN_1_SET; // Set DEBUG-PIN
+//    DBGPIN_1_SET; // Set DEBUG-PIN
     
     // Execute high priority, time critical tasks
     appPowerSupply_Execute();
     appFaults_Execute();
+  
+    DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
     
     LOW_PRIORITY_GO = true; // Set GO trigger for low priority tasks
     
     _T1IF = 0;
-    DBGPIN_1_CLEAR; // Clear DEBUG-PIN
+///    DBGPIN_1_CLEAR; // Clear DEBUG-PIN
 }
 
 
