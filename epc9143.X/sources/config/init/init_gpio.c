@@ -11,6 +11,8 @@
 
 volatile uint16_t init_gpio(void) {
     
+    volatile uint16_t retval=1;
+    
     // Reset all analog inputs to be Digital I/Os
     ANSELA = 0x0000;
     ANSELB = 0x0000;
@@ -20,5 +22,5 @@ volatile uint16_t init_gpio(void) {
     DBGPIN_2_INIT;
     DBGPIN_3_INIT;
     
-    return(1);
+    return(retval);
 }
