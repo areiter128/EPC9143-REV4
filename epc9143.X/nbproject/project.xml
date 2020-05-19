@@ -27,6 +27,10 @@
                     <name>EPC9143_R40</name>
                     <type>2</type>
                 </confElem>
+                <confElem>
+                    <name>DM330029_R20</name>
+                    <type>2</type>
+                </confElem>
             </confList>
             <formatting>
                 <project-formatting-style>false</project-formatting-style>
