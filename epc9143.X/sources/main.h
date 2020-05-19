@@ -38,7 +38,27 @@
 #include <stddef.h> // include standard definition data types
 
 #include "globals.h"
-#include "config/epc9143_r40_hwdescr.h"
+
+#if defined (__EPC9143_R40__)
+
+    #include "config/epc9143_r40_hwdescr.h"
+
+#elif defined (__DM330029_R20__)
+
+    #include "config/DM330029_R20_pinmap.h"
+
+    #if defined (__MA330048_R30__)
+        #include "config/MA330048_R30_pinmap.h"
+    #elif  defined (__MA330049_R10__)
+        #include "config/MA330048_R30_pinmap.h"
+    #endif
+
+#else
+    #pragma message "Error: Unknown or unsupported hardare selection."
+
+#endif
+
+
 
 #ifdef	__cplusplus
 extern "C" {
