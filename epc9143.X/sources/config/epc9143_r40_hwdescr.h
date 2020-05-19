@@ -210,7 +210,8 @@ extern "C" {
 #define BUCK_PWM2_ADTR1OFS             0 // ADC Trigger 1 Offset:  0...31
 #define BUCK_PWM2_ADTR1PS              0 // ADC Trigger 1 Postscaler: 0...31
     
-
+#define BUCK_PWM_MASTER_SOCS            0b0010  // PWM2 provides Master Trigger
+    
 // ~~~ conversion macros ~~~~~~~~~~~~~~~~~~~~~~~~~
 #define BUCK_SWITCHING_PERIOD      (float)(1.0/SWITCHING_FREQUENCY)   // Switching period in [sec]
 #define BUCK_PWM_PERIOD            (uint16_t)(float)(BUCK_SWITCHING_PERIOD / PWM_CLOCK_PERIOD)
