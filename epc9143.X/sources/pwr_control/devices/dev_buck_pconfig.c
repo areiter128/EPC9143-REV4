@@ -131,7 +131,7 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
             ((volatile uint8_t*) &ANSELA + ((gpio_Instance - 1) * P33C_GPIO_SFR_OFFSET)));
 
         pg   = (volatile P33C_PWM_INSTANCE_t*) ((volatile struct P33C_GPIO_INSTANCE_t*) 
-            ((volatile uint8_t*) &PG1CONL + ((pwm_Instance - 1) * P33C_PWM_SFR_OFFSET)));
+            ((volatile uint8_t*) &PG1CONL + ((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET)));
 
         // WRITE GPIO CONFIGURATION OF PWM OUTPUT(S)
         gpio->LATx  &= ~(0x0001 << buckInstance->sw_node[_i].gpio_high);  // Clear PWMxH output LOW
@@ -142,35 +142,46 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
         gpio->CNPDx |= (0x0001 << buckInstance->sw_node[_i].gpio_low); // Enable intern pull down register (PWM1L)
     
         // COPY CONFIGURATION FROM TEMPLATE TO PWM GENERATOR x CONTROL REGISTERS
-        pg->PGxCONL = REG_PGxCONL; // PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
-        pg->PGxCONH = REG_PGxCONH; // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
-        pg->PGxIOCONL = REG_PGxIOCONL; // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER LOW
-        pg->PGxIOCONH = REG_PGxIOCONH; // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER HIGH
-        pg->PGxEVTL = REG_PGxEVTL; // PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
-        pg->PGxEVTH = REG_PGxEVTH; // PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
-        pg->PGxCLPCIL = REG_PGxCLPCIL; // PGxLCPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER LOW
-        pg->PGxCLPCIH = REG_PGxCLPCIH; // PGxLCPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER HIGH
-        pg->PGxFPCIL = REG_PGxFPCIL; // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER LOW
-        pg->PGxFPCIH = REG_PGxFPCIH; // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER HIGH
-        pg->PGxFFPCIL = REG_PGxFFPCIL; // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER LOW
-        pg->PGxFFPCIH = REG_PGxFFPCIH; // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER HIGH
-        pg->PGxSPCIL = REG_PGxSPCIL; // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER LOW
-        pg->PGxSPCIH = REG_PGxSPCIH; // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER HIGH
-        pg->PGxLEBL = REG_PGxLEBL; // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW
-        pg->PGxLEBH = REG_PGxLEBH; // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
+        pg->PGxCONL.value = REG_PGxCONL; // PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
+        pg->PGxCONH.value = REG_PGxCONH; // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
+        pg->PGxIOCONL.value = REG_PGxIOCONL; // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER LOW
+        pg->PGxIOCONH.value = REG_PGxIOCONH; // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER HIGH
+        pg->PGxEVTL.value = REG_PGxEVTL; // PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
+        pg->PGxEVTH.value = REG_PGxEVTH; // PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
+        pg->PGxCLPCIL.value = REG_PGxCLPCIL; // PGxLCPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER LOW
+        pg->PGxCLPCIH.value = REG_PGxCLPCIH; // PGxLCPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER HIGH
+        pg->PGxFPCIL.value = REG_PGxFPCIL; // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER LOW
+        pg->PGxFPCIH.value = REG_PGxFPCIH; // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER HIGH
+        pg->PGxFFPCIL.value = REG_PGxFFPCIL; // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER LOW
+        pg->PGxFFPCIH.value = REG_PGxFFPCIH; // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER HIGH
+        pg->PGxSPCIL.value = REG_PGxSPCIL; // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER LOW
+        pg->PGxSPCIH.value = REG_PGxSPCIH; // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER HIGH
+        pg->PGxLEBL.value = REG_PGxLEBL; // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW
+        pg->PGxLEBH.value = REG_PGxLEBH; // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
 
         // LOAD PWM GENERATOR TIMING SETTINGS FROM BUCK CONVERTER OBJECT
-        pg->PGxPHASE = buckInstance->sw_node[_i].phase; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
-        pg->PGxDC = buckInstance->sw_node[_i].duty_ratio_min; // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
-        pg->PGxDCA = REG_PGxDCA; // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER (not used)
-        pg->PGxPER = buckInstance->sw_node[_i].period; // PGxPER: PWM GENERATOR x PERIOD REGISTER
-        pg->PGxTRIGA = 0; // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
-        pg->PGxTRIGB = 0; // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER
-        pg->PGxTRIGC = 0; // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER
-        pg->PGxDTL = buckInstance->sw_node[_i].dead_time_falling; // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW
-        pg->PGxDTH = buckInstance->sw_node[_i].dead_time_rising; // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
-        pg->PGxLEBL = buckInstance->sw_node[_i].leb_period; // PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW 
+        pg->PGxPHASE.value = buckInstance->sw_node[_i].phase; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
+        pg->PGxDC.value = buckInstance->sw_node[_i].duty_ratio_min; // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
+        pg->PGxDCA.value = REG_PGxDCA; // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER (not used)
+        pg->PGxPER.value = buckInstance->sw_node[_i].period; // PGxPER: PWM GENERATOR x PERIOD REGISTER
+        pg->PGxTRIGA.value = 0; // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
+        pg->PGxTRIGB.value = 0; // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER
+        pg->PGxTRIGC.value = 0; // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER
+        pg->PGxDTL.value = buckInstance->sw_node[_i].dead_time_falling; // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW
+        pg->PGxDTH.value = buckInstance->sw_node[_i].dead_time_rising; // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
+        pg->PGxLEBL.value = buckInstance->sw_node[_i].leb_period; // PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW 
         
+        // First switch-node object of array is used as master PWM
+        if( _i == 0) {
+            pg->PGxCONH.bits.MSTEN = 1; // Make first PWM of switch node objects MASTER
+            pg->PGxCONH.bits.UPDMOD = 0b001; // Master PWM updates PWM registers Immediately
+            pg->PGxCONH.bits.SOCS = 0b0000; // Master PWM is self-triggered
+        }
+        else {
+            pg->PGxCONH.bits.MSTEN = 1; // Make all other PWMs of switch node objects SLAVES
+            pg->PGxCONH.bits.UPDMOD = 0b011; // Slave PWMs update PWM registers Immediately at MASTER trigger
+            pg->PGxCONH.bits.SOCS = BUCK_PWM_MASTER_SOCS; // Slave PWMs are triggered by MASTER PWM
+        }
     }
         
     return(fres);    
@@ -204,21 +215,21 @@ volatile uint16_t buckPWM_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
         
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
         pg = (volatile P33C_PWM_INSTANCE_t*)((volatile struct P33C_PWM_INSTANCE_t*) 
-            ((volatile uint8_t*) & PG1CONL + ((pwmInstance - 1) * P33C_PWM_SFR_OFFSET)));
+            ((volatile uint8_t*) & PG1CONL + ((pwmInstance - 1) * P33C_PWMGEN_SFR_OFFSET)));
 
-        pg->PGxIOCONL |= P33C_PGxIOCONL_OVREN; // PWMxH/L Output Override Enable: PWM generator controls the PWMxH output pin
-        pg->PGxIOCONH &= ~(P33C_PGxIOCONH_PEN); // PWMxH/L Output Port Disable: PWM generator controls the PWMxH output pin
+        pg->PGxIOCONL.value |= P33C_PGxIOCONL_OVREN; // PWMxH/L Output Override Enable: PWM generator controls the PWMxH output pin
+        pg->PGxIOCONH.value &= ~(P33C_PGxIOCONH_PEN); // PWMxH/L Output Port Disable: PWM generator controls the PWMxH output pin
 
-        pg->PGxCONL |= P33C_PGxCONL_PWM_ON; // PWM Generator Enable: PWM Generator is enabled
-        pg->PGxSTAT |= P33C_PGxSTAT_UPDREQ; // Update all PWM registers
+        pg->PGxCONL.value |= P33C_PGxCONL_PWM_ON; // PWM Generator Enable: PWM Generator is enabled
+        pg->PGxSTAT.value |= P33C_PGxSTAT_UPDREQ; // Update all PWM registers
 
-        if(pg->PGxCONL & P33C_PGxCONL_HRES_EN) { // If high resolution is enabled
+        if(pg->PGxCONL.value & P33C_PGxCONL_HRES_EN) { // If high resolution is enabled
             while((!PCLKCONbits.HRRDY) && (timeout++ < 5000));  // wait for high resolution to get ready
             if ((timeout >= 5000) || (PCLKCONbits.HRERR))       // if there is an error
                 return(0);  // return ERROR
         }
 
-        pg->PGxIOCONH |= P33C_PGxIOCONH_PEN; // PWMxH/L Output Port Enable: PWM generator controls the PWMxH output pin
+        pg->PGxIOCONH.value |= P33C_PGxIOCONH_PEN; // PWMxH/L Output Port Enable: PWM generator controls the PWMxH output pin
 
     }
     
@@ -252,13 +263,13 @@ volatile uint16_t buckPWM_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
 
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
         pg = (volatile P33C_PWM_INSTANCE_t*)((volatile struct P33C_PWM_INSTANCE_t*) 
-                ((volatile uint8_t*) & PG1CONL + ((pwmInstance - 1) * P33C_PWM_SFR_OFFSET)));
+                ((volatile uint8_t*) & PG1CONL + ((pwmInstance - 1) * P33C_PWMGEN_SFR_OFFSET)));
 
-        pg->PGxIOCONL |= P33C_PGxIOCONL_OVREN;  // PWMxH/L Output Override Enable
-        pg->PGxIOCONH &= ~(P33C_PGxIOCONH_PEN); // PWMxH/L Output Pint Control Disable
-        pg->PGxCONL &= ~(P33C_PGxCONL_PWM_ON);  // PWM Generator Disable
-        pg->PGxDC = 0; // Reset Duty Cycle
-        pg->PGxSTAT |= P33C_PGxSTAT_UPDREQ;     // Set the Update Request bit to update PWM timing
+        pg->PGxIOCONL.value |= P33C_PGxIOCONL_OVREN;  // PWMxH/L Output Override Enable
+        pg->PGxIOCONH.value &= ~(P33C_PGxIOCONH_PEN); // PWMxH/L Output Pint Control Disable
+        pg->PGxCONL.value &= ~(P33C_PGxCONL_PWM_ON);  // PWM Generator Disable
+        pg->PGxDC.value = 0; // Reset Duty Cycle
+        pg->PGxSTAT.value |= P33C_PGxSTAT_UPDREQ;     // Set the Update Request bit to update PWM timing
 
     }
         
@@ -292,12 +303,12 @@ volatile uint16_t buckPWM_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance
 
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
         pg = (volatile P33C_PWM_INSTANCE_t*)((volatile struct P33C_PWM_INSTANCE_t*) 
-            ((volatile uint8_t*) & PG1CONL + ((pwmInstance - 1) * P33C_PWM_SFR_OFFSET)));
-        pg->PGxIOCONL |= P33C_PGxIOCONL_OVREN; // PWMxH/L Output Override Enable
-        pg->PGxDC = 0;  // Reset Duty Cycle
-        pg->PGxSTAT |= P33C_PGxSTAT_UPDREQ; // Set the Update Request bit to update PWM timing
+            ((volatile uint8_t*) & PG1CONL + ((pwmInstance - 1) * P33C_PWMGEN_SFR_OFFSET)));
+        pg->PGxIOCONL.value |= P33C_PGxIOCONL_OVREN; // PWMxH/L Output Override Enable
+        pg->PGxDC.value = 0;  // Reset Duty Cycle
+        pg->PGxSTAT.value |= P33C_PGxSTAT_UPDREQ; // Set the Update Request bit to update PWM timing
 
-        fres &= (bool)(pg->PGxIOCONL & P33C_PGxIOCONL_OVREN);
+        fres &= (bool)(pg->PGxIOCONL.value & P33C_PGxIOCONL_OVREN);
 
     }
     
@@ -331,12 +342,12 @@ volatile uint16_t buckPWM_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
 
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
         pg = (volatile P33C_PWM_INSTANCE_t*)((volatile struct P33C_PWM_INSTANCE_t*) 
-            ((volatile uint8_t*) & PG1CONL + ((pwmInstance - 1) * P33C_PWM_SFR_OFFSET)));
+            ((volatile uint8_t*) & PG1CONL + ((pwmInstance - 1) * P33C_PWMGEN_SFR_OFFSET)));
 
-        pg->PGxSTAT |= P33C_PGxSTAT_UPDREQ; // Set the Update Request bit to update PWM timing
-        pg->PGxIOCONL &= ~(P33C_PGxIOCONL_OVREN); // PWMxH/L Output Override Disable
+        pg->PGxSTAT.value |= P33C_PGxSTAT_UPDREQ; // Set the Update Request bit to update PWM timing
+        pg->PGxIOCONL.value &= ~(P33C_PGxIOCONL_OVREN); // PWMxH/L Output Override Disable
 
-        fres = (bool)(pg->PGxIOCONL & P33C_PGxIOCONL_OVREN);
+        fres = (bool)(pg->PGxIOCONL.value & P33C_PGxIOCONL_OVREN);
 
     }
         

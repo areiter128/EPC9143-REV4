@@ -89,6 +89,17 @@ extern "C" {
 // GENERIC PWM MODULE SPECIAL FUNCTION REGISTER SET
 #ifndef P33C_PWM_MODULE_t     
     typedef struct {
+// ToDo: Check if PWM module registers can be split up like shown below
+//        union { 
+//            volatile PCLKCONBITS bits; // Register bit-field
+//            volatile uint16_t value; // 16-bit wide register value
+//        } pwmPCLKCON;  // PCLKCON: PWM CLOCK CONTROL REGISTER
+//        union { 
+//            struct {
+//                volatile uint16_t FSCL : 16; // Register bit-field
+//            } bits; // Register bit-field
+//            volatile uint16_t value; // 16-bit wide register value
+//        }pwmFSCL;     // FSCL: FREQUENCY SCALE REGISTER
         volatile uint16_t PCLKCON;  // PCLKCON: PWM CLOCK CONTROL REGISTER
         volatile uint16_t FSCL;     // FSCL: FREQUENCY SCALE REGISTER
         volatile uint16_t FSMINPER; // FSMINPER: FREQUENCY SCALING MINIMUM PERIOD REGISTER
@@ -116,35 +127,133 @@ extern "C" {
 // GENERIC PWM GENERATOR SPECIAL FUNCTION REGISTER SET 
 #ifndef P33C_PWM_INSTANCE_t     
     typedef struct {
-        volatile uint16_t PGxCONL;  // PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
-        volatile uint16_t PGxCONH;  // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
-        volatile uint16_t PGxSTAT;  // PGxSTAT: PWM GENERATOR x STATUS REGISTER
-        volatile uint16_t PGxIOCONL; // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER LOW
-        volatile uint16_t PGxIOCONH; // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER HIGH
-        volatile uint16_t PGxEVTL;  // PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
-        volatile uint16_t PGxEVTH;  // PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
-        volatile uint16_t PGxFPCIL; // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER LOW
-        volatile uint16_t PGxFPCIH; // PGxFPCIH: PWM GENERATOR x FAULT PCI REGISTER HIGH
-        volatile uint16_t PGxCLPCIL; // PGxCLPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER LOW
-        volatile uint16_t PGxCLPCIH; // PGxCLPCIH: PWM GENERATOR x CURRENT LIMIT PCI REGISTER HIGH
-        volatile uint16_t PGxFFPCIL; // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER LOW
-        volatile uint16_t PGxFFPCIH; // PGxFFPCIH: PWM GENERATOR x FEED FORWARD PCI REGISTER HIGH
-        volatile uint16_t PGxSPCIL; // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER LOW
-        volatile uint16_t PGxSPCIH; // PGxSPCIH: PWM GENERATOR x SOFTWARE PCI REGISTER HIGH
-        volatile uint16_t PGxLEBL;  // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW
-        volatile uint16_t PGxLEBH;  // PGxLEBH: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
-        volatile uint16_t PGxPHASE; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
-        volatile uint16_t PGxDC;    // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
-        volatile uint16_t PGxDCA;   // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
-        volatile uint16_t PGxPER;   // PGxPER: PWM GENERATOR x PERIOD REGISTER
-        volatile uint16_t PGxTRIGA; // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
-        volatile uint16_t PGxTRIGB; // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER
-        volatile uint16_t PGxTRIGC; // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER
-        volatile uint16_t PGxDTL;   // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW
-        volatile uint16_t PGxDTH;   // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
-        volatile uint16_t PGxCAP;   // PGxCAP: PWM GENERATOR x CAPTURE REGISTER
+        union {   
+            volatile PG1CONLBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxCONL; // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
+        union {
+            volatile PG1CONHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxCONH; // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
+        union {
+            volatile PG1STATBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxSTAT; // PGxSTAT: PWM GENERATOR x STATUS REGISTER
+        union {
+            volatile PG1IOCONLBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxIOCONL; // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER LOW
+        union {
+            volatile PG1IOCONHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        } PGxIOCONH; // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER HIGH
+        union {
+            volatile PG1EVTLBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxEVTL;  // PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
+        union {
+            volatile PG1EVTHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxEVTH;  // PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
+        union {
+            volatile PG1FPCILBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxFPCIL; // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER LOW
+        union {
+            volatile PG1FPCIHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxFPCIH; // PGxFPCIH: PWM GENERATOR x FAULT PCI REGISTER HIGH
+        union {
+            volatile PG1CLPCILBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxCLPCIL; // PGxCLPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER LOW
+        union {
+            volatile PG1CLPCIHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxCLPCIH; // PGxCLPCIH: PWM GENERATOR x CURRENT LIMIT PCI REGISTER HIGH
+        union {
+            volatile PG1FFPCILBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxFFPCIL; // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER LOW
+        union {
+            volatile PG1FFPCIHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxFFPCIH; // PGxFFPCIH: PWM GENERATOR x FEED FORWARD PCI REGISTER HIGH
+        union {
+            volatile PG1SPCILBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxSPCIL; // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER LOW
+        union {
+            volatile PG1SPCIHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxSPCIH; // PGxSPCIH: PWM GENERATOR x SOFTWARE PCI REGISTER HIGH
+        union {
+            struct {
+                volatile uint16_t LEBL : 16; // Register bit-field
+            } bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxLEBL;  // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW
+        union {
+            volatile PG1LEBHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxLEBH;  // PGxLEBH: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
+        union {
+            struct {
+                volatile uint16_t PHASE : 16; // Register bit-field
+            } bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxPHASE; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
+        union {
+            struct {
+                volatile uint16_t DC : 16; // Register bit-field
+            } bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxDC;    // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
+        union {
+            volatile PG1DCABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxDCA;   // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
+        union {
+            struct {
+                volatile uint16_t PER : 16; // Register bit-field
+            } bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxPER;   // PGxPER: PWM GENERATOR x PERIOD REGISTER
+        union {
+            struct {
+                volatile uint16_t TRIG : 16; // Register bit-field
+            } bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxTRIGA; // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
+        union {
+            struct {
+                volatile uint16_t TRIG : 16; // Register bit-field
+            } bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxTRIGB; // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER
+        union {
+            struct {
+                volatile uint16_t TRIG : 16; // Register bit-field
+            } bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxTRIGC; // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER
+        union {
+            volatile PG1DTLBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxDTL;   // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW
+        union {
+            volatile PG1DTHBITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxDTH;   // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
+        union {
+            struct {
+                volatile uint16_t CAP : 16; // Register bit-field
+            } bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PGxCAP;   // PGxCAP: PWM GENERATOR x CAPTURE REGISTER
+        
     } __attribute__((packed)) P33C_PWM_INSTANCE_t; // PWM INSTANCE REGISTER SET
-    #define P33C_PWM_SFR_OFFSET  ((volatile uint16_t)&PG2CONL - (volatile uint16_t)&PG1CONL)
+    #define P33C_PWMGEN_SFR_OFFSET  ((volatile uint16_t)&PG2CONL - (volatile uint16_t)&PG1CONL)
 #endif
     
 #define P33C_PGxCONL_PWM_ON     0x8000  // control bit in PGxCONL enabling/disabling the PWM generator
