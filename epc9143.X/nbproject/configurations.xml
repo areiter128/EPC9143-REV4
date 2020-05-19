@@ -9,6 +9,8 @@
           <itemPath>sources/config/init/init_fosc.h</itemPath>
           <itemPath>sources/config/init/init_gpio.h</itemPath>
           <itemPath>sources/config/init/init_timer1.h</itemPath>
+          <itemPath>sources/config/init/init_opa.h</itemPath>
+          <itemPath>sources/config/init/init_dac.h</itemPath>
         </logicalFolder>
         <itemPath>sources/config/epc9143_r40_hwdescr.h</itemPath>
       </logicalFolder>
@@ -51,6 +53,8 @@
           <itemPath>sources/config/init/init_fosc.c</itemPath>
           <itemPath>sources/config/init/init_gpio.c</itemPath>
           <itemPath>sources/config/init/init_timer1.c</itemPath>
+          <itemPath>sources/config/init/init_opa.c</itemPath>
+          <itemPath>sources/config/init/init_dac.c</itemPath>
         </logicalFolder>
         <itemPath>sources/config/config_bits.c</itemPath>
         <itemPath>sources/config/epc9143_r40_hwdescr.c</itemPath>
@@ -70,11 +74,10 @@
           <logicalFolder name="f3" displayName="fault_handler" projectFiles="true">
             <itemPath>sources/fault_handler/drivers/drv_fault_handler.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="led" projectFiles="true">
-          </logicalFolder>
           <logicalFolder name="f1" displayName="pwr_control" projectFiles="true">
             <itemPath>sources/pwr_control/drivers/v_loop.c</itemPath>
             <itemPath>sources/pwr_control/drivers/v_loop_asm.s</itemPath>
+            <itemPath>sources/pwr_control/drivers/v_loop_agc.s</itemPath>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
@@ -96,6 +99,7 @@
     <Elem>sources/pwr_control/drivers</Elem>
     <Elem>sources/pwr_control/devices</Elem>
     <Elem>sources/switch/drivers</Elem>
+    <Elem>sources/config/init</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -105,7 +109,7 @@
         <targetDevice>dsPIC33CK32MP102</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>1.50</languageToolchainVersion>
         <platform>3</platform>
@@ -169,7 +173,7 @@
         <property key="oXC16gcc-sfr-warn" value="false"/>
         <property key="oXC16gcc-smar-io-lvl" value="1"/>
         <property key="oXC16gcc-smart-io-fmt" value=""/>
-        <property key="optimization-level" value="1"/>
+        <property key="optimization-level" value="0"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value=""/>
@@ -274,30 +278,21 @@
         <property key="CLC 3" value="true"/>
         <property key="CLC 4" value="true"/>
         <property key="CRC" value="true"/>
-        <property key="DACFRZ" value="true"/>
+        <property key="DACFRZ" value="false"/>
         <property key="DMA" value="true"/>
         <property key="FRZ" value="true"/>
         <property key="Freeze All Other Peripherals" value="true"/>
         <property key="I2C 1" value="true"/>
         <property key="I2C 2" value="true"/>
-        <property key="I2C 3" value="true"/>
         <property key="MCCP/SCCP 1" value="true"/>
         <property key="MCCP/SCCP 2" value="true"/>
         <property key="MCCP/SCCP 3" value="true"/>
         <property key="MCCP/SCCP 4" value="true"/>
         <property key="MCCP/SCCP 5" value="true"/>
-        <property key="MCCP/SCCP 6" value="true"/>
-        <property key="MCCP/SCCP 7" value="true"/>
-        <property key="MCCP/SCCP 8" value="true"/>
-        <property key="MCCP/SCCP 9" value="true"/>
         <property key="PG1" value="true"/>
-        <property key="PG2" value="true"/>
+        <property key="PG2" value="false"/>
         <property key="PG3" value="true"/>
-        <property key="PG4" value="true"/>
-        <property key="PG5" value="true"/>
-        <property key="PG6" value="true"/>
-        <property key="PG7" value="true"/>
-        <property key="PG8" value="true"/>
+        <property key="PG4" value="false"/>
         <property key="PTGFRZ" value="true"/>
         <property key="QEI1" value="true"/>
         <property key="QEI2" value="true"/>
@@ -331,7 +326,7 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-aeff"/>
-        <property key="poweroptions.powerenable" value="false"/>
+        <property key="poweroptions.powerenable" value="true"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
@@ -340,7 +335,7 @@
         <property key="programoptions.pgdconfig" value="pull down"/>
         <property key="programoptions.pgdresistor.value" value="4.7"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
-        <property key="programoptions.pgmspeed" value="Med"/>
+        <property key="programoptions.pgmspeed" value="Min"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"
                   value="${memories.dataflash.default}"/>

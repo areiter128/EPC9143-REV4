@@ -20,6 +20,7 @@
                 <sourceRootElem>sources/pwr_control/drivers</sourceRootElem>
                 <sourceRootElem>sources/pwr_control/devices</sourceRootElem>
                 <sourceRootElem>sources/switch/drivers</sourceRootElem>
+                <sourceRootElem>sources/config/init</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
