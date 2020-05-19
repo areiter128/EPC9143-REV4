@@ -160,7 +160,7 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
         pg->PGxLEBH.value = REG_PGxLEBH; // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
 
         // LOAD PWM GENERATOR TIMING SETTINGS FROM BUCK CONVERTER OBJECT
-        pg->PGxPHASE.value = buckInstance->sw_node[_i].phase; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
+        pg->PGxPHASE.value = 0; //buckInstance->sw_node[_i].phase; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
         pg->PGxDC.value = buckInstance->sw_node[_i].duty_ratio_min; // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
         pg->PGxDCA.value = REG_PGxDCA; // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER (not used)
         pg->PGxPER.value = buckInstance->sw_node[_i].period; // PGxPER: PWM GENERATOR x PERIOD REGISTER
@@ -176,6 +176,8 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
             pg->PGxCONH.bits.MSTEN = 1; // Make first PWM of switch node objects MASTER
             pg->PGxCONH.bits.UPDMOD = 0b001; // Master PWM updates PWM registers Immediately
             pg->PGxCONH.bits.SOCS = 0b0000; // Master PWM is self-triggered
+            pg->PGxEVTL.bits.PGTRGSEL = 0b011; // Master PWM uses PGxTRIGC as master trigger output
+            pg->PGxTRIGC.bits.TRIG = buckInstance->sw_node[_i].phase; // Set phase shift of trigger
         }
         else {
             pg->PGxCONH.bits.MSTEN = 1; // Make all other PWMs of switch node objects SLAVES

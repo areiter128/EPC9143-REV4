@@ -193,7 +193,7 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
         buck.sw_node[_i].gpio_low = BUCK_PWM1_GPIO_PORT_PINL;
         buck.sw_node[_i].master_period = false;
         buck.sw_node[_i].period = BUCK_PWM_PERIOD;
-        buck.sw_node[_i].phase = (_i * BUCK_PWM_PHASE_SHIFT); // Add phase shift to each phase
+        buck.sw_node[_i].phase = BUCK_PWM_PHASE_SHIFT; 
         buck.sw_node[_i].duty_ratio_min = BUCK_PWM_DC_MIN;
         buck.sw_node[_i].duty_ratio_init = BUCK_PWM_DC_MIN;
         buck.sw_node[_i].duty_ratio_max = BUCK_PWM_DC_MAX;
