@@ -133,8 +133,6 @@ extern "C" {
 #define SWITCHING_DEAD_TIME_LE  (float)20e-9    // Leading Edge Dead Time in [sec]
 #define SWITCHING_DEAD_TIME_FE  (float)30e-9    // Falling Edge Dead Time in [sec]
     
-
-
 /*!Fundamental PWM Settings
  * *************************************************************************************************
  * Summary:
@@ -150,7 +148,7 @@ extern "C" {
  * 
  * *************************************************************************************************/
 
-#define BUCK_NO_OF_PHASES              1U     // Number of power converter phases of this design
+#define BUCK_NO_OF_PHASES              2U     // Number of power converter phases of this design
     
 #define BUCK_PWM_DUTY_CYCLE_MIN        (float)0.010 // ~1.0% On Time 
 #define BUCK_PWM_DUTY_CYCLE_MAX        (float)0.400 // ~90% On Time 
