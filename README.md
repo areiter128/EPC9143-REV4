@@ -1,7 +1,7 @@
 <p><a href="https://www.microchip.com" rel="nofollow"><img src="https://www.microchip.com/ResourcePackages/Microchip/assets/dist/images/logo.png" alt="Microchip Technology" style="max-width:100%;"></a></p>
 
-## P33C_CE200: Simple Control Loop Implementation
-**Synchronous Buck Converter in Voltage Mode Control**
+## EPC9143 16th Brick Non-Isolated Step Down Converter Firmware
+**2-Phase Synchronous Buck Converter with Advanced Voltage Mode Control and Current Balancing**
 
 **Description:**
 This code example demonstrates a closed loop voltage mode control implementation for dsPIC33CK. It has specifically been developed for the Digital Power Starter Kit 3 (DPSK3) buck converter.
@@ -15,23 +15,19 @@ The control loop is based on a digital type III compensator (3P3Z controller).
 
 **Operation Parameters:**
   * Input Voltage: 6 V ... 13.8 V
-  * Output Voltage: 3.3 V
+  * Output Voltage: 3.0 V
   * Switching Frequency:	500 kHz
   * Control Frequency:	500 kHz
   * Cross-Over Frequency: ~15 kHz (depends on VIN and if AGC is on/off)
   * Phase Margin: ~ 50°
 
 **Required Hardware:** 
-  * DPSK3: dsPIC33C Digital Power Starter Kit 3 (Part-No. [DM330017-3](https://www.microchip.com/dm330017-3))
-  * DPSK3 system blocks used:
+  * EPC9143: EPC9143 16th Brick Non-Isolated Step Down Converter
+  * Digital Power Libraries System Blocks used:
     * Buck Converter
-    * LC Display
-    * Debugging LED
-    * User Switch Button (turns on/off AGC control algorithm)
-    * Debugging Pins TP50, TP52 and TP53
 
 **Device Support:**
-  * [dsPIC33CK256MP505](https://www.microchip.com/dsPIC33CK256MP505)
+  * [dsPIC33CK32MP102](https://www.microchip.com/dsPIC33CK32MP102)
   
 **Libraries:**
   * [PWRLIB_BUCK](https://bitbucket.microchip.com/projects/MCU16ASMPSL/repos/pwrlib_buck/browse) - Single Phase Buck Converter State Machine & Peripheral Configuration Template
