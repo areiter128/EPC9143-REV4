@@ -39,18 +39,18 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void);
 
 volatile uint16_t appPowerSupply_Initialize(void)
 { 
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
 
     // Run initialization sequence
-    fres &= appPowerSupply_ConverterObjectInitialize();
-    fres &= appPowerSupply_ControllerInitialize();
-    fres &= appPowerSupply_PeripheralsInitialize();
+    retval &= appPowerSupply_ConverterObjectInitialize();
+    retval &= appPowerSupply_ControllerInitialize();
+    retval &= appPowerSupply_PeripheralsInitialize();
 
     // Sequence Peripheral Startup
-    fres &= buckPWM_Start(buck.sw_node.pwm_instance);   // Start PWM (No Outputs Enabled)
-    if (fres) buck.status.bits.pwm_active = 1;
+    retval &= buckPWM_Start(&buck);   // Start PWM (All Outputs Disabled)
+    if (retval) buck.status.bits.pwm_active = 1;
     
-    fres &= buckADC_Start();                            // Start ADC
+    retval &= buckADC_Start(); // Start ADC
     
     // Initialize Control Interrupt
     _BUCK_VLOOP_ISR_IP = 5;
@@ -60,16 +60,24 @@ volatile uint16_t appPowerSupply_Initialize(void)
     // Enable Buck Converter
     buck.status.bits.enabled = true;
     
-    return(fres); 
+    return(retval); 
 }
 
 volatile uint16_t appPowerSupply_Execute(void)
 { 
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
+    volatile uint16_t _i=0;
+    volatile uint16_t i_dummy=0;
 
     // Capture data values
     buck.data.v_in = BUCK_VIN_ADCBUF;
-    buck.data.i_out = BUCK_VIN_ADCBUF;
+    buck.data.i_sns[0] = BUCK_ISNS1_ADCBUF;
+    buck.data.i_sns[1] = BUCK_ISNS2_ADCBUF;
+    
+    for (_i=0; _i<buck.set_values.phases; _i++) // Accumulate phase current values
+    { i_dummy += buck.data.i_sns[_i]; }
+    buck.data.i_out = i_dummy; // Set output current value
+
 /*    
     // Check conditional parameters and fault flags
     buck.status.bits.power_source_detected = (bool)
@@ -86,7 +94,7 @@ volatile uint16_t appPowerSupply_Execute(void)
     buck.status.bits.power_source_detected = true;
     
     // Execute buck converter state machine
-    fres &= drv_BuckConverter_Execute(&buck);
+    retval &= drv_BuckConverter_Execute(&buck);
 
     // Buck regulation error is only active while controller is running
     // and while being tied to a valid reference
@@ -100,17 +108,22 @@ volatile uint16_t appPowerSupply_Execute(void)
         fltobj_BuckRegErr.status.bits.enabled = false;
     }
     
-    return(fres); 
+    return(retval); 
 }
 
 volatile uint16_t appPowerSupply_Dispose(void)
 { 
     volatile uint16_t fres=1;
+    volatile uint16_t _i=0;
 
     buck.status.value = 0;
-    buck.data.i_out = 0;
-    buck.data.v_out = 0;
-    buck.data.v_in = 0;
+    
+    for (_i=0; _i<buck.set_values.phases; _i++) // Reset phase current values
+    { buck.data.i_sns[0] = 0; }
+    buck.data.i_out = 0; // Reset output current value
+    buck.data.v_out = 0; // Reset output voltage value
+    buck.data.v_in = 0;  // Reset input voltage value
+    buck.data.temp = 0;  // Reset output temperature value
     buck.mode = BUCK_STATE_INITIALIZE; // Set state machine
     
     return(fres); 
@@ -120,7 +133,7 @@ volatile uint16_t appPowerSupply_Suspend(void)
 { 
     volatile uint16_t fres=1;
 
-    buckPWM_Suspend(buck.sw_node.pwm_instance); // Shut down PWM immediately
+    buckPWM_Suspend(&buck); // Shut down PWM immediately
     buck.status.bits.fault_active = true; // Set FAULT flag
     buck.mode = BUCK_STATE_RESET; // Reset State Machine (causes loop reset)
 
@@ -144,6 +157,7 @@ volatile uint16_t appPowerSupply_Resume(void)
 volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
 {
     volatile uint16_t fres = 1;
+    volatile uint16_t _i = 0;
     
     // Initialize Buck Converter Object Status
     buck.status.bits.adc_active = false; // Clear ADC STARTED flag
@@ -160,30 +174,36 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.set_values.control_mode = BUCK_CONTROL_MODE_VMC; // Set Control Mode
     buck.set_values.i_ref = BUCK_ISNS_REF; // Set current loop reference
     buck.set_values.v_ref = BUCK_VOUT_REF; // Set voltage loop reference
+    buck.set_values.phases = BUCK_NO_OF_PHASES; // Set number of converter phases
     
     // Clear Runtime Data
-    buck.data.v_out = 0; // Reset output voltage value
+    for (_i=0; _i<buck.set_values.phases; _i++) // Reset phase current values
+    { buck.data.i_sns[0] = 0; }
     buck.data.i_out = 0; // Reset output current value
+    buck.data.v_out = 0; // Reset output voltage value
     buck.data.v_in = 0;  // Reset input voltage value
     buck.data.temp = 0;  // Reset output temperature value
     
     // Initialize Switch Node
-    buck.sw_node.pwm_instance = BUCK_PWM1_CHANNEL;
-    buck.sw_node.gpio_instance = BUCK_PWM1_GPIO_INSTANCE;
-    buck.sw_node.gpio_high = BUCK_PWM1_GPIO_PORT_PINH;
-    buck.sw_node.gpio_low = BUCK_PWM1_GPIO_PORT_PINL;
-    buck.sw_node.master_period = false;
-    buck.sw_node.period = BUCK_PWM_PERIOD;
-    buck.sw_node.phase = BUCK_PWM_PHASE_SHIFT;
-    buck.sw_node.duty_ratio_min = BUCK_PWM_DC_MIN;
-    buck.sw_node.duty_ratio_init = BUCK_PWM_DC_MIN;
-    buck.sw_node.duty_ratio_max = BUCK_PWM_DC_MAX;
-    buck.sw_node.dead_time_rising = BUCK_PWM_DEAD_TIME_LE;
-    buck.sw_node.dead_time_falling = BUCK_PWM_DEAD_TIME_FE;
-    buck.sw_node.leb_period = BUCK_LEB_PERIOD;
-    buck.sw_node.trigger_offset = BUCK_PWM1_ADTR1OFS;
-    buck.sw_node.trigger_scaler = BUCK_PWM1_ADTR1PS;
-
+    for (_i = 0; _i < buck.set_values.phases; _i++) {
+        
+        buck.sw_node[_i].pwm_instance = BUCK_PWM1_CHANNEL;
+        buck.sw_node[_i].gpio_instance = BUCK_PWM1_GPIO_INSTANCE;
+        buck.sw_node[_i].gpio_high = BUCK_PWM1_GPIO_PORT_PINH;
+        buck.sw_node[_i].gpio_low = BUCK_PWM1_GPIO_PORT_PINL;
+        buck.sw_node[_i].master_period = false;
+        buck.sw_node[_i].period = BUCK_PWM_PERIOD;
+        buck.sw_node[_i].phase = BUCK_PWM_PHASE_SHIFT;
+        buck.sw_node[_i].duty_ratio_min = BUCK_PWM_DC_MIN;
+        buck.sw_node[_i].duty_ratio_init = BUCK_PWM_DC_MIN;
+        buck.sw_node[_i].duty_ratio_max = BUCK_PWM_DC_MAX;
+        buck.sw_node[_i].dead_time_rising = BUCK_PWM_DEAD_TIME_LE;
+        buck.sw_node[_i].dead_time_falling = BUCK_PWM_DEAD_TIME_FE;
+        buck.sw_node[_i].leb_period = BUCK_LEB_PERIOD;
+        buck.sw_node[_i].trigger_offset = BUCK_PWM1_ADTR1OFS;
+        buck.sw_node[_i].trigger_scaler = BUCK_PWM1_ADTR1PS;
+    }
+    
     // Initialize Feedback Channels
     
     // ~~~ OUTPUT VOLTAGE FEEDBACK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -226,20 +246,37 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
 
     // ~~~ OUTPUT CURRENT FEEDBACK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    buck.feedback.ad_iphs.enabled = false;   // Use this channel
+    buck.feedback.ad_isns[0].enabled = false;   // Use this channel
 
-    buck.feedback.ad_iphs.adc_input = BUCK_ISNS1_ADCIN;
-    buck.feedback.ad_iphs.adc_core = BUCK_ISNS1_ADCCORE;
-    buck.feedback.ad_iphs.adc_buffer = &BUCK_ISNS1_ADCBUF;
-    buck.feedback.ad_iphs.trigger_source = BUCK_ISNS1_TRGSRC;
+    buck.feedback.ad_isns[0].adc_input = BUCK_ISNS1_ADCIN;
+    buck.feedback.ad_isns[0].adc_core = BUCK_ISNS1_ADCCORE;
+    buck.feedback.ad_isns[0].adc_buffer = &BUCK_ISNS1_ADCBUF;
+    buck.feedback.ad_isns[0].trigger_source = BUCK_ISNS1_TRGSRC;
 
-    buck.feedback.ad_iphs.differential_input = false;
-    buck.feedback.ad_iphs.interrupt_enable = false;
-    buck.feedback.ad_iphs.early_interrupt_enable = false;
-    buck.feedback.ad_iphs.level_trigger = false;
-    buck.feedback.ad_iphs.signed_result = false;
+    buck.feedback.ad_isns[0].differential_input = false;
+    buck.feedback.ad_isns[0].interrupt_enable = false;
+    buck.feedback.ad_isns[0].early_interrupt_enable = false;
+    buck.feedback.ad_isns[0].level_trigger = false;
+    buck.feedback.ad_isns[0].signed_result = false;
 
-    BUCK_ISNS1_ANSEL = buck.feedback.ad_iphs.enabled;
+    BUCK_ISNS1_ANSEL = buck.feedback.ad_isns[0].enabled;
+
+    
+    buck.feedback.ad_isns[1].enabled = false;   // Use this channel
+
+    buck.feedback.ad_isns[1].adc_input = BUCK_ISNS2_ADCIN;
+    buck.feedback.ad_isns[1].adc_core = BUCK_ISNS2_ADCCORE;
+    buck.feedback.ad_isns[1].adc_buffer = &BUCK_ISNS2_ADCBUF;
+    buck.feedback.ad_isns[1].trigger_source = BUCK_ISNS2_TRGSRC;
+
+    buck.feedback.ad_isns[1].differential_input = false;
+    buck.feedback.ad_isns[1].interrupt_enable = false;
+    buck.feedback.ad_isns[1].early_interrupt_enable = false;
+    buck.feedback.ad_isns[1].level_trigger = false;
+    buck.feedback.ad_isns[1].signed_result = false;
+
+    BUCK_ISNS1_ANSEL = buck.feedback.ad_isns[1].enabled;
+
     
     // ~~~ OUTPUT CURRENT FEEDBACK END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -280,13 +317,15 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
     
  
     fres &= buckPWM_ModuleInitialize(&buck); // Initialize PWM Module
-    fres &= buckPWM_VMC_Initialize(&buck);  // Initialize PWM Channel of Buck Converter
+    fres &= buckPWM_ChannelInitialize(&buck);  // Initialize PWM Channel of Buck Converter
+    fres &= buckPWM_ChannelInitialize(&buck);  // Initialize PWM Channel of Buck Converter
     
     fres &= buckADC_ModuleInitialize();     // Initialize ADC Module
     
     fres &= buckADC_Channel_Initialize(&buck.feedback.ad_vout); // Initialize Output Voltage Channel
     fres &= buckADC_Channel_Initialize(&buck.feedback.ad_vin);  // Initialize Input Voltage Channel
-    fres &= buckADC_Channel_Initialize(&buck.feedback.ad_iphs); // Initialize Output Current Channel
+    fres &= buckADC_Channel_Initialize(&buck.feedback.ad_isns[0]); // Initialize Phase Current #1 Channel
+    fres &= buckADC_Channel_Initialize(&buck.feedback.ad_isns[1]); // Initialize Phase Current #2 Channel
     fres &= buckADC_Channel_Initialize(&buck.feedback.ad_temp); // Initialize Temperature Channel
     
     // Custom configurations
