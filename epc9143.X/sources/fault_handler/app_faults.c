@@ -28,9 +28,9 @@ volatile uint16_t appFaults_Initialize(void)
     
     fltobj_BuckUVLO.status.bits.type = FLTCMP_LESS_THAN; // Select Compare-Type
     fltobj_BuckUVLO.counter = 0;        // Clear fault event counter
-    fltobj_BuckUVLO.trip_level = VIN_UVLO_TRIP;    // Set fault trip level
+    fltobj_BuckUVLO.trip_level = BUCK_VIN_UVLO_TRIP;    // Set fault trip level
     fltobj_BuckUVLO.tripcnt_max = 50;    // Set counter level at which a FAULT condition will be tripped
-    fltobj_BuckUVLO.reset_level = VIN_UVLO_RELEASE;   // Set fault reset level
+    fltobj_BuckUVLO.reset_level = BUCK_VIN_UVLO_RELEASE;   // Set fault reset level
     fltobj_BuckUVLO.rstcnt_max = 500;     // Set counter level at which a FAULT condition will be cleared
     
     // User-function declarations
@@ -50,9 +50,9 @@ volatile uint16_t appFaults_Initialize(void)
     
     fltobj_BuckOVLO.status.bits.type = FLTCMP_GREATER_THAN; // Select Compare-Type
     fltobj_BuckOVLO.counter = 0;        // Clear fault event counter
-    fltobj_BuckOVLO.trip_level = VIN_OVLO_TRIP;    // Set fault trip level
+    fltobj_BuckOVLO.trip_level = BUCK_VIN_OVLO_TRIP;    // Set fault trip level
     fltobj_BuckOVLO.tripcnt_max = 50;    // Set counter level at which a FAULT condition will be tripped
-    fltobj_BuckOVLO.reset_level = VIN_OVLO_RELEASE;   // Set fault reset level
+    fltobj_BuckOVLO.reset_level = BUCK_VIN_OVLO_RELEASE;   // Set fault reset level
     fltobj_BuckOVLO.rstcnt_max = 500;     // Set counter level at which a FAULT condition will be cleared
     
     // User-function declarations

@@ -70,7 +70,7 @@ volatile uint16_t appPowerSupply_Execute(void)
     // Capture data values
     buck.data.v_in = BUCK_VIN_ADCBUF;
     buck.data.i_out = BUCK_VIN_ADCBUF;
-    
+/*    
     // Check conditional parameters and fault flags
     buck.status.bits.power_source_detected = (bool)
         ((VIN_UVLO_TRIP < buck.data.v_in) && (buck.data.v_in<VIN_OVLO_TRIP));
@@ -81,6 +81,9 @@ volatile uint16_t appPowerSupply_Execute(void)
         fltobj_BuckOVLO.status.bits.fault_status |
         fltobj_BuckRegErr.status.bits.fault_status 
         );
+*/
+    buck.status.bits.fault_active = false;
+    buck.status.bits.power_source_detected = true;
     
     // Execute buck converter state machine
     fres &= drv_BuckConverter_Execute(&buck);
@@ -166,20 +169,20 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     
     // Initialize Switch Node
     buck.sw_node.pwm_instance = BUCK_PWM1_CHANNEL;
-    buck.sw_node.gpio_instance = BUCK_PWM_OUT_PORT;
-    buck.sw_node.gpio_high = BUCK_PWMxH_OUT_PINNO;
-    buck.sw_node.gpio_low = BUCK_PWMxL_OUT_PINNO;
+    buck.sw_node.gpio_instance = BUCK_PWM1_GPIO_INSTANCE;
+    buck.sw_node.gpio_high = BUCK_PWM1_GPIO_PORT_PINH;
+    buck.sw_node.gpio_low = BUCK_PWM1_GPIO_PORT_PINL;
     buck.sw_node.master_period = false;
     buck.sw_node.period = BUCK_PWM_PERIOD;
     buck.sw_node.phase = BUCK_PWM_PHASE_SHIFT;
     buck.sw_node.duty_ratio_min = BUCK_PWM_DC_MIN;
     buck.sw_node.duty_ratio_init = BUCK_PWM_DC_MIN;
     buck.sw_node.duty_ratio_max = BUCK_PWM_DC_MAX;
-    buck.sw_node.dead_time_rising = BUCK_PWM_DEAD_TIME_RISING;
-    buck.sw_node.dead_time_falling = BUCK_PWM_DEAD_TIME_FALLING;
+    buck.sw_node.dead_time_rising = BUCK_PWM_DEAD_TIME_LE;
+    buck.sw_node.dead_time_falling = BUCK_PWM_DEAD_TIME_FE;
     buck.sw_node.leb_period = BUCK_LEB_PERIOD;
-    buck.sw_node.trigger_offset = BUCK_PWM_ADTR1OFS;
-    buck.sw_node.trigger_scaler = BUCK_PWM_ADTR1PS;
+    buck.sw_node.trigger_offset = BUCK_PWM1_ADTR1OFS;
+    buck.sw_node.trigger_scaler = BUCK_PWM1_ADTR1PS;
 
     // Initialize Feedback Channels
     
@@ -286,6 +289,9 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
     fres &= buckADC_Channel_Initialize(&buck.feedback.ad_iphs); // Initialize Output Current Channel
     fres &= buckADC_Channel_Initialize(&buck.feedback.ad_temp); // Initialize Temperature Channel
     
+    // Custom configurations
+    ADCON4Hbits.C1CHS = 1; // Set ADC channel input to ANA1
+    
     return(fres);
 }
 
@@ -319,7 +325,7 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->Ports.Source.NormFactor = BUCK_VOUT_NORM_FACTOR; // Output voltage normalization factor fractional
     
     buck.v_loop.controller->Ports.AltSource.ptrAddress = &BUCK_VIN_ADCBUF; // Input Voltage Is Alternate Source
-    buck.v_loop.controller->Ports.AltSource.Offset = BUCK_VIN_OFFSET; // Input Voltage feedback signal offset 
+    buck.v_loop.controller->Ports.AltSource.Offset = BUCK_VIN_FB_OFFSET; // Input Voltage feedback signal offset 
     buck.v_loop.controller->Ports.AltSource.NormScaler = BUCK_VIN_NORM_SCALER; // Input voltage normalization factor bit-shift scaler 
     buck.v_loop.controller->Ports.AltSource.NormFactor = BUCK_VIN_NORM_FACTOR; // Input voltage normalization factor fractional
 
