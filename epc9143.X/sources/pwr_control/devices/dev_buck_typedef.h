@@ -35,7 +35,9 @@
 #include <stdint.h> // include standard integer number data types
 #include <stdbool.h> // include standard boolean data types (true/false)
 
+#include "config/epc9143_r40_hwdescr.h"
 #include "pwr_control/drivers/npnz16b.h"
+
 
 #ifdef	__cplusplus
 extern "C" {
@@ -63,6 +65,8 @@ extern "C" {
  *  
  * *************************************************************************************************** */
 
+#define MPHBUCK_NO_OF_PHASES    BUCK_NO_OF_PHASES
+    
 //// Controller Status Bits
 //#define BUCK_STAT_ADC_ACTIVE             0b0000000000000001
 //#define BUCK_STAT_PWM_STARTED            0b0000000000000010
@@ -168,7 +172,8 @@ typedef struct {
 // ==============================================================================================
 
 typedef struct {
-    volatile uint16_t i_out;    // BUCK output current
+    volatile uint16_t i_sns[MPHBUCK_NO_OF_PHASES];    // BUCK output current
+    volatile uint16_t i_out;    // BUCK common output current
     volatile uint16_t v_in;     // BUCK input voltage
     volatile uint16_t v_out;    // BUCK output voltage
     volatile uint16_t temp;     // BUCK board temperature
@@ -194,6 +199,7 @@ typedef struct {
     volatile BUCK_CONTROL_MODE_e control_mode; // Fundamental control mode 
     volatile uint16_t v_ref; // User reference setting used to control the power converter controller
     volatile uint16_t i_ref; // User reference setting used to control the power converter controller
+    volatile uint16_t phases; // number of converter phases
 } BUCK_CONVERTER_CONTROL_t;
 
 
@@ -281,7 +287,7 @@ typedef struct {
 typedef struct {
     volatile BUCK_ADC_INPUT_SETTINGS_t ad_vin;  // ADC input sampling input voltage
     volatile BUCK_ADC_INPUT_SETTINGS_t ad_vout; // ADC input sampling output voltage
-    volatile BUCK_ADC_INPUT_SETTINGS_t ad_iphs; // ADC input sampling phase current
+    volatile BUCK_ADC_INPUT_SETTINGS_t ad_isns[MPHBUCK_NO_OF_PHASES]; // ADC input sampling phase current
     volatile BUCK_ADC_INPUT_SETTINGS_t ad_temp; // ADC input sampling temperature
 } BUCK_FEEDBACK_SETTINGS_t;
 
@@ -297,11 +303,11 @@ typedef struct {
     volatile BUCK_CONVERTER_STARTUP_t startup; // BUCK startup timing settings 
     volatile BUCK_CONVERTER_CONTROL_t set_values; // Control field for global access to references
     volatile BUCK_CONVERTER_DATA_t data;     // BUCK runtime data
-    volatile BUCK_SWITCH_NODE_SETTINGS_t sw_node; // BUCK converter switch node settings
+    volatile BUCK_SWITCH_NODE_SETTINGS_t sw_node[MPHBUCK_NO_OF_PHASES]; // BUCK converter switch node settings
     volatile BUCK_FEEDBACK_SETTINGS_t feedback; // BUCK converter feedback settings
     
     volatile BUCK_LOOP_SETTINGS_t v_loop; // BUCK voltage control loop object
-    volatile BUCK_LOOP_SETTINGS_t i_loop; // BUCK Current control loop object
+    volatile BUCK_LOOP_SETTINGS_t i_loop[MPHBUCK_NO_OF_PHASES]; // BUCK Current control loop objects
     
 } BUCK_POWER_CONTROLLER_t; // BUCK control & monitoring data structure
 

@@ -54,11 +54,11 @@ extern volatile uint16_t drv_BuckConverter_Resume(volatile BUCK_POWER_CONTROLLER
     
 extern volatile uint16_t buckPWM_ModuleInitialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
 
-extern volatile uint16_t buckPWM_VMC_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t buckPWM_Start(volatile uint16_t pwmInstance);
-extern volatile uint16_t buckPWM_Stop(volatile uint16_t pwmInstance);
-extern volatile uint16_t buckPWM_Suspend(volatile uint16_t pwmInstance);
-extern volatile uint16_t buckPWM_Resume(volatile uint16_t pwmInstance);
+extern volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t buckPWM_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t buckPWM_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t buckPWM_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t buckPWM_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
 
 extern volatile uint16_t buckADC_ModuleInitialize(void);
 extern volatile uint16_t buckADC_Channel_Initialize(volatile BUCK_ADC_INPUT_SETTINGS_t* adcInstance);

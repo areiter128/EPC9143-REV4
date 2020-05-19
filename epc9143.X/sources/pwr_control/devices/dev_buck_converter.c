@@ -16,12 +16,17 @@
 volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
     volatile uint16_t fres = 1;
+    volatile uint16_t _i=0;
     
     buckInstance->v_loop.controller->status.bits.enabled = false; // Disable voltage loop
     
-    if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) // In current mode...
-        buckInstance->i_loop.controller->status.bits.enabled = false; // Disable current loop
+    if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) { // In current mode...
+     
+        for (_i=0; _i<buck.set_values.phases; _i++) // Reset phase current values
+        { buckInstance->i_loop[_i].controller->status.bits.enabled = false; } // Disable current loop
     
+    }
+        
     buckInstance->status.bits.enabled = false;  // Disable Buck Converter
     buckInstance->mode = BUCK_STATE_INITIALIZE; // Reset state machine
     
@@ -31,6 +36,7 @@ volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t*
 volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
     volatile uint16_t fres = 1;
+    volatile uint16_t _i = 0;
     volatile float fdummy = 0.0;
     volatile uint16_t int_dummy = 0;
 
@@ -96,7 +102,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             buckInstance->status.bits.busy = true;
 
             // Disable PWM outputs & control loops (immediate power cut-off)
-            buckPWM_Suspend(buckInstance->sw_node.pwm_instance); // Disable PWM outputs
+            buckPWM_Suspend(buckInstance); // Disable PWM outputs
 
             // Disable voltage loop controller and reset control loop histories
             buckInstance->v_loop.controller->status.bits.enabled = false; // disable voltage control loop
@@ -107,10 +113,14 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             // Disable current loop controller and reset control loop histories
             if (buck.set_values.control_mode == BUCK_CONTROL_MODE_ACMC) 
             {   // Disable all current control loops and reset control loop histories
-                buckInstance->i_loop.controller->status.bits.enabled = false; 
-                buckInstance->i_loop.ctrl_Reset(buckInstance->i_loop.controller); 
-                *buckInstance->i_loop.controller->Ports.Target.ptrAddress = 
-                    buckInstance->i_loop.controller->Limits.MinOutput;
+                
+                for (_i=0; _i<buck.set_values.phases; _i++)  { 
+
+                    buckInstance->i_loop[_i].controller->status.bits.enabled = false; 
+                    buckInstance->i_loop[_i].ctrl_Reset(buckInstance->i_loop[_i].controller); 
+                    *buckInstance->i_loop[_i].controller->Ports.Target.ptrAddress = 
+                        buckInstance->i_loop[_i].controller->Limits.MinOutput;
+                }
             }
                 
             // Switch to STANDBY mode
@@ -210,7 +220,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                 
             // Pre-charge PWM and control loop history ToDo: FIX VIN-2-VOUT SCALING ISSUE !!!!
             fdummy = (float)(buckInstance->data.v_out) / (float)(buckInstance->data.v_in << 1);
-            int_dummy = (uint16_t)(fdummy * (float)buckInstance->sw_node.period);
+            int_dummy = (uint16_t)(fdummy * (float)buckInstance->sw_node[0].period);
             
             if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_VMC)
             {
@@ -225,17 +235,19 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             }
             else if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) 
             {   
-                if(int_dummy < buckInstance->i_loop.minimum) 
-                { int_dummy = buckInstance->i_loop.minimum; }
-                else if(int_dummy > buckInstance->i_loop.maximum) 
-                { int_dummy = buckInstance->i_loop.maximum; }
+                for (_i=0; _i<buck.set_values.phases; _i++)  
+                { 
+                    if(int_dummy < buckInstance->i_loop[_i].minimum) 
+                    { int_dummy = buckInstance->i_loop[_i].minimum; }
+                    else if(int_dummy > buckInstance->i_loop[_i].maximum) 
+                    { int_dummy = buckInstance->i_loop[_i].maximum; }
 
-                buckInstance->i_loop.ctrl_Precharge(
-                            buckInstance->i_loop.controller, 0, int_dummy
-                        );
+                    buckInstance->i_loop[_i].ctrl_Precharge(
+                                buckInstance->i_loop[_i].controller, 0, int_dummy
+                            );
 
-                *buckInstance->i_loop.controller->Ports.Target.ptrAddress = int_dummy; // set initial PWM duty ratio
-
+                    *buckInstance->i_loop[_i].controller->Ports.Target.ptrAddress = int_dummy; // set initial PWM duty ratio
+                }
             }
 
             // switch to soft-start phase RAMP UP
@@ -259,7 +271,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             if(!buckInstance->v_loop.controller->status.bits.enabled) {
 
                 // Enable input power source
-                buckPWM_Resume(buckInstance->sw_node.pwm_instance);  // Enable PWM outputs
+                buckPWM_Resume(buckInstance);  // Enable PWM outputs
 
                 if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_VMC)
                 {   
@@ -268,7 +280,8 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                 else if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC)
                 {
                     buckInstance->v_loop.controller->status.bits.enabled = true; // enable voltage loop controller
-                    buckInstance->i_loop.controller->status.bits.enabled = true; // enable phase current loop controller
+                    for (_i=0; _i<buckInstance->set_values.phases; _i++)
+                    { buckInstance->i_loop[_i].controller->status.bits.enabled = true; } // enable phase current loop controller
                 }
 
             }
@@ -407,12 +420,14 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
         case BUCK_STATE_SUSPEND:
 
             // Disable PWM outputs & control loops (immediate power shut-down)
-            buckPWM_Stop(buckInstance->sw_node.pwm_instance); // Disable PWM outputs
+            buckPWM_Stop(buckInstance); // Disable PWM outputs
             
             buckInstance->v_loop.controller->status.bits.enabled = false;   // disable voltage control loop
             
-            if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC)
-                buckInstance->i_loop.controller->status.bits.enabled = false;  // disable current control loop
+            if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC){
+                for (_i=0; _i<buckInstance->set_values.phases; _i++)
+                { buckInstance->i_loop[_i].controller->status.bits.enabled = false; } // disable current control loop
+            }
             
             // Reset the state machine to repeat the soft-start without delays (ramp only)
             buckInstance->startup.power_on_delay.counter = (buckInstance->startup.power_on_delay.period + 1); // Clamp POD counter to PERIOD_EXPIRED for future startups
@@ -438,16 +453,21 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
 volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
     volatile uint16_t fres=1;
+    volatile uint16_t _i=0;
     
     // Start PWM with its outputs disabled
-    fres &= buckPWM_Start(buckInstance->sw_node.pwm_instance);
+    fres &= buckPWM_Start(buckInstance);
     
     buckInstance->v_loop.controller->status.bits.enabled = false; // Disable voltage loop
     buckInstance->v_loop.ctrl_Reset(buckInstance->v_loop.controller); // Reset voltage loop histories
 
     if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) { // In current mode...
-        buckInstance->i_loop.controller->status.bits.enabled = false; // Disable current loop
-        buckInstance->i_loop.ctrl_Reset(buckInstance->i_loop.controller); // Reset current loop histories
+        
+        for (_i=0; _i<buckInstance->set_values.phases; _i++)
+        { 
+            buckInstance->i_loop[_i].controller->status.bits.enabled = false; // Disable current loop
+            buckInstance->i_loop[_i].ctrl_Reset(buckInstance->i_loop[_i].controller); // Reset current loop histories
+        }
     }
     
     buckInstance->status.bits.enabled = true;   // Enable Buck Converter
@@ -459,14 +479,17 @@ volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buck
 volatile uint16_t drv_BuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
     volatile uint16_t fres=1;
+    volatile uint16_t _i=0;
     
     // Stop PWM completely (shuts down PWM generator)
-    fres &= buckPWM_Stop(buckInstance->sw_node.pwm_instance); // Stop PWM
+    fres &= buckPWM_Stop(buckInstance); // Stop PWM
     
     buckInstance->v_loop.controller->status.bits.enabled = false; // Disable voltage loop
     
-    if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) // In current mode...
-        buckInstance->i_loop.controller->status.bits.enabled = false; // Disable current loop
+    if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) {// In current mode...
+        for (_i=0; _i<buckInstance->set_values.phases; _i++)
+        { buckInstance->i_loop[_i].controller->status.bits.enabled = false; } // Disable current loop
+    }
     
     buckInstance->status.bits.enabled = false;  // Disable Buck Converter
     buckInstance->mode = BUCK_STATE_INITIALIZE; // Reset state machine
