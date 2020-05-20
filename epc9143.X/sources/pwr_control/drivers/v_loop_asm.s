@@ -3,7 +3,7 @@
 ;  SDK Version: z-Domain Control Loop Designer v0.9.7.102
 ;  AGS Version: Assembly Generator Script v2.0.11 (05/20/2020)
 ;  Author:      M91406
-;  Date/Time:   05/20/2020 2:42:51 PM
+;  Date/Time:   05/20/2020 4:41:47 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -184,13 +184,24 @@ _v_loop_Update:    ; provide global scope to routine
 ;------------------------------------------------------------------------------
 ; Write control output value to target
 	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target to working register
-	mov w4, [w8]    ; move control output to target address
+    mov [w0 + #TargetOffset], w6 ; load output offset into working register
+    add w4, w6, w6  ; add offset to control output
+    mov w6, [w8]    ; move target offset-control output to target address
+;	mov w4, [w8]    ; move control output to target address
 	mov [w0 + #ptrAltTargetRegister], w8    ; move pointer to alternate target to working register
-	mov w4, [w8]    ; move control output to alternate target address
+    mov [w0 + #AltTargetOffset], w6 ; load alternate output offset into working register
+    add w4, w6, w6  ; add alternate target offset to control output
+    mov w6, [w8]    ; move offset-control output to alternate target address
+;	mov w4, [w8]    ; move control output to target address
 	
 ;------------------------------------------------------------------------------
 ; Update ADC trigger locations
 	asr w4, #1, w6    ; half control output by shifting value one bit to the right
+	; Update ADC trigger B position
+	mov [w0 + #ADCTriggerBOffset], w8    ; load user-defined ADC trigger B offset value into working register
+	add w6, w8, w10    ; add user-defined ADC trigger B offset to half of control output
+	mov [w0 + #ptrADCTriggerBRegister], w8    ; load pointer to ADC trigger B register into working register
+	mov w10, [w8]    ; push new ADC trigger value to ADC trigger B register
 	; Update ADC trigger A position
 	mov [w0 + #ADCTriggerAOffset], w8    ; load user-defined ADC trigger A offset value into working register
 	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
@@ -354,6 +365,11 @@ _v_loop_PTermUpdate:
 	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
 	mov [w0 + #ptrADCTriggerARegister], w8    ; load pointer to ADC trigger A register into working register
 	mov w10, [w8]    ; push new ADC trigger value to ADC trigger A register
+	; Update ADC trigger B position
+	mov [w0 + #ADCTriggerBOffset], w8    ; load user-defined ADC trigger B offset value into working register
+	add w6, w8, w10    ; add user-defined ADC trigger B offset to half of control output
+	mov [w0 + #ptrADCTriggerBRegister], w8    ; load pointer to ADC trigger B register into working register
+	mov w10, [w8]    ; push new ADC trigger value to ADC trigger B register
 	
 ;------------------------------------------------------------------------------
 ; Update status flag bitfield

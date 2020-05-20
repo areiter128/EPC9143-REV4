@@ -2,7 +2,7 @@
  * z-Domain Control Loop Designer, Version 0.9.7.102
  * *********************************************************************************
  * Generic library header for z-domain compensation filter assembly functions
- * CGS Version: 2.0.9
+ * CGS Version: 2.0.10
  * CGS Date:    05/20/2020
  * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -80,9 +80,9 @@ typedef union {
 
 typedef struct {
     volatile uint16_t* ptrAddress; // Pointer to register or variable where the value is read from (e.g. ADCBUFx) or written to (e.g. PGxDC)
-    volatile uint16_t  NormScaler; // Bit-shift scaler of the Q15 normalization factor
+    volatile int16_t   NormScaler; // Bit-shift scaler of the Q15 normalization factor
     volatile fractional NormFactor; // Q15 normalization factor
-    volatile uint16_t  Offset; // Value/signal offset of this port
+    volatile int16_t   Offset; // Value/signal offset of this port
 } __attribute__((packed))CONTROLLER_PORT_t;
 
 typedef struct {
