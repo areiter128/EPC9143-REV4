@@ -63,6 +63,18 @@ volatile uint16_t appPowerSupply_Initialize(void)
     return(retval); 
 }
 
+/* @@<function_name>
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
 volatile uint16_t appPowerSupply_Execute(void)
 { 
     volatile uint16_t retval=1;
@@ -111,6 +123,18 @@ volatile uint16_t appPowerSupply_Execute(void)
     return(retval); 
 }
 
+/* @@<function_name>
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
 volatile uint16_t appPowerSupply_Dispose(void)
 { 
     volatile uint16_t fres=1;
@@ -129,6 +153,18 @@ volatile uint16_t appPowerSupply_Dispose(void)
     return(fres); 
 }
 
+/* @@<function_name>
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
 volatile uint16_t appPowerSupply_Suspend(void)
 { 
     volatile uint16_t fres=1;
@@ -139,6 +175,18 @@ volatile uint16_t appPowerSupply_Suspend(void)
 
     return(fres); 
 }
+
+/* @@<function_name>
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
 
 volatile uint16_t appPowerSupply_Resume(void)
 { 
@@ -326,6 +374,18 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     return(fres);
 }
 
+/* @@<function_name>
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
 volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
 {
     volatile uint16_t fres=1;
@@ -350,6 +410,18 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
     
     return(fres);
 }
+
+/* @@<function_name>
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
 
 volatile uint16_t appPowerSupply_ControllerInitialize(void)
 {
@@ -451,9 +523,26 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
  * 
  * **************************************************************************************************/
 
+/* @@_BUCK_VLOOP_Interrupt
+ * ********************************************************************************
+ * Summary: Main Control Interrupt
+ * 
+ * Parameters:
+ *  (none)
+ * 
+ * Returns:
+ *  (none)
+ * 
+ * Description:
+ * The control interrupt is calling the control loop. The point in time where
+ * this interrupt is thrown is determined by selecting the BUCK_VOUT_TRIGGER_MODE
+ * option. 
+ * 
+ * ********************************************************************************/
+
 void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void)
 {
-DBGPIN_2_SET;
+    DBGPIN_1_SET;
 
     buck.status.bits.adc_active = true;
     #if (PLANT_MEASUREMENT == false)
