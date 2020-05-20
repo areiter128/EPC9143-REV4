@@ -227,7 +227,7 @@ extern "C" {
     
 /*!Input Voltage Feedback
  * *************************************************************************************************
- * Summary:
+ * Summary: Declaration of input voltage limits and nominal operating points
  * 
  * Description:
  * 
