@@ -53,9 +53,9 @@ int main(void) {
     // Enable Timer1
     T1CONbits.TON = 1; 
 
-    _T1IP = 1;  // Set interrupt priority to zero
+    _T1IP = 2;  // Set interrupt priority to zero
     _T1IF = 0;  // Reset interrupt flag bit
-    _T1IE = 1;  // Disable Timer1 interrupt
+    _T1IE = 1;  // Enable/Disable Timer1 interrupt
     
     DBGPIN_2_CLEAR;
 
