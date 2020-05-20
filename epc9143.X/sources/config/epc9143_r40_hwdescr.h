@@ -170,7 +170,7 @@ extern "C" {
 #define BUCK_PWM1L_WR                  _LATB13  // Device Pin WRITE
 #define BUCK_PWM1L_RD                  _RB13    // Device Pin READ
 
-#define _BUCK_PWM1_Interrupt           _PWM2Interrupt // PWM Interrupt Serivice Routine label
+#define _BUCK_PWM1_Interrupt           _PWM2Interrupt // PWM Interrupt Service Routine label
 #define BUCK_PWM1_IF                   _PWM2IF  // PWM Interrupt Flag Bit
 #define BUCK_PWM1_IE                   _PWM2IE  // PWM Interrupt Enable Bit
 #define BUCK_PWM1_IP                   _PWM2IP  // PWM Interrupt Priority
@@ -273,8 +273,8 @@ extern "C" {
 #define BUCK_VIN_ADCCORE            8           // 0=Dedicated Core #0, 1=Dedicated Core #1, 8=Shared ADC Core
 #define BUCK_VIN_ADCIN              9           // Analog input number (e.g. '5' for 'AN5')
 #define BUCK_VIN_ADCBUF             ADCBUF9     // ADC input buffer of this ADC channel
-#define BUCK_VIN_ADCTRIG            PG2TRIGB    // Register used for trigger placement
-#define BUCK_VIN_TRGSRC             0b00111     // THis aDC channel trigger source: PWM2 Trigger 2
+#define BUCK_VIN_ADCTRIG            PG2TRIGA    // Register used for trigger placement
+#define BUCK_VIN_TRGSRC             BUCK_PWM1_TRGSRC_TRG1 // PWM1 (=PG2) Trigger 2 via PGxTRIGB
 
 /*!Output Voltage Feedback
  * *************************************************************************************************
@@ -301,7 +301,7 @@ extern "C" {
 #define BUCK_VOUT_ADCIN             0           // Analog input number (e.g. '5' for 'AN5')
 #define BUCK_VOUT_ADCBUF            ADCBUF0     // ADC input buffer of this ADC channel
 #define BUCK_VOUT_ADCTRIG           PG2TRIGA    // Register used for trigger placement
-#define BUCK_VOUT_TRGSRC            0b00110     // PWM2 Trigger 1
+#define BUCK_VOUT_TRGSRC            BUCK_PWM1_TRGSRC_TRG1 // PWM1 (=PG2) Trigger 1 via PGxTRIGA
     
 // ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
 
@@ -339,21 +339,21 @@ extern "C" {
 #define _BUCK_ISNS1_ADCISR_IF       _ADCAN1IF
 
 #define BUCK_ISNS1_ANSEL            _ANSELA1    // GPIO analog function mode enable bit
-#define BUCK_ISNS1_ADCCORE          0           // 0=Dedicated Core #0, 1=Dedicated Core #1, 2=Shared ADC Core
+#define BUCK_ISNS1_ADCCORE          1           // 0=Dedicated Core #0, 1=Dedicated Core #1, 2=Shared ADC Core
 #define BUCK_ISNS1_ADCIN            1           // Analog input number (e.g. '5' for 'AN5')
 #define BUCK_ISNS1_ADCBUF           ADCBUF1     // ADC input buffer of this ADC channel
-#define BUCK_ISNS1_ADCTRIG          PG2TRIGA    // Register used for trigger placement
-#define BUCK_ISNS1_TRGSRC           0b00110     // PWM2 Trigger 1
+#define BUCK_ISNS1_ADCTRIG          PG2TRIGB    // Register used for trigger placement
+#define BUCK_ISNS1_TRGSRC           BUCK_PWM1_TRGSRC_TRG2 // PWM1 (=PG2) Trigger 2 via PGxTRIGB
 
 #define _BUCK_ISNS2_ADCInterrupt    _ADCAN4Interrupt   
 #define _BUCK_ISNS2_ADCISR_IF       _ADCAN4IF
 
 #define BUCK_ISNS2_ANSEL            _ANSELA4    // GPIO analog function mode enable bit
-#define BUCK_ISNS2_ADCCORE          0           // 0=Dedicated Core #0, 1=Dedicated Core #1, 2=Shared ADC Core
-#define BUCK_ISNS2_ADCIN            0           // Analog input number (e.g. '5' for 'AN5')
+#define BUCK_ISNS2_ADCCORE          8           // 0=Dedicated Core #0, 1=Dedicated Core #1, 2=Shared ADC Core
+#define BUCK_ISNS2_ADCIN            4           // Analog input number (e.g. '5' for 'AN5')
 #define BUCK_ISNS2_ADCBUF           ADCBUF4     // ADC input buffer of this ADC channel
-#define BUCK_ISNS2_ADCTRIG          PG4TRIGA    // Register used for trigger placement
-#define BUCK_ISNS2_TRGSRC           0b01010     // PWM4 Trigger 1
+#define BUCK_ISNS2_ADCTRIG          PG4TRIGB    // Register used for trigger placement
+#define BUCK_ISNS2_TRGSRC           BUCK_PWM2_TRGSRC_TRG2 // PWM2 (=PG4) Trigger 2 via PGxTRIGB
 
 // ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
 
