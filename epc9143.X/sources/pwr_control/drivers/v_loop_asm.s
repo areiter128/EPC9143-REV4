@@ -3,7 +3,7 @@
 ;  SDK Version: z-Domain Control Loop Designer v0.9.7.102
 ;  AGS Version: Assembly Generator Script v2.0.11 (05/20/2020)
 ;  Author:      M91406
-;  Date/Time:   05/20/2020 4:41:47 PM
+;  Date/Time:   05/20/2020 8:00:08 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -164,6 +164,14 @@ _v_loop_Update:    ; provide global scope to routine
 	sftac b, w6    ; shift accumulator B by number of bits loaded in working register
 	
 ;------------------------------------------------------------------------------
+; Adaptive Loop Gain Modulation
+	mov [w0 + #agcGainModFactor], w4    ; load AGC modulation factor into working register
+	mov [w0 + #agcGainModScaler], w2    ; load AGC modulation factor scaler into working register
+	sac.r b, w6    ; store result of accumulator B in working register
+	mpy w4*w6, b    ; multiply accumulator B result with AGC modulation factor
+	sftac b, w2    ; shift result by AGC scaler
+	
+;------------------------------------------------------------------------------
 ; Add accumulators finalizing LDE computation
 	add a    ; add accumulator b to accumulator a
 	sac.r a, w4    ; store most recent accumulator result in working register
@@ -184,15 +192,9 @@ _v_loop_Update:    ; provide global scope to routine
 ;------------------------------------------------------------------------------
 ; Write control output value to target
 	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target to working register
-    mov [w0 + #TargetOffset], w6 ; load output offset into working register
-    add w4, w6, w6  ; add offset to control output
-    mov w6, [w8]    ; move target offset-control output to target address
-;	mov w4, [w8]    ; move control output to target address
+	mov w4, [w8]    ; move control output to target address
 	mov [w0 + #ptrAltTargetRegister], w8    ; move pointer to alternate target to working register
-    mov [w0 + #AltTargetOffset], w6 ; load alternate output offset into working register
-    add w4, w6, w6  ; add alternate target offset to control output
-    mov w6, [w8]    ; move offset-control output to alternate target address
-;	mov w4, [w8]    ; move control output to target address
+	mov w4, [w8]    ; move control output to alternate target address
 	
 ;------------------------------------------------------------------------------
 ; Update ADC trigger locations

@@ -9,14 +9,14 @@
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
- *  Input Gain:         0.5
+ *  Input Gain:         0.208791
  *
  * *********************************************************************************
  * CGS Version:         2.0.10
  * CGS Date:            05/20/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           05/20/2020 4:41:46 PM
+ * Date/Time:           05/20/2020 8:00:08 PM
  * ********************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
@@ -57,6 +57,10 @@ typedef struct
 // P-Term Coefficient for Plant Measurements
 extern volatile int16_t v_loop_pterm_factor;
 extern volatile int16_t v_loop_pterm_scaler;
+
+//Adaptive Gain Control Coefficient
+extern volatile int16_t v_loop_agc_factor_default;
+extern volatile int16_t v_loop_agc_scaler_default;
 
 
 // User-defined cNPNZ_t controller data object

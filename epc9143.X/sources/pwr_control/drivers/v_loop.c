@@ -9,14 +9,14 @@
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
- *  Input Gain:         0.5
+ *  Input Gain:         0.208791
  *
  * *********************************************************************************
  * CGS Version:         2.0.10
  * CGS Date:            05/20/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           05/20/2020 4:41:46 PM
+ * Date/Time:           05/20/2020 8:00:08 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -48,39 +48,43 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    333 Hz
- *    fP1:    104500 Hz
+ *    fP0:    300 Hz
+ *    fP1:    230000 Hz
  *    fP2:    250000 Hz
- *    fZ1:    3020 Hz
- *    fZ2:    5033 Hz
+ *    fZ1:    4600 Hz
+ *    fZ2:    7800 Hz
  *
  * *********************************************************************************
  * Filter Coefficients and Parameters:
  * ********************************************************************************/
 volatile int32_t v_loop_ACoefficients [3] =
 {
-    0x00007E1E, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x000007C7, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0x0000FA1C  // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x00004C48, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x00002E8D, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x0000052D  // Coefficient A3 will be multiplied with controller output u(n-3)
 };
 
 volatile int32_t v_loop_BCoefficients [4] =
 {
-    0x0000719F, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x00009994, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x00008EA4, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x000066AF  // Coefficient B3 will be multiplied with error input e(n-3)
+    0x00004F7F, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0000BC67, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x0000B0ED, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x00004405  // Coefficient B3 will be multiplied with error input e(n-3)
 };
 
 // Coefficient normalization factors
 volatile int16_t v_loop_pre_scaler = 3;
 volatile int16_t v_loop_post_shift_A = 0;
-volatile int16_t v_loop_post_shift_B = -1;
+volatile int16_t v_loop_post_shift_B = -2;
 volatile fractional v_loop_post_scaler = 0x0000;
 
 // P-Term Coefficient for Plant Measurements
-volatile int16_t v_loop_pterm_factor = 0x65D7;
-volatile int16_t v_loop_pterm_scaler = 0xFFFF;
+volatile int16_t v_loop_pterm_factor = 0x54CF;
+volatile int16_t v_loop_pterm_scaler = 0xFFFE;
+
+//Adaptive Gain Control Coefficient
+volatile int16_t v_loop_agc_factor_default = 0x7FFF;
+volatile int16_t v_loop_agc_scaler_default = 0x0000;
 
 
 // User-defined cNPNZ_t controller data object
@@ -150,6 +154,10 @@ volatile uint16_t v_loop_Initialize(volatile cNPNZ16b_t* controller)
     // Load P-Term factor and scaler into data structure
     controller->Filter.PTermFactor = v_loop_pterm_factor;;
     controller->Filter.PTermScaler = v_loop_pterm_scaler;
+    
+    // Load initial AGC factor and scaler into data structure
+    controller->GainControl.AgcFactor = v_loop_agc_factor_default;
+    controller->GainControl.AgcScaler = v_loop_agc_scaler_default;
     
     return(1);
 }
