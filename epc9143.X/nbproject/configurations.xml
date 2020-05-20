@@ -76,7 +76,6 @@
           <logicalFolder name="f1" displayName="pwr_control" projectFiles="true">
             <itemPath>sources/pwr_control/drivers/v_loop.c</itemPath>
             <itemPath>sources/pwr_control/drivers/v_loop_asm.s</itemPath>
-            <itemPath>sources/pwr_control/drivers/v_loop_agc.s</itemPath>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
@@ -325,7 +324,7 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-aeff"/>
-        <property key="poweroptions.powerenable" value="true"/>
+        <property key="poweroptions.powerenable" value="false"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
