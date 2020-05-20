@@ -142,10 +142,7 @@ volatile uint16_t appPowerSupply_Execute(void)
         fltobj_BuckRegErr.ref_obj = buck.v_loop.controller->Ports.ptrControlReference;
 
         #if (PLANT_MEASUREMENT == false)
-
         fltobj_BuckRegErr.status.bits.enabled = buck.v_loop.controller->status.bits.enabled;
-
-
         #endif
 
     }
@@ -531,7 +528,15 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->GainControl.AgcFactor = 0x7FFF; // Adaptive Gain Control factor fractional
     buck.v_loop.controller->GainControl.AgcScaler = 0x0000; // Adaptive Gain Control factor bit-shift scaler
     buck.v_loop.controller->GainControl.AgcMedian = 0x0000; // Q15 number representing normalized Nominal Operating Point
+    buck.v_loop.controller->GainControl.ptrAgcObserverFunction = (uint16_t)&v_loop_GetAGCFactor;
 
+//    // Initialize Advanced Control Settings (not used in this code example)
+//    buck.v_loop.controller->GainControl.AgcFactor = 0x1FFF; // Adaptive Gain Control factor fractional
+//    buck.v_loop.controller->GainControl.AgcScaler = 0xFFFE; // Adaptive Gain Control factor bit-shift scaler
+//    buck.v_loop.controller->GainControl.AgcMedian = (0x1BA2 >> 2); // Q15 number representing normalized Nominal Operating Point
+//    buck.v_loop.controller->GainControl.ptrAgcObserverFunction = (uint16_t)&v_loop_GetGainFactor; // Declare pointer to Modulation Factor Update function
+    
+    
     // Custom Advanced Control Settings
     buck.v_loop.controller->Advanced.advParam1 = 0; // No additional advanced control options used
     buck.v_loop.controller->Advanced.advParam2 = 0; // No additional advanced control options used
