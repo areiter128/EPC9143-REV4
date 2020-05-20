@@ -383,7 +383,7 @@ extern "C" {
                           ||| _____________ BIT 12: SIEN: PCI Sync Interrupt Enable
                           |||| ____________ BIT 11: (unimplemented)
                           ||||| ___________ BIT 10: (unimplemented)
-                          |||||| __________ BIT  9: IEVTSEL[1:0]: Interrupt Event Selection
+                          |||||| __________ BIT  9: IEVTSEL[1:0]: Interrupt Event Selection = Interrupts CPU at TRIGA compare event
                           ||||||| _________ BIT  8: 
                           |||||||| ________ BIT  7: ADTR2EN3: ADC Trigger 2 Source is PGxTRIGC Compare Event Enable
                           ||||||||| _______ BIT  6: ADTR2EN2: ADC Trigger 2 Source is PGxTRIGB Compare Event Enable
@@ -394,7 +394,7 @@ extern "C" {
                           |||||||||||||| __ BIT  1: 
                           ||||||||||||||| _ BIT  0: 
                           ||||||||||||||||  */
-#define REG_PGxEVTH     0b0000001001000000
+#define REG_PGxEVTH     0b0000000101000000
 
 
 /* PGxCLPCIL: PWM GENERATOR CURRENT LIMIT PCI REGISTER LOW
