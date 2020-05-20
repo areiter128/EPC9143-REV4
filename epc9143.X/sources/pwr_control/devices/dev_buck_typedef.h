@@ -20,10 +20,13 @@
  */
 
 /* 
- * File:   
- * Author: 
- * Comments:
+ * File:   dev_buck_typedef.h
+ * Author: M91406
+ * Comments: Type definitions for the multiphase BUCK converter data object
  * Revision history: 
+ * 1.0  initial release
+ * 1.1  restructured phase arrays in data object to optimize code execution and stay with unified API
+ *      with regards to other power converter object libraries
  */
 
 // This is a guard condition so that contents of this file are not included
