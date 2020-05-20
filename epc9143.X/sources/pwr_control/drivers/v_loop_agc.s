@@ -28,7 +28,7 @@
 	.equ NPNZ16_STATUS_LSAT,         0    ; bit position of the LOWER_SATURATION_FLAG status bit
 	
 ;------------------------------------------------------------------------------
-; Address offset declarations for data structure addressing
+; Address offset declarations for data structure addressing (double bit-shift scaling)
 	.equ Status,                    0    ; controller object status word at address-offset = 0
 	.equ ptrSourceRegister,         2    ; parameter group Ports.Source: pointer to source memory address
 	.equ SourceNormShift,           4    ; parameter group Ports.Source: bit-shift scaler of normalization factor
@@ -56,8 +56,8 @@
 	.equ CtrlHistArraySize,         48    ; parameter group Filter: size of the control history array
 	.equ ErrHistArraySize,          50    ; parameter group Filter: size of the error history array
 	.equ PreShift,                  52    ; parameter group Filter: value of input value normalization bit-shift scaler
-	.equ reserved_0,                54    ; parameter group Filter: (reserved)
-	.equ reserved_1,                56    ; parameter group Filter: (reserved)
+	.equ PostShiftA,                54    ; parameter group Filter: value of A-term normalization bit-shift scaler
+	.equ PostShiftB,                56    ; parameter group Filter: value of B-term normalization bit-shift scaler
 	.equ reserved_2,                58    ; parameter group Filter: (reserved)
 	.equ pterm_scaler,              60    ; parameter group Filter: P-Term coefficient scaler
 	.equ pterm_factor,              62    ; parameter group Filter: P-Term coefficient fractional factor
@@ -93,10 +93,12 @@
 ;------------------------------------------------------------------------------
 	
 	.global _v_loop_GetAGCFactor
-_v_loop_GetACGFactor:
+_v_loop_GetAGCFactor:
     
     nop ; (debugging break point anchor)
 
+    return
+    
     ; determine most recent VL
     
     ; read and normalize input voltage 
@@ -118,8 +120,8 @@ _v_loop_GetACGFactor:
     mov [w0 + #agcGainModMedian], w4        ; load pointer to nominal VL
     
     ; Divide median by instatneous VL
-    push.s      ; Save pointer to NPNZ16b_t data structure
-    repeat #5   ; run divide in  6 steps
+    push.s      ; Save pointer to cNPNZ16b_t data structure
+    repeat #5   ; run divide in 6 steps
     divf w4, w6 ; divide VL_nom/VL
     mov w0, w4  ; move result to w4
     pop.s       ; restore pointer to cNPNZ16b_t data structure
