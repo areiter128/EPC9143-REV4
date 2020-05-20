@@ -184,25 +184,40 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.data.v_in = 0;  // Reset input voltage value
     buck.data.temp = 0;  // Reset output temperature value
     
-    // Initialize Switch Node
-    for (_i = 0; _i < buck.set_values.phases; _i++) {
-        
-        buck.sw_node[_i].pwm_instance = BUCK_PWM1_CHANNEL;
-        buck.sw_node[_i].gpio_instance = BUCK_PWM1_GPIO_INSTANCE;
-        buck.sw_node[_i].gpio_high = BUCK_PWM1_GPIO_PORT_PINH;
-        buck.sw_node[_i].gpio_low = BUCK_PWM1_GPIO_PORT_PINL;
-        buck.sw_node[_i].master_period = false;
-        buck.sw_node[_i].period = BUCK_PWM_PERIOD;
-        buck.sw_node[_i].phase = BUCK_PWM_PHASE_SHIFT; 
-        buck.sw_node[_i].duty_ratio_min = BUCK_PWM_DC_MIN;
-        buck.sw_node[_i].duty_ratio_init = BUCK_PWM_DC_MIN;
-        buck.sw_node[_i].duty_ratio_max = BUCK_PWM_DC_MAX;
-        buck.sw_node[_i].dead_time_rising = BUCK_PWM_DEAD_TIME_LE;
-        buck.sw_node[_i].dead_time_falling = BUCK_PWM_DEAD_TIME_FE;
-        buck.sw_node[_i].leb_period = BUCK_LEB_PERIOD;
-        buck.sw_node[_i].trigger_offset = BUCK_PWM1_ADTR1OFS;
-        buck.sw_node[_i].trigger_scaler = BUCK_PWM1_ADTR1PS;
-    }
+    // Initialize Switch Node of PWM #1
+    buck.sw_node[0].pwm_instance = BUCK_PWM1_CHANNEL;
+    buck.sw_node[0].gpio_instance = BUCK_PWM1_GPIO_INSTANCE;
+    buck.sw_node[0].gpio_high = BUCK_PWM1_GPIO_PORT_PINH;
+    buck.sw_node[0].gpio_low = BUCK_PWM1_GPIO_PORT_PINL;
+    buck.sw_node[0].master_period = false;
+    buck.sw_node[0].period = BUCK_PWM_PERIOD;
+    buck.sw_node[0].phase = BUCK_PWM_PHASE_SHIFT; 
+    buck.sw_node[0].duty_ratio_min = BUCK_PWM_DC_MIN;
+    buck.sw_node[0].duty_ratio_init = BUCK_PWM_DC_MIN;
+    buck.sw_node[0].duty_ratio_max = BUCK_PWM_DC_MAX;
+    buck.sw_node[0].dead_time_rising = BUCK_PWM_DEAD_TIME_LE;
+    buck.sw_node[0].dead_time_falling = BUCK_PWM_DEAD_TIME_FE;
+    buck.sw_node[0].leb_period = BUCK_LEB_PERIOD;
+    buck.sw_node[0].trigger_offset = BUCK_PWM1_ADTR1OFS;
+    buck.sw_node[0].trigger_scaler = BUCK_PWM1_ADTR1PS;
+
+    // Initialize Switch Node of PWM #1
+    buck.sw_node[1].pwm_instance = BUCK_PWM2_CHANNEL;
+    buck.sw_node[1].gpio_instance = BUCK_PWM2_GPIO_INSTANCE;
+    buck.sw_node[1].gpio_high = BUCK_PWM2_GPIO_PORT_PINH;
+    buck.sw_node[1].gpio_low = BUCK_PWM2_GPIO_PORT_PINL;
+    buck.sw_node[1].master_period = false;
+    buck.sw_node[1].period = BUCK_PWM_PERIOD;
+    buck.sw_node[1].phase = BUCK_PWM_PHASE_SHIFT; 
+    buck.sw_node[1].duty_ratio_min = BUCK_PWM_DC_MIN;
+    buck.sw_node[1].duty_ratio_init = BUCK_PWM_DC_MIN;
+    buck.sw_node[1].duty_ratio_max = BUCK_PWM_DC_MAX;
+    buck.sw_node[1].dead_time_rising = BUCK_PWM_DEAD_TIME_LE;
+    buck.sw_node[1].dead_time_falling = BUCK_PWM_DEAD_TIME_FE;
+    buck.sw_node[1].leb_period = BUCK_LEB_PERIOD;
+    buck.sw_node[1].trigger_offset = BUCK_PWM2_ADTR1OFS;
+    buck.sw_node[1].trigger_scaler = BUCK_PWM2_ADTR1PS;
+    
     
     // Initialize Feedback Channels
     
@@ -318,7 +333,6 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
  
     fres &= buckPWM_ModuleInitialize(&buck); // Initialize PWM Module
     fres &= buckPWM_ChannelInitialize(&buck);  // Initialize PWM Channel of Buck Converter
-    fres &= buckPWM_ChannelInitialize(&buck);  // Initialize PWM Channel of Buck Converter
     
     fres &= buckADC_ModuleInitialize();     // Initialize ADC Module
     
@@ -377,7 +391,7 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->Ports.Target.NormScaler = 0; // Primary control output normalization factor bit-shift scaler 
     buck.v_loop.controller->Ports.Target.NormFactor = 0x7FFF; // Primary control output normalization factor fractional 
 
-    buck.v_loop.controller->Ports.AltTarget.ptrAddress = NULL; // No alternate target used
+    buck.v_loop.controller->Ports.AltTarget.ptrAddress = &BUCK_PWM2_PDC; // PWM Duty Cycle is Control Target
     buck.v_loop.controller->Ports.AltTarget.Offset = 0; // Static secondary output value offset
     buck.v_loop.controller->Ports.AltTarget.NormScaler = 0; // Secondary control output normalization factor bit-shift scaler
     buck.v_loop.controller->Ports.AltTarget.NormFactor = 0x7FFF; // Secondary control output normalization factor fractional 
