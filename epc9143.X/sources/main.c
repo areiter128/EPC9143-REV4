@@ -27,18 +27,7 @@ int main(void) {
 
     volatile uint16_t test=0;
     
-    Nop();
-    Nop();
-    Nop();
-    
-    test = BUCK_VIN_NORM_FACTOR;
-
-    Nop();
-    Nop();
-    Nop();
-
-    test = BUCK_VIN_NORM_SCALER;
-
+    test=BUCK_PWM_PHASE_SHIFT;
     Nop();
     Nop();
     Nop();
@@ -55,7 +44,7 @@ int main(void) {
     
     init_dac_module();  // Initialize DAC module
     init_dac_channel(1); // Initialize DAC #1 used to generate the reference voltage for current sense amplifiers
-    init_dac_enable();
+    init_dac_enable(); // Enable DAC setting the reference for current sense amplifiers
     
     appPowerSupply_Initialize(); // Initialize BUCK converter object and state machine
     appFaults_Initialize(); // Initialize fault objects and fault handler task
