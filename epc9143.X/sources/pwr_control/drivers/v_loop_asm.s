@@ -1,11 +1,11 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.7.99
-;  AGS Version: Assembly Generator Script v2.0.8 (04/21/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.7.102
+;  AGS Version: Assembly Generator Script v2.0.11 (05/20/2020)
 ;  Author:      M91406
-;  Date/Time:   04/23/2020 3:26:49 PM
+;  Date/Time:   05/20/2020 2:42:51 PM
 ; **********************************************************************************
-;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
+;  3P3Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
 	
 ;------------------------------------------------------------------------------
@@ -28,7 +28,7 @@
 	.equ NPNZ16_STATUS_LSAT,         0    ; bit position of the LOWER_SATURATION_FLAG status bit
 	
 ;------------------------------------------------------------------------------
-; Address offset declarations for data structure addressing
+; Address offset declarations for data structure addressing (double bit-shift scaling)
 	.equ Status,                    0    ; controller object status word at address-offset = 0
 	.equ ptrSourceRegister,         2    ; parameter group Ports.Source: pointer to source memory address
 	.equ SourceNormShift,           4    ; parameter group Ports.Source: bit-shift scaler of normalization factor
@@ -56,8 +56,8 @@
 	.equ CtrlHistArraySize,         48    ; parameter group Filter: size of the control history array
 	.equ ErrHistArraySize,          50    ; parameter group Filter: size of the error history array
 	.equ PreShift,                  52    ; parameter group Filter: value of input value normalization bit-shift scaler
-	.equ reserved_0,                54    ; parameter group Filter: (reserved)
-	.equ reserved_1,                56    ; parameter group Filter: (reserved)
+	.equ PostShiftA,                54    ; parameter group Filter: value of A-term normalization bit-shift scaler
+	.equ PostShiftB,                56    ; parameter group Filter: value of B-term normalization bit-shift scaler
 	.equ reserved_2,                58    ; parameter group Filter: (reserved)
 	.equ pterm_scaler,              60    ; parameter group Filter: P-Term coefficient scaler
 	.equ pterm_factor,              62    ; parameter group Filter: P-Term coefficient fractional factor
@@ -111,19 +111,15 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Compute compensation filter term
-	clr b, [w8]+=2, w5    ; clear both accumulators and prefetch first operands
-	clr a, [w8]+=4, w4, [w10]+=2, w6
-	mpy w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
-	sftac a, w5    ; shift accumulator to post-scale floating number
-	add b    ; adding accumulator b to a
-	mov [w8 - #6], w5    ; load scaler into wreg
-	mpy w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-1) from the delay line with coefficient X1
-	sftac a, w5    ; shift accumulator to post-scale floating number
-	add b    ; adding accumulator b to a
-	mov [w8 - #6], w5    ; load scaler into wreg
-	mpy w4*w6, a    ; multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
-	sftac a, w5    ; shift accumulator to post-scale floating number
-	add b    ; adding accumulator b to a
+	clr a, [w8]+=4, w4, [w10]+=2, w6    ; clear accumulator A and prefetch first operands
+	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-1) from the delay line with coefficient A1
+	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-2) from the delay line with coefficient A2
+	mac w4*w6, a    ; multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
+	
+;------------------------------------------------------------------------------
+; Backward normalization of recent result
+	mov [w0 + #PostShiftA], w6    ; load A-coefficients post bit-shift scaler value into working register
+	sftac a, w6    ; shift accumulator A by number of bits loaded in working register
 	
 ;------------------------------------------------------------------------------
 ; Setup pointer to first element of error history array
@@ -155,26 +151,22 @@ _v_loop_Update:    ; provide global scope to routine
 	mov w1, [w10]    ; add most recent error input to history array
 	
 ;------------------------------------------------------------------------------
-; Compute compensation filter term
-	movsac b, [w8]+=2, w5    ; leave contents of accumulator B unchanged
-	clr a, [w8]+=4, w4, [w10]+=2, w6    ; clear accumulator A and prefetch first operands
-	mpy w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
-	sftac a, w5    ; shift accumulator to post-scale floating number
-	add b    ; adding accumulator b to a
-	mov [w8 - #6], w5    ; load scaler into wreg
-	mpy w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-0) from the delay line with coefficient X0
-	sftac a, w5    ; shift accumulator to post-scale floating number
-	add b    ; adding accumulator b to a
-	mov [w8 - #6], w5    ; load scaler into wreg
-	mpy w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-1) from the delay line with coefficient X1
-	sftac a, w5    ; shift accumulator to post-scale floating number
-	add b    ; adding accumulator b to a
-	mov [w8 - #6], w5    ; load scaler into wreg
-	mpy w4*w6, a    ; multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
-	sftac a, w5    ; shift accumulator to post-scale floating number
-	add b    ; adding accumulator b to a
-	; Backwards normalization of the controller output
-	sac.r b, w4    ; store most recent accumulator result in working register
+; Compute B-Term of the compensation filter
+	clr b, [w8]+=4, w4, [w10]+=2, w6    ; clear accumulator B and prefetch first operands
+	mac w4*w6, b, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-0) from the delay line with coefficient B0 and prefetch next operands
+	mac w4*w6, b, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-1) from the delay line with coefficient B1 and prefetch next operands
+	mac w4*w6, b, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-2) from the delay line with coefficient B2 and prefetch next operands
+	mac w4*w6, b    ; multiply & accumulate last error input with coefficient of the delay line (no more prefetch)
+	
+;------------------------------------------------------------------------------
+; Backward normalization of recent result
+	mov [w0 + #PostShiftB], w6    ; load B-coefficients post bit-shift scaler value into working register
+	sftac b, w6    ; shift accumulator B by number of bits loaded in working register
+	
+;------------------------------------------------------------------------------
+; Add accumulators finalizing LDE computation
+	add a    ; add accumulator b to accumulator a
+	sac.r a, w4    ; store most recent accumulator result in working register
 	
 ;------------------------------------------------------------------------------
 ; Controller Anti-Windup (control output value clamping)
@@ -191,12 +183,15 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
-	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target in to working register
-	mov w4, [w8]    ; move control output into target address
+	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target to working register
+	mov w4, [w8]    ; move control output to target address
+	mov [w0 + #ptrAltTargetRegister], w8    ; move pointer to alternate target to working register
+	mov w4, [w8]    ; move control output to alternate target address
 	
 ;------------------------------------------------------------------------------
-; Update ADC trigger A position
+; Update ADC trigger locations
 	asr w4, #1, w6    ; half control output by shifting value one bit to the right
+	; Update ADC trigger A position
 	mov [w0 + #ADCTriggerAOffset], w8    ; load user-defined ADC trigger A offset value into working register
 	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
 	mov [w0 + #ptrADCTriggerARegister], w8    ; load pointer to ADC trigger A register into working register
@@ -330,11 +325,11 @@ _v_loop_PTermUpdate:
 ;------------------------------------------------------------------------------
 ; Load P-gain factor from data structure
 	mov [w0 + #pterm_factor], w6    ; move P-coefficient fractional into working register
-	mov [w0 + #pterm_scaler], w5    ; move P-coefficient scaler into working register
+	mov [w0 + #pterm_scaler], w2    ; move P-coefficient scaler into working register
 	mov w1, w4    ; move error to MPY working register
 	; calculate P-control result
 	mpy w4*w6, a    ; multiply most recent error with P-coefficient
-	sftac a, w5    ; shift accumulator to post-scale floating number
+	sftac a, w2    ; shift accumulator to post-scale floating number
 	sac.r a, w4    ; store accumulator result to working register
 	
 ;------------------------------------------------------------------------------
@@ -352,12 +347,9 @@ _v_loop_PTermUpdate:
 	
 ;------------------------------------------------------------------------------
 ; Write control output value to target
-	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target in to working register
-	mov w4, [w8]    ; move control output into target address
-	
-;------------------------------------------------------------------------------
-; Update ADC trigger A position
-	asr w4, #1, w6    ; half control output by shifting value one bit to the right
+	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target to working register
+	mov w4, [w8]    ; move control output to target address
+	; Update ADC trigger A position
 	mov [w0 + #ADCTriggerAOffset], w8    ; load user-defined ADC trigger A offset value into working register
 	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
 	mov [w0 + #ptrADCTriggerARegister], w8    ; load pointer to ADC trigger A register into working register

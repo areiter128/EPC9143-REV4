@@ -1,5 +1,5 @@
 /* *********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.7.99
+ * z-Domain Control Loop Designer, Version 0.9.7.102
  * *********************************************************************************
  * 3p3z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -8,15 +8,15 @@
  *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       4 - Fast Floating Point Coefficient Scaling
+ *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         0.5
  *
  * *********************************************************************************
- * CGS Version:         2.0.6
- * CGS Date:            04/23/2020
+ * CGS Version:         2.0.9
+ * CGS Date:            05/20/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           04/23/2020 3:26:48 PM
+ * Date/Time:           05/20/2020 2:42:50 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -59,23 +59,23 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * ********************************************************************************/
 volatile int32_t v_loop_ACoefficients [3] =
 {
-    0x7E1E0000, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x7C700004, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0xA1BD0004  // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x00007E1E, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x000007C7, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x0000FA1C  // Coefficient A3 will be multiplied with controller output u(n-3)
 };
 
 volatile int32_t v_loop_BCoefficients [4] =
 {
-    0x71CBFFFD, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x996DFFFD, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x8E78FFFD, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x66D7FFFD  // Coefficient B3 will be multiplied with error input e(n-3)
+    0x000071CB, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0000996D, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x00008E78, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x000066D7  // Coefficient B3 will be multiplied with error input e(n-3)
 };
 
 // Coefficient normalization factors
 volatile int16_t v_loop_pre_scaler = 3;
 volatile int16_t v_loop_post_shift_A = 0;
-volatile int16_t v_loop_post_shift_B = 0;
+volatile int16_t v_loop_post_shift_B = -3;
 volatile fractional v_loop_post_scaler = 0x0000;
 
 // P-Term Coefficient for Plant Measurements

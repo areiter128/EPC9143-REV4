@@ -1,9 +1,9 @@
 /* *********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.7.99
+ * z-Domain Control Loop Designer, Version 0.9.7.102
  * *********************************************************************************
  * Generic library header for z-domain compensation filter assembly functions
- * CGS Version: 2.0.6
- * CGS Date:    04/23/2020
+ * CGS Version: 2.0.9
+ * CGS Date:    05/20/2020
  * ********************************************************************************/
 #ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 #define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
@@ -54,7 +54,7 @@ typedef enum {
     CONTROLLER_STATUS_INV_INPUT_ON    = 0b0100000000000000,
     CONTROLLER_STATUS_ENABLE_OFF      = 0b0000000000000000,
     CONTROLLER_STATUS_ENABLE_ON       = 0b1000000000000000
-} CONTROLLER_STATUS_FLAGS_t;
+} CONTROLLER_STATUS_FLAGS_e;
 
 typedef union {
     struct {
@@ -156,7 +156,7 @@ typedef struct {
         volatile uint16_t AgcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
         volatile fractional AgcFactor; // Q15 value of Adaptive Gain Modulation factor
         volatile fractional AgcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
-        volatile uint16_t* ptrAgcObserverFunction; // Function Pointer to Observer function updating the AGC modulation factor
+        volatile uint16_t ptrAgcObserverFunction; // Function Pointer to Observer function updating the AGC modulation factor
     } __attribute__((packed))GainControl; // Parameter section for advanced control options
 
     // User Data Space for Advanced Control Functions
