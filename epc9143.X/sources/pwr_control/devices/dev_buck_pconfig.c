@@ -180,9 +180,10 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
             pg->PGxTRIGC.bits.TRIG = buckInstance->sw_node[_i].phase; // Set phase shift of trigger
         }
         else {
-            pg->PGxCONH.bits.MSTEN = 1; // Make all other PWMs of switch node objects SLAVES
+            pg->PGxCONH.bits.MSTEN = 0; // Make all other PWMs of switch node objects SLAVES
             pg->PGxCONH.bits.UPDMOD = 0b011; // Slave PWMs update PWM registers Immediately at MASTER trigger
             pg->PGxCONH.bits.SOCS = BUCK_PWM_MASTER_SOCS; // Slave PWMs are triggered by MASTER PWM
+            pg->PGxTRIGC.bits.TRIG = buckInstance->sw_node[_i].phase; // Set phase shift of trigger
         }
     }
         
