@@ -37,6 +37,8 @@
 #include <stddef.h> // include standard definition data types
 
 #include "pwr_control/devices/dev_buck_typedef.h"
+#include "pwr_control/drivers/v_loop.h"
+#include "devices/dev_buck_converter.h"
 
 #ifdef	__cplusplus
 extern "C" {
@@ -50,6 +52,10 @@ extern volatile uint16_t appPowerSupply_Execute(void);
 extern volatile uint16_t appPowerSupply_Suspend(void);
 extern volatile uint16_t appPowerSupply_Resume(void);
 
+// ADVANCED CONTROL FUNCTION DECLARATIONS
+extern void v_loop_GetAGCFactor( // Calls the AGC Factor Modulation Function (Assembly)
+        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+    );
 
 #ifdef	__cplusplus
 }
