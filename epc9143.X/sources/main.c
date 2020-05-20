@@ -25,13 +25,6 @@ volatile bool LOW_PRIORITY_GO = false;  // Flag allowing low priority tasks to b
 
 int main(void) {
 
-    volatile uint16_t test=0;
-    
-    test=BUCK_PWM_PHASE_SHIFT;
-    Nop();
-    Nop();
-    Nop();
-    
     volatile uint16_t timeout = 0;
     
     init_fosc();        // Set up system oscillator for 100 MIPS operation
