@@ -151,7 +151,7 @@ extern "C" {
 #define BUCK_NO_OF_PHASES              2U     // Number of power converter phases of this design
     
 #define BUCK_PWM_DUTY_CYCLE_MIN        (float)0.010 // ~1.0% On Time 
-#define BUCK_PWM_DUTY_CYCLE_MAX        (float)0.400 // ~90% On Time 
+#define BUCK_PWM_DUTY_CYCLE_MAX        (float)0.800 // ~80% On Time 
 #define BUCK_LEADING_EDGE_BLANKING     (float)120.0e-9 // Leading Edge Blanking in [sec]
 #define BUCK_DEAD_TIME_LEADING_EDGE    (float)100.0e-9 // Leading Edge Dead Time in [sec]
 #define BUCK_DEAD_TIME_FALLING_EDGE    (float)100.0e-9 // Falling Edge Dead Time in [sec]
