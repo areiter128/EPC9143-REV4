@@ -189,7 +189,7 @@ extern "C" {
 #define BUCK_PWM2_GPIO_PORT_PINH       9U // Port Pin Number
 #define BUCK_PWM2_GPIO_PORT_PINL       8U // Port Pin Number
 
-#define BUCK_PWM2H_PDC                 PG4DC    // PWM Instance Duty Cycle Register
+#define BUCK_PWM2_PDC                  PG4DC    // PWM Instance Duty Cycle Register
 #define BUCK_PWM2H_TRIS                _TRISB9  // Device Port TRIS register
 #define BUCK_PWM2H_WR                  _LATB9   // Device Pin WRITE
 #define BUCK_PWM2H_RD                  _RB9     // Device Pin READ
