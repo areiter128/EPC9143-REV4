@@ -325,6 +325,8 @@ extern "C" {
  * 
  * *************************************************************************************************/
 
+#define BUCK_ISNS_NEED_CALIBRATION  true                // Flag indicating that current feedback needs calibration
+    
 // Feedback Declarations
 #define BUCK_ISNS_FB_GAIN           (float) 0.050       // Current Gain in V/A
 #define BUCK_ISNS_MAXIMUM           (float) 2.500       // absolute maximum output current (average)

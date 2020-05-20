@@ -110,7 +110,7 @@ volatile uint16_t appPowerSupply_Execute(void)
         );
     
     // Current Calibration Procedure
-    if ((buck.mode == BUCK_STATE_STANDBY) && (!buck.status.bits.cs_calib_ready))
+    if ((buck.mode == BUCK_STATE_STANDBY) && (!buck.status.bits.cs_calib_complete))
     {
         if (buck.status.bits.adc_active) {
             
@@ -127,7 +127,7 @@ volatile uint16_t appPowerSupply_Execute(void)
                 calib_cs1.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
                 calib_cs2.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
 
-                buck.status.bits.cs_calib_ready = true;   // Set CALIB_DONE flag
+                buck.status.bits.cs_calib_complete = true;   // Set CALIB_DONE flag
             }
         }
     }
@@ -242,8 +242,10 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.status.bits.adc_active = false; // Clear ADC STARTED flag
     buck.status.bits.pwm_active = false; // clear PWM STARTED flag
     buck.status.bits.power_source_detected = false; // Clear POWER SOURCE DETECTED flag
+    buck.status.bits.cs_calib_complete = false; // Clear Current Sense Calibration flag
     buck.status.bits.fault_active = true; // Set global FAULT flag
-    buck.status.bits.autorun = true;    // Allow the buck converter to run when cleared of faults
+    buck.status.bits.cs_calib = BUCK_ISNS_NEED_CALIBRATION; // Topology current sensors need to be calibrated
+    buck.status.bits.autorun = true;  // Allow the buck converter to run when cleared of faults
     buck.status.bits.enabled = false; // Disable buck converter
  
     // Set Initial State Machine State

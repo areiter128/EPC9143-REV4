@@ -69,23 +69,24 @@ extern "C" {
  * *************************************************************************************************** */
 
 #define MPHBUCK_NO_OF_PHASES    BUCK_NO_OF_PHASES
+
+// Controller Status Bits
+#define BUCK_STAT_READY                  0b0000000000000001
+#define BUCK_STAT_ADC_ACTIVE             0b0000000000000010
+#define BUCK_STAT_PWM_ACTIVE             0b0000000000000100
+#define BUCK_STAT_POWERSOURCE_DETECTED   0b0000000000001000
+#define BUCK_STAT_CS_SENSE_READY         0b0000000000010000
     
-//// Controller Status Bits
-//#define BUCK_STAT_ADC_ACTIVE             0b0000000000000001
-//#define BUCK_STAT_PWM_STARTED            0b0000000000000010
-//#define BUCK_STAT_POWERSOURCE_DETECTED   0b0000000000000100
-//#define BUCK_STAT_CS_SENSE_READY         0b0000000000001000
-//#define BUCK_STAT_FORCED_SHUT_DOWN       0b0000000000100000
-//
-//#define BUCK_STAT_BUSY                   0b0000000100000000
-//
-//// Controller Control Bits
-//#define BUCK_STAT_GO                     0b0010000000000000
-//#define BUCK_STAT_AUTORUN                0b0100000000000000
-//#define BUCK_STAT_NO_AUTORUN             0b0000000000000000
-//
-//#define BUCK_STAT_ENABLED                0b1000000000000000
-//#define BUCK_STAT_DISABLED               0b0000000000000000
+#define BUCK_STAT_FORCED_SHUT_DOWN       0b0000000010000000
+#define BUCK_STAT_BUSY                   0b0000000100000000
+
+// Controller Control Bits
+#define BUCK_STAT_GO                     0b0010000000000000
+#define BUCK_STAT_AUTORUN                0b0100000000000000
+#define BUCK_STAT_NO_AUTORUN             0b0000000000000000
+
+#define BUCK_STAT_ENABLED                0b1000000000000000
+#define BUCK_STAT_DISABLED               0b0000000000000000
 
 typedef union 
 {
@@ -94,13 +95,13 @@ typedef union
         volatile bool adc_active:1;	    // Bit #1: indicating that ADC has been started and samples are taken
         volatile bool pwm_active:1;     // Bit #2: indicating that PWM has been started and ADC triggers are generated
         volatile bool power_source_detected:1;	// Bit #3:  indicating that a valid power source was detected
-        volatile bool cs_calib_ready :1; // Bit #4: indicating that current sensor is ready
+        volatile bool cs_calib_complete :1; // Bit #4: indicating that current sensor calibration has completed
         volatile unsigned :1;           // Bit #5: (reserved)
         volatile unsigned :1;           // Bit #6: (reserved)
         volatile bool fault_active :1;  // Bit #7: Flag bit indicating system is in enforced shut down mode (usually due to a fault condition)
 
         volatile bool busy :1;      // Bit #8:  Flag bit indicating that the state machine is executing a process (e.g. startup-ramp)
-        volatile unsigned :1;       // Bit #9: (reserved)
+        volatile bool cs_calib :1;  // Bit #9:  Flag bit indicating that current sensors need to calibrated
         volatile unsigned :1;       // Bit #10: (reserved)
         volatile unsigned :1;       // Bit #11: (reserved)
         volatile unsigned :1;       // Bit #12: (reserved)

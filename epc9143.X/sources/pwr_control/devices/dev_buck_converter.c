@@ -80,11 +80,11 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             buckInstance->status.bits.adc_active = false;
 
             // Initiate current sensor calibration flag bit
-            if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_VMC)
-                buckInstance->status.bits.cs_calib_ready = false; //true; 
+            if (buckInstance->status.bits.cs_calib)
+                buckInstance->status.bits.cs_calib_complete = false; 
             else
-                buckInstance->status.bits.cs_calib_ready = false; 
-                
+                buckInstance->status.bits.cs_calib_complete = true; 
+            
             // switch to soft-start phase RESUME
             buckInstance->mode = BUCK_STATE_RESET;
 
@@ -150,7 +150,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                 (buckInstance->status.bits.adc_active) &&       // ADC needs to be running
                 (buckInstance->status.bits.pwm_active) &&       // PWM needs to be running 
                 (!buckInstance->status.bits.fault_active) &&    // No active fault is present
-                (buckInstance->status.bits.cs_calib_ready)      // Current Sensor Calibration complete
+                (buckInstance->status.bits.cs_calib_complete)      // Current Sensor Calibration complete
                 )
             {
                 // switch to soft-start phase POWER-ON DELAY
@@ -178,7 +178,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                 buckInstance->startup.power_on_delay.counter = 
                     (buckInstance->startup.power_on_delay.period + 1); // Saturate power on counter
 
-                if (buckInstance->status.bits.cs_calib_ready) { // if current sensors is calibrated
+                if (buckInstance->status.bits.cs_calib_complete) { // if current sensors is calibrated
                     buckInstance->mode = BUCK_STATE_LAUNCH_V_RAMP; // ramp up output
                 }
 
