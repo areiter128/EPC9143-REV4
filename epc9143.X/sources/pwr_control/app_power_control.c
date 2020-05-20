@@ -86,14 +86,14 @@ volatile uint16_t appPowerSupply_Execute(void)
     buck.data.i_sns[0] = BUCK_ISNS1_ADCBUF;
     buck.data.i_sns[1] = BUCK_ISNS2_ADCBUF;
     
-    for (_i=0; _i<buck.set_values.phases; _i++) // Accumulate phase current values
+    // Accumulate phase currents
+    for (_i=0; _i<buck.set_values.phases; _i++) 
     { i_dummy += buck.data.i_sns[_i]; }
     buck.data.i_out = i_dummy; // Set output current value
 
-/*    
     // Check conditional parameters and fault flags
     buck.status.bits.power_source_detected = (bool)
-        ((VIN_UVLO_TRIP < buck.data.v_in) && (buck.data.v_in<VIN_OVLO_TRIP));
+        ((BUCK_VIN_UVLO_TRIP < buck.data.v_in) && (buck.data.v_in<BUCK_VIN_OVLO_TRIP));
     
     // Combine individual fault bits to a common fault indicator
     buck.status.bits.fault_active = (bool) (
@@ -101,9 +101,11 @@ volatile uint16_t appPowerSupply_Execute(void)
         fltobj_BuckOVLO.status.bits.fault_status |
         fltobj_BuckRegErr.status.bits.fault_status 
         );
-*/
-    buck.status.bits.fault_active = false;
-    buck.status.bits.power_source_detected = true;
+    
+    // Current Calibration Procedure
+//        cs_calib_ready = true;
+//    buck.status.bits.fault_active = false;
+//    buck.status.bits.power_source_detected = true;
     
     // Execute buck converter state machine
     retval &= drv_BuckConverter_Execute(&buck);
@@ -111,10 +113,16 @@ volatile uint16_t appPowerSupply_Execute(void)
     // Buck regulation error is only active while controller is running
     // and while being tied to a valid reference
     if(buck.mode >= BUCK_STATE_V_RAMP_UP) {
+
         fltobj_BuckRegErr.ref_obj = buck.v_loop.controller->Ports.ptrControlReference;
+
         #if (PLANT_MEASUREMENT == false)
+
         fltobj_BuckRegErr.status.bits.enabled = buck.v_loop.controller->status.bits.enabled;
+
+
         #endif
+
     }
     else {
         fltobj_BuckRegErr.status.bits.enabled = false;
@@ -206,6 +214,7 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
 {
     volatile uint16_t fres = 1;
     volatile uint16_t _i = 0;
+    volatile bool adc_trigger_mode=false;
     
     // Initialize Buck Converter Object Status
     buck.status.bits.adc_active = false; // Clear ADC STARTED flag
@@ -272,6 +281,7 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     // ~~~ OUTPUT VOLTAGE FEEDBACK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     buck.feedback.ad_vout.enabled = true;   // Use this channel
+    adc_trigger_mode = (bool)(BUCK_VOUT_TRIGGER_MODE == BUCK_VOUT_TRIG_ADC);
 
     buck.feedback.ad_vout.adc_input = BUCK_VOUT_ADCIN;
     buck.feedback.ad_vout.adc_core = BUCK_VOUT_ADCCORE;
@@ -279,12 +289,12 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.feedback.ad_vout.trigger_source = BUCK_VOUT_TRGSRC;
 
     buck.feedback.ad_vout.differential_input = false;
-    buck.feedback.ad_vout.interrupt_enable = false;
-    buck.feedback.ad_vout.early_interrupt_enable = false;
+    buck.feedback.ad_vout.interrupt_enable = adc_trigger_mode;
+    buck.feedback.ad_vout.early_interrupt_enable = adc_trigger_mode;
     buck.feedback.ad_vout.level_trigger = false;
     buck.feedback.ad_vout.signed_result = false;
     
-    BUCK_VOUT_ANSEL = buck.feedback.ad_vout.enabled;
+    BUCK_VOUT_ANSEL = (int)buck.feedback.ad_vout.enabled;
     
     // ~~~ OUTPUT VOLTAGE FEEDBACK END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -303,13 +313,13 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.feedback.ad_vin.level_trigger = false;
     buck.feedback.ad_vin.signed_result = false;
 
-    BUCK_VIN_ANSEL = buck.feedback.ad_vin.enabled;
+    BUCK_VIN_ANSEL = (int)buck.feedback.ad_vin.enabled;
     
     // ~~~ INPUT VOLTAGE FEEDBACK END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // ~~~ OUTPUT CURRENT FEEDBACK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    buck.feedback.ad_isns[0].enabled = false;   // Use this channel
+    buck.feedback.ad_isns[0].enabled = true;   // Use this channel
 
     buck.feedback.ad_isns[0].adc_input = BUCK_ISNS1_ADCIN;
     buck.feedback.ad_isns[0].adc_core = BUCK_ISNS1_ADCCORE;
@@ -322,10 +332,10 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.feedback.ad_isns[0].level_trigger = false;
     buck.feedback.ad_isns[0].signed_result = false;
 
-    BUCK_ISNS1_ANSEL = buck.feedback.ad_isns[0].enabled;
+    BUCK_ISNS1_ANSEL = (int)buck.feedback.ad_isns[0].enabled;
 
     
-    buck.feedback.ad_isns[1].enabled = false;   // Use this channel
+    buck.feedback.ad_isns[1].enabled = true;   // Use this channel
 
     buck.feedback.ad_isns[1].adc_input = BUCK_ISNS2_ADCIN;
     buck.feedback.ad_isns[1].adc_core = BUCK_ISNS2_ADCCORE;
@@ -338,7 +348,7 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.feedback.ad_isns[1].level_trigger = false;
     buck.feedback.ad_isns[1].signed_result = false;
 
-    BUCK_ISNS1_ANSEL = buck.feedback.ad_isns[1].enabled;
+    BUCK_ISNS2_ANSEL = (int)buck.feedback.ad_isns[1].enabled;
 
     
     // ~~~ OUTPUT CURRENT FEEDBACK END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -478,10 +488,10 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->Limits.AltMaxOutput = 0; // not used
 
     // ADC Trigger Control Configuration
-    buck.v_loop.controller->ADCTriggerControl.ptrADCTriggerARegister = &BUCK_VOUT_ADCTRIG;
-    buck.v_loop.controller->ADCTriggerControl.ADCTriggerAOffset = buck.v_loop.trigger_offset;
-    buck.v_loop.controller->ADCTriggerControl.ptrADCTriggerBRegister = NULL;
-    buck.v_loop.controller->ADCTriggerControl.ADCTriggerBOffset = 0;
+    buck.v_loop.controller->ADCTriggerControl.ptrADCTriggerARegister = &BUCK_VOUT_ADCTRIG;    // Using PGxTRIGA = ADC Trigger 1
+    buck.v_loop.controller->ADCTriggerControl.ADCTriggerAOffset = buck.v_loop.trigger_offset; // Triggering at 50% off-time
+    buck.v_loop.controller->ADCTriggerControl.ptrADCTriggerBRegister = &BUCK_ISNS1_ADCTRIG;   // Using PGxTRIGB = ADC Trigger 2
+    buck.v_loop.controller->ADCTriggerControl.ADCTriggerBOffset = BUCK_ISNS_ADC_TRGDLY; // Triggering at 50% on-time
     
     // Data Provider Configuration
     buck.v_loop.controller->DataProviders.ptrDProvControlInput = &buck.data.v_out;
@@ -550,9 +560,32 @@ void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void
     #else
     v_loop_PTermUpdate(&v_loop);
     #endif
-    PG1STATbits.UPDREQ = 1;  // Force PWM timing update
-    _BUCK_VLOOP_ISR_IF = 0;  // Clear the ADCANx interrupt flag 
 
-DBGPIN_2_CLEAR;
+    // Sync ADC triggers of VON, VOUT, ISNS1, ISNS2
+    PG4TRIGA = PG2TRIGA;
+    PG4TRIGB = PG2TRIGB;
+    
+    // Low frequency current balancing
+    // ToDo: Move current balancing out to lower frequency execution
+    //       Check current balancing after applying current calibration
+    
+//    if(buck.v_loop.controller->status.bits.enabled) {
+//
+//        if(buck.data.i_sns[0] > buck.data.i_sns[1]) {
+//            buck.v_loop.controller->Ports.AltTarget.Offset++;
+//            buck.v_loop.controller->Ports.Target.Offset--;
+//        }
+//        else {
+//            buck.v_loop.controller->Ports.AltTarget.Offset--;
+//            buck.v_loop.controller->Ports.Target.Offset++;
+//        }
+//    
+//    }
+    
+    // Clear the ADCANx interrupt flag 
+    _BUCK_VLOOP_ISR_IF = 0;  
+    
+    DBGPIN_1_CLEAR;
+    
 }
 
