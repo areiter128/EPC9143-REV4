@@ -67,36 +67,30 @@ int main(void) {
         LOW_PRIORITY_GO = false;
         timeout = 0;    // Reset timeout counter
 
-//        DBGPIN_2_SET; // Set DEBUG-PIN
-
-        DBGPIN_2_TOGGLE;
+        DBGPIN_2_TOGGLE; // indicate main() loop activity
         
         // Execute non-time critical, low-priority tasks
         /* PLACE LOW_PRIORITY TASKS CALLS HERE */
 
-        
-//        DBGPIN_2_CLEAR; // Clear DEBUG-PIN
         Nop();
     }
-
 
     return (0);
 }
 
 void __attribute__((__interrupt__, auto_psv)) _T1Interrupt(void)
 {
-//    DBGPIN_1_SET; // Set DEBUG-PIN
+    DBGPIN_3_SET; // Set DEBUG-PIN
     
     // Execute high priority, time critical tasks
     appPowerSupply_Execute();
     appFaults_Execute();
   
-    DBGPIN_1_TOGGLE; // Toggle DEBUG-PIN
-    
     LOW_PRIORITY_GO = true; // Set GO trigger for low priority tasks
     
     _T1IF = 0;
-///    DBGPIN_1_CLEAR; // Clear DEBUG-PIN
+    DBGPIN_3_CLEAR; // Clear DEBUG-PIN
+    
 }
 
 
