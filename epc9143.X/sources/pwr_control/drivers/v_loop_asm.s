@@ -3,9 +3,9 @@
 ;  SDK Version: z-Domain Control Loop Designer v0.9.7.102
 ;  AGS Version: Assembly Generator Script v2.0.11 (05/20/2020)
 ;  Author:      M91406
-;  Date/Time:   05/20/2020 8:00:08 PM
+;  Date/Time:   05/20/2020 11:53:25 PM
 ; **********************************************************************************
-;  3P3Z Control Library File (Dual Bitshift-Scaling Mode)
+;  4P4Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
 	
 ;------------------------------------------------------------------------------
@@ -114,6 +114,7 @@ _v_loop_Update:    ; provide global scope to routine
 	clr a, [w8]+=4, w4, [w10]+=2, w6    ; clear accumulator A and prefetch first operands
 	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-1) from the delay line with coefficient A1
 	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-2) from the delay line with coefficient A2
+	mac w4*w6, a, [w8]+=4, w4, [w10]+=2, w6    ; multiply control output (n-3) from the delay line with coefficient A3
 	mac w4*w6, a    ; multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
 	
 ;------------------------------------------------------------------------------
@@ -127,6 +128,8 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Update error history (move error one tick along the delay line)
+	mov [w10 + #6], w6    ; move entry (n-4) into buffer
+	mov w6, [w10 + #8]    ; move buffered value one tick down the delay line
 	mov [w10 + #4], w6    ; move entry (n-3) into buffer
 	mov w6, [w10 + #6]    ; move buffered value one tick down the delay line
 	mov [w10 + #2], w6    ; move entry (n-2) into buffer
@@ -156,6 +159,7 @@ _v_loop_Update:    ; provide global scope to routine
 	mac w4*w6, b, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-0) from the delay line with coefficient B0 and prefetch next operands
 	mac w4*w6, b, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-1) from the delay line with coefficient B1 and prefetch next operands
 	mac w4*w6, b, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-2) from the delay line with coefficient B2 and prefetch next operands
+	mac w4*w6, b, [w8]+=4, w4, [w10]+=2, w6    ; multiply & accumulate error input (n-3) from the delay line with coefficient B3 and prefetch next operands
 	mac w4*w6, b    ; multiply & accumulate last error input with coefficient of the delay line (no more prefetch)
 	
 ;------------------------------------------------------------------------------
@@ -216,6 +220,8 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Update control output history
+	mov [w10 + #4], w6    ; move entry (n-3) one tick down the delay line
+	mov w6, [w10 + #6]
 	mov [w10 + #2], w6    ; move entry (n-2) one tick down the delay line
 	mov w6, [w10 + #4]
 	mov [w10 + #0], w6    ; move entry (n-1) one tick down the delay line
@@ -255,6 +261,7 @@ _v_loop_Reset:
 	mov  [w0 + #ptrControlHistory], w0    ; set pointer to the base address of control history array
 	clr [w0++]    ; clear next address of control history array
 	clr [w0++]    ; clear next address of control history array
+	clr [w0++]    ; clear next address of control history array
 	clr [w0]    ; clear last address of control history array
 	pop w0    ; restore contents of working register WREG0
 	
@@ -262,6 +269,7 @@ _v_loop_Reset:
 ; Clear error history array
 	push w0    ; save contents of working register WREG0
 	mov [w0 + #ptrErrorHistory], w0    ; set pointer to the base address of error history array
+	clr [w0++]    ; Clear next address of error history array
 	clr [w0++]    ; Clear next address of error history array
 	clr [w0++]    ; Clear next address of error history array
 	clr [w0++]    ; Clear next address of error history array
@@ -289,6 +297,7 @@ _v_loop_Precharge:
 	mov w1, [w0++]    ; Load user value into next address of error history array
 	mov w1, [w0++]    ; Load user value into next address of error history array
 	mov w1, [w0++]    ; Load user value into next address of error history array
+	mov w1, [w0++]    ; Load user value into next address of error history array
 	mov w1, [w0]    ; load user value into last address of error history array
 	pop w1    ; restore contents of working register WREG1
 	pop w0    ; restore contents of working register WREG0
@@ -298,6 +307,7 @@ _v_loop_Precharge:
 	push w0    ; save contents of working register WREG0
 	push w2    ; save contents of working register WREG2
 	mov  [w0 + #ptrControlHistory], w0    ; set pointer to the base address of control history array
+	mov w2, [w0++]    ; Load user value into next address of control history array
 	mov w2, [w0++]    ; Load user value into next address of control history array
 	mov w2, [w0++]    ; Load user value into next address of control history array
 	mov w2, [w0]    ; Load user value into last address of control history array

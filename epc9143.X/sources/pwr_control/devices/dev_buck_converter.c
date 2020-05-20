@@ -81,7 +81,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
 
             // Initiate current sensor calibration flag bit
             if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_VMC)
-                buckInstance->status.bits.cs_calib_ready = true; 
+                buckInstance->status.bits.cs_calib_ready = false; //true; 
             else
                 buckInstance->status.bits.cs_calib_ready = false; 
                 

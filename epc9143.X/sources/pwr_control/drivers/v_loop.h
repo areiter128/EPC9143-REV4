@@ -1,11 +1,11 @@
 /* *********************************************************************************
  * z-Domain Control Loop Designer, Version 0.9.7.102
  * *********************************************************************************
- * 3p3z controller function declarations and compensation filter coefficients
+ * 4p4z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
  * *********************************************************************************
  *
- *  Controller Type:    3P3Z - Basic Voltage Mode Compensator
+ *  Controller Type:    4P4Z - Advanced High-Q Compensator
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
@@ -16,7 +16,7 @@
  * CGS Date:            05/20/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           05/20/2020 8:00:08 PM
+ * Date/Time:           05/20/2020 11:53:24 PM
  * ********************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
@@ -44,14 +44,14 @@
  * ******************************************************************************/
 typedef struct
 {
-    volatile int32_t ACoefficients[3]; // A-Coefficients
-    volatile int32_t BCoefficients[4]; // B-Coefficients
+    volatile int32_t ACoefficients[4]; // A-Coefficients
+    volatile int32_t BCoefficients[5]; // B-Coefficients
 } __attribute__((packed)) V_LOOP_CONTROL_LOOP_COEFFICIENTS_t;
 
 typedef struct
 {
-    volatile fractional ControlHistory[3];  // Control History Array
-    volatile fractional ErrorHistory[4];  // Error History Array
+    volatile fractional ControlHistory[4];  // Control History Array
+    volatile fractional ErrorHistory[5];  // Error History Array
 } __attribute__((packed)) V_LOOP_CONTROL_LOOP_HISTORIES_t;
 
 // P-Term Coefficient for Plant Measurements
@@ -75,12 +75,12 @@ extern volatile uint16_t v_loop_Initialize( // v_loop initialization function ca
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
-// Clears the 3P3Z controller output and error histories
+// Clears the 4P4Z controller output and error histories
 extern void v_loop_Reset( // v_loop reset function call (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
-// Loads user-defined values into 3P3Z controller output and error histories
+// Loads user-defined values into 4P4Z controller output and error histories
 extern void v_loop_Precharge( // v_loop history pre-charge function call (Assembly)
         volatile cNPNZ16b_t* controller, // Pointer to nPnZ data type object
         volatile fractional ctrl_input, // user-defined, constant error history value
@@ -88,7 +88,7 @@ extern void v_loop_Precharge( // v_loop history pre-charge function call (Assemb
     );
 
 // Calls the v_loop control loop
-extern void v_loop_Update( // Calls the 3P3Z controller (Assembly)
+extern void v_loop_Update( // Calls the 4P4Z controller (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
