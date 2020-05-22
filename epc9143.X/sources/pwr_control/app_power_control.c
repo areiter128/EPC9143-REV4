@@ -6,6 +6,7 @@
  */
 
 #include "pwr_control/app_power_control.h"
+#include "pwr_control/devices/dev_buck_typedef.h"
 #include "config/epc9143_r40_hwdescr.h"
 #include "fault_handler/app_faults.h"
 
@@ -110,27 +111,27 @@ volatile uint16_t appPowerSupply_Execute(void)
         );
     
     // Current Calibration Procedure
-    if ((buck.mode == BUCK_STATE_STANDBY) && (!buck.status.bits.cs_calib_complete))
-    {
-        if (buck.status.bits.adc_active) {
-            
-            if (++calib_cs1.cs_calib_cnt < CS_CALIB_STEPS)
-            {
-                calib_cs1.cs_calib_offset += buck.data.i_sns[0]; // Read ADC offset value
-                calib_cs2.cs_calib_offset += buck.data.i_sns[1]; // Read ADC offset value
-            }
-            else
-            {
-                calib_cs1.cs_calib_offset += buck.data.i_sns[0]; // Read ADC offset value
-                calib_cs2.cs_calib_offset += buck.data.i_sns[1]; // Read ADC offset value
-
-                calib_cs1.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
-                calib_cs2.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
-
-                buck.status.bits.cs_calib_complete = true;   // Set CALIB_DONE flag
-            }
-        }
-    }
+//    if ((buck.mode == BUCK_STATE_STANDBY) && (!buck.status.bits.cs_calib_complete))
+//    {
+//        if (buck.status.bits.adc_active) {
+//            
+//            if (++calib_cs1.cs_calib_cnt < CS_CALIB_STEPS)
+//            {
+//                calib_cs1.cs_calib_offset += buck.data.i_sns[0]; // Read ADC offset value
+//                calib_cs2.cs_calib_offset += buck.data.i_sns[1]; // Read ADC offset value
+//            }
+//            else
+//            {
+//                calib_cs1.cs_calib_offset += buck.data.i_sns[0]; // Read ADC offset value
+//                calib_cs2.cs_calib_offset += buck.data.i_sns[1]; // Read ADC offset value
+//
+//                calib_cs1.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
+//                calib_cs2.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
+//
+//                buck.status.bits.cs_calib_complete = true;   // Set CALIB_DONE flag
+//            }
+//        }
+//    }
     
     // Execute buck converter state machine
     retval &= drv_BuckConverter_Execute(&buck);
