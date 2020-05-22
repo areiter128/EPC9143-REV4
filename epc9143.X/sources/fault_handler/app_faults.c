@@ -104,7 +104,7 @@ volatile uint16_t appFaults_Execute(void)
     // Call fault handler
     fres &= fault_check(&fltobj_BuckUVLO);
     fres &= fault_check(&fltobj_BuckOVLO);
-    fres &= fault_check(&fltobj_BuckRegErr);
+//    fres &= fault_check(&fltobj_BuckRegErr);
     
     return (fres);
 }
