@@ -151,7 +151,7 @@ extern "C" {
 #define BUCK_NO_OF_PHASES              2U     // Number of power converter phases of this design
     
 #define BUCK_PWM_DUTY_CYCLE_MIN        (float)0.010 // ~1.0% On Time 
-#define BUCK_PWM_DUTY_CYCLE_MAX        (float)0.800 // ~80% On Time 
+#define BUCK_PWM_DUTY_CYCLE_MAX        (float)0.600 // ~80% On Time 
 #define BUCK_LEADING_EDGE_BLANKING     (float)120.0e-9 // Leading Edge Blanking in [sec]
 #define BUCK_DEAD_TIME_LEADING_EDGE    (float)100.0e-9 // Leading Edge Dead Time in [sec]
 #define BUCK_DEAD_TIME_FALLING_EDGE    (float)100.0e-9 // Falling Edge Dead Time in [sec]
@@ -234,7 +234,7 @@ extern "C" {
  * *************************************************************************************************/
     
 #define BUCK_VIN_MINIMUM        (float)10.000   // Minimum input voltage
-#define BUCK_VIN_NOMINAL        (float)12.000   // Nominal input voltage
+#define BUCK_VIN_NOMINAL        (float)24.000   // Nominal input voltage
 #define BUCK_VIN_MAXIMUM        (float)60.000   // Maximum input voltage
 
 #define BUCK_VIN_UNDER_VOLTAGE  (float)9.500    // Under Voltage Lock Out Cut Off
@@ -285,7 +285,7 @@ extern "C" {
  * *************************************************************************************************/
 
 // Feedback Declarations
-#define BUCK_VOUT_NOMINAL           (float)3.000   // Nominal output voltage
+#define BUCK_VOUT_NOMINAL           (float)6.000   // Nominal output voltage
 #define BUCK_VOUT_TOLERANCE_MAX     (float)0.500   // Output voltage tolerance [+/-]
 #define BUCK_VOUT_TOLERANCE_MIN     (float)0.100   // Output voltage tolerance [+/-]
     
@@ -325,7 +325,7 @@ extern "C" {
  * 
  * *************************************************************************************************/
 
-#define BUCK_ISNS_NEED_CALIBRATION  true                // Flag indicating that current feedback needs calibration
+#define BUCK_ISNS_NEED_CALIBRATION  false //true                // Flag indicating that current feedback needs calibration
     
 // Feedback Declarations
 #define BUCK_ISNS_FB_GAIN           (float) 0.050       // Current Gain in V/A
@@ -405,7 +405,7 @@ extern "C" {
 
 #define BUCK_POWER_ON_DELAY          (float) 500e-3 // power on delay in [sec]
 #define BUCK_VRAMP_PERIOD            (float) 200e-3 // ramp period in [sec]
-#define BUCK_IRAMP_PERIOD            (float)  50e-3 // ramp period in [sec]
+#define BUCK_IRAMP_PERIOD            (float) 200e-3 // ramp period in [sec]
 #define BUCK_POWER_GOOD_DELAY        (float) 100e-3 // power good in [sec]
 
 // ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
