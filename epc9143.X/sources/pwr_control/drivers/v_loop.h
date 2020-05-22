@@ -1,5 +1,5 @@
 /* *********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.7.102
+ * z-Domain Control Loop Designer, Version 0.9.8.104
  * *********************************************************************************
  * 4p4z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -16,7 +16,7 @@
  * CGS Date:            05/20/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           05/21/2020 12:15:24 AM
+ * Date/Time:           05/22/2020 7:32:46 PM
  * ********************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__

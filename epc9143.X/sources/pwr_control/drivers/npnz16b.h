@@ -1,5 +1,5 @@
 /* *********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.7.102
+ * z-Domain Control Loop Designer, Version 0.9.8.104
  * *********************************************************************************
  * Generic library header for z-domain compensation filter assembly functions
  * CGS Version: 2.0.10
@@ -17,7 +17,7 @@
 // This version key represents the product version of DCLD as integer number
 // of the form [MAJOR][MINOR][REVISION] => version 0.9.3.xxx would be shown as 903
 #ifndef __DCLD_VERSION
-    #define __DCLD_VERSION    907
+    #define __DCLD_VERSION    908
 #endif  // end of __DCLD_VERSION
 
 /* Status flags (Single Bit) */

@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.7.102
+;  SDK Version: z-Domain Control Loop Designer v0.9.8.104
 ;  AGS Version: Assembly Generator Script v2.0.11 (05/20/2020)
 ;  Author:      M91406
-;  Date/Time:   05/21/2020 12:15:24 AM
+;  Date/Time:   05/22/2020 7:32:47 PM
 ; **********************************************************************************
 ;  4P4Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
