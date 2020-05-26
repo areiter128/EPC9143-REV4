@@ -68,6 +68,7 @@
         <logicalFolder name="f3" displayName="app" projectFiles="true">
           <itemPath>sources/fault_handler/app_faults.c</itemPath>
           <itemPath>sources/pwr_control/app_power_control.c</itemPath>
+          <itemPath>sources/pwr_control/app_power_control_isr.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="devices" projectFiles="true">
           <logicalFolder name="f2" displayName="pwr_control" projectFiles="true">
@@ -186,6 +187,7 @@
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
+        <appendMe value="-finline-functions"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -1242,6 +1244,7 @@
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
+        <appendMe value="-finline-functions"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
