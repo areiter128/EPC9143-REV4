@@ -169,7 +169,7 @@ volatile uint16_t appPowerSupply_Execute(void)
 
 volatile uint16_t appPowerSupply_Dispose(void)
 { 
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t _i=0;
 
     buck.status.value = 0;
@@ -182,7 +182,7 @@ volatile uint16_t appPowerSupply_Dispose(void)
     buck.data.temp = 0;  // Reset output temperature value
     buck.mode = BUCK_STATE_INITIALIZE; // Set state machine
     
-    return(fres); 
+    return(retval); 
 }
 
 /* @@<function_name>
@@ -199,13 +199,13 @@ volatile uint16_t appPowerSupply_Dispose(void)
 
 volatile uint16_t appPowerSupply_Suspend(void)
 { 
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
 
-    buckPWM_Suspend(&buck); // Shut down PWM immediately
+    retval &= buckPWM_Suspend(&buck); // Shut down PWM immediately
     buck.status.bits.fault_active = true; // Set FAULT flag
     buck.mode = BUCK_STATE_RESET; // Reset State Machine (causes loop reset)
 
-    return(fres); 
+    return(retval); 
 }
 
 /* @@<function_name>
@@ -222,12 +222,12 @@ volatile uint16_t appPowerSupply_Suspend(void)
 
 volatile uint16_t appPowerSupply_Resume(void)
 { 
-    volatile uint16_t fres=0;
+    volatile uint16_t retval=0;
 
     buck.mode = BUCK_STATE_RESET;       // Ensure State Machine is RESET
     buck.status.bits.enabled = true;    // Ensure Buck Converter is enabled
     
-    return(fres); 
+    return(retval); 
 }
 
 /* *************************************************************************************************
@@ -236,7 +236,7 @@ volatile uint16_t appPowerSupply_Resume(void)
 
 volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
 {
-    volatile uint16_t fres = 1;
+    volatile uint16_t retval = 1;
     volatile uint16_t _i = 0;
     volatile bool adc_trigger_mode=false;
     
@@ -407,7 +407,7 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.startup.power_good_delay.reference = BUCK_VOUT_REF;
     
     
-    return(fres);
+    return(retval);
 }
 
 /* @@<function_name>
@@ -424,19 +424,19 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
 
 volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     
  
-    fres &= buckPWM_ModuleInitialize(&buck); // Initialize PWM Module
-    fres &= buckPWM_ChannelInitialize(&buck);  // Initialize PWM Channel of Buck Converter
+    retval &= buckPWM_ModuleInitialize(&buck); // Initialize PWM Module
+    retval &= buckPWM_ChannelInitialize(&buck);  // Initialize PWM Channel of Buck Converter
     
-    fres &= buckADC_ModuleInitialize();     // Initialize ADC Module
+    retval &= buckADC_ModuleInitialize();     // Initialize ADC Module
     
-    fres &= buckADC_Channel_Initialize(&buck.feedback.ad_vout); // Initialize Output Voltage Channel
-    fres &= buckADC_Channel_Initialize(&buck.feedback.ad_vin);  // Initialize Input Voltage Channel
-    fres &= buckADC_Channel_Initialize(&buck.feedback.ad_isns[0]); // Initialize Phase Current #1 Channel
-    fres &= buckADC_Channel_Initialize(&buck.feedback.ad_isns[1]); // Initialize Phase Current #2 Channel
-    fres &= buckADC_Channel_Initialize(&buck.feedback.ad_temp); // Initialize Temperature Channel
+    retval &= buckADC_Channel_Initialize(&buck.feedback.ad_vout); // Initialize Output Voltage Channel
+    retval &= buckADC_Channel_Initialize(&buck.feedback.ad_vin);  // Initialize Input Voltage Channel
+    retval &= buckADC_Channel_Initialize(&buck.feedback.ad_isns[0]); // Initialize Phase Current #1 Channel
+    retval &= buckADC_Channel_Initialize(&buck.feedback.ad_isns[1]); // Initialize Phase Current #2 Channel
+    retval &= buckADC_Channel_Initialize(&buck.feedback.ad_temp); // Initialize Temperature Channel
     
     // Custom configurations
     ADCON4Hbits.C1CHS = 1; // Set ADC  input channel to read from ANA1
@@ -444,7 +444,7 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
     // Synchronize PWM channels #1 and #2
     
     
-    return(fres);
+    return(retval);
 }
 
 /* @@<function_name>
@@ -461,7 +461,7 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
 
 volatile uint16_t appPowerSupply_ControllerInitialize(void)
 {
-    volatile uint16_t fres = 1;
+    volatile uint16_t retval = 1;
     
     // ~~~ VOLTAGE LOOP CONFIGURATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -559,7 +559,7 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     // ~~~ VOLTAGE LOOP CONFIGURATION END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     
-    return(fres);
+    return(retval);
 }
 
 /*!Power Converter Control Loop Interrupt
