@@ -20,10 +20,11 @@
  */
 
 /* 
- * File:   
- * Author: 
- * Comments:
+ * File:   dev_buck_pconfig.h
+ * Author: M91406
+ * Comments: Peripheral configuration template header file for generic buck converter driver
  * Revision history: 
+ * 1.0  initial release
  */
 
 // This is a guard condition so that contents of this file are not included
@@ -122,10 +123,44 @@ extern "C" {
         volatile uint16_t PWMEVTE;  // PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y
         volatile uint16_t PWMEVTF;  // PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y
     } __attribute__((packed)) P33C_PWM_MODULE_t; // PWM MODULE REGISTER SET
+    
 #endif
 
 // GENERIC PWM GENERATOR SPECIAL FUNCTION REGISTER SET 
-#ifndef P33C_PWM_INSTANCE_t     
+#ifndef P33C_PWM_INSTANCE_t  
+    
+/*
+    typedef struct {
+        volatile uint16_t PGxCONL; // PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
+        volatile uint16_t PGxCONH; // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
+        volatile uint16_t PGxSTAT; // PGxSTAT: PWM GENERATOR x STATUS REGISTER
+        volatile uint16_t PGxIOCONL; // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER LOW
+        volatile uint16_t PGxIOCONH; // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER HIGH
+        volatile uint16_t PGxEVTL;  // PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
+        volatile uint16_t PGxEVTH;  // PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
+        volatile uint16_t PGxFPCIL; // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER LOW
+        volatile uint16_t PGxFPCIH; // PGxFPCIH: PWM GENERATOR x FAULT PCI REGISTER HIGH
+        volatile uint16_t PGxCLPCIL; // PGxCLPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER LOW
+        volatile uint16_t PGxCLPCIH; // PGxCLPCIH: PWM GENERATOR x CURRENT LIMIT PCI REGISTER HIGH
+        volatile uint16_t PGxFFPCIL; // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER LOW
+        volatile uint16_t PGxFFPCIH; // PGxFFPCIH: PWM GENERATOR x FEED FORWARD PCI REGISTER HIGH
+        volatile uint16_t PGxSPCIL; // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER LOW
+        volatile uint16_t PGxSPCIH; // PGxSPCIH: PWM GENERATOR x SOFTWARE PCI REGISTER HIGH
+        volatile uint16_t PGxLEBL;  // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW
+        volatile uint16_t PGxLEBH;  // PGxLEBH: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
+        volatile uint16_t PGxPHASE; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
+        volatile uint16_t PGxDC;    // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
+        volatile uint16_t PGxDCA;   // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
+        volatile uint16_t PGxPER;   // PGxPER: PWM GENERATOR x PERIOD REGISTER
+        volatile uint16_t PGxTRIGA; // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
+        volatile uint16_t PGxTRIGB; // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER
+        volatile uint16_t PGxTRIGC; // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER
+        volatile uint16_t PGxDTL;   // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW
+        volatile uint16_t PGxDTH;   // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
+        volatile uint16_t PGxCAP;   // PGxCAP: PWM GENERATOR x CAPTURE REGISTER
+    } __attribute__((packed)) P33C_PWM_INSTANCE_t; // PWM INSTANCE REGISTER SET
+    #define P33C_PWMGEN_SFR_OFFSET  ((volatile uint16_t)&PG2CONL - (volatile uint16_t)&PG1CONL)
+*/
     typedef struct {
         union {   
             volatile PG1CONLBITS bits; // Register bit-field
@@ -253,9 +288,11 @@ extern "C" {
         }PGxCAP;   // PGxCAP: PWM GENERATOR x CAPTURE REGISTER
         
     } __attribute__((packed)) P33C_PWM_INSTANCE_t; // PWM INSTANCE REGISTER SET
-    #define P33C_PWMGEN_SFR_OFFSET  ((volatile uint16_t)&PG2CONL - (volatile uint16_t)&PG1CONL)
-#endif
     
+    #define P33C_PWMGEN_SFR_OFFSET  ((volatile uint16_t)((volatile uint16_t*)&PG2CONL - (volatile uint16_t*)&PG1CONL))
+
+#endif
+
 #define P33C_PGxCONL_PWM_ON     0x8000  // control bit in PGxCONL enabling/disabling the PWM generator
 #define P33C_PGxCONL_HRES_EN    0x0080  // control bit in PGxCONL enabling/disabling High Resolution Mode
 #define P33C_PGxIOCONL_OVREN    0x3000  // control bits in PGxIOCONL enabling/disabling the PWM output override
@@ -716,5 +753,7 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
+#else
+   #pragma message "Warning: dev_buck_pconfig.h inclusion bypassed"
 #endif	/* BUCK_CONVERTER_PERIPHERAL_CONFIGURAITON_H */
 
