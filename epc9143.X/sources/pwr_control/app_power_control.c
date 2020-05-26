@@ -587,7 +587,9 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
 void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void)
 {
     DBGPIN_1_SET;
+    PWRGOOD_SET;
 
+    
     buck.status.bits.adc_active = true;
     #if (PLANT_MEASUREMENT == false)
     buck.v_loop.ctrl_Update(buck.v_loop.controller);
@@ -595,9 +597,16 @@ void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void
     v_loop_PTermUpdate(&v_loop);
     #endif
 
+    Nop();
+    Nop();
+    Nop();
+    Nop();
+    
     // Sync ADC triggers of VON, VOUT, ISNS1, ISNS2
-    PG4TRIGA = PG2TRIGA;
-    PG4TRIGB = PG2TRIGB;
+//    PG4TRIGA = PG2TRIGA;
+//    PG4TRIGB = PG2TRIGB;
+//    PG2STATbits.UPDREQ = 1;
+//    PG4STATbits.UPDREQ = 1;
     
     // Low frequency current balancing
     // ToDo: Move current balancing out to lower frequency execution
@@ -620,6 +629,7 @@ void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void
     _BUCK_VLOOP_ISR_IF = 0;  
     
     DBGPIN_1_CLEAR;
+    PWRGOOD_CLEAR;
     
 }
 
