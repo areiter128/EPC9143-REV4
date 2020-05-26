@@ -164,7 +164,9 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
         pg->PGxLEBH.value = REG_PGxLEBH; // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
 
         // LOAD PWM GENERATOR TIMING SETTINGS FROM BUCK CONVERTER OBJECT
-        pg->PGxPHASE.value = 0; //buckInstance->sw_node[_i].phase; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
+        pg->PGxCONH.bits.MPERSEL = (uint16_t)buckInstance->sw_node[_i].master_period;
+        
+        pg->PGxPHASE.value = 0; // buckInstance->sw_node[_i].phase; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
         pg->PGxDC.value = buckInstance->sw_node[_i].duty_ratio_min; // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
         pg->PGxDCA.value = REG_PGxDCA; // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER (not used)
         pg->PGxPER.value = buckInstance->sw_node[_i].period; // PGxPER: PWM GENERATOR x PERIOD REGISTER
