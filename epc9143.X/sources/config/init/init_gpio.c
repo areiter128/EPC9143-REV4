@@ -21,6 +21,8 @@ volatile uint16_t init_gpio(void) {
     DBGPIN_1_INIT;
     DBGPIN_2_INIT;
     DBGPIN_3_INIT;
+    PWRGOOD_INIT;            
+
 
     // Map PWM4H/L outputs to pins RB8/9
     // ToDo: Move hard-coded peripheral and pin assignments to hardware abstraction layer files

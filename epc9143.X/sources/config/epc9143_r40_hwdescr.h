@@ -111,6 +111,13 @@ extern "C" {
     #define DBGPIN_3_CLEAR	{ _LATB10 = 0; }
     #define DBGPIN_3_TOGGLE	{ _LATB10 ^= 1; }
     #define DBGPIN_3_INIT	{ _LATB10 = 0; _TRISB10 = 0; }
+
+    // Device Pin #14 on EPC9243
+    #define PWRGOOD_SET     { _LATB1 = 1; }
+    #define PWRGOOD_CLEAR	{ _LATB1 = 0; }
+    #define PWRGOOD_TOGGLE	{ _LATB1 ^= 1; }
+    #define PWRGOOD_INIT	{ _ANSELB1 = 0; _LATB1 = 0; _TRISB1 = 0; }
+    
 #endif
 
 /*!Power Control Parameter Declaration
