@@ -19,36 +19,35 @@
 #include "config/init/init_opa.h"
 #include "config/init/init_dac.h"
 
-
 #define  TMR1_TIMEOUT 30000   // Timeout protection for Timer1 interrupt flag bit
 volatile bool LOW_PRIORITY_GO = false;  // Flag allowing low priority tasks to be executed
 
 int main(void) {
 
+    volatile uint16_t retval=1;
     volatile uint16_t timeout = 0;
     
-    init_fosc();        // Set up system oscillator for 100 MIPS operation
-    init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
-    init_timer1();      // Set up Timer1 as scheduler time base
-    init_gpio();        // Initialize common device GPIOs
+    retval &= init_fosc();        // Set up system oscillator for 100 MIPS operation
+    retval &= init_aclk();        // Set up Auxiliary PLL for 500 MHz (source clock to PWM module)
+    retval &= init_timer1();      // Set up Timer1 as scheduler time base
+    retval &= init_gpio();        // Initialize common device GPIOs
     
     
-    init_opa(); // Initialize op-amp #2 used to drive the reference voltage for current sense amplifiers
+    retval &= init_opa(); // Initialize op-amp #2 used to drive the reference voltage for current sense amplifiers
     
-    init_dac_module();  // Initialize DAC module
-    init_dac_channel(1); // Initialize DAC #1 used to generate the reference voltage for current sense amplifiers
-    init_dac_enable(); // Enable DAC setting the reference for current sense amplifiers
+    retval &= init_dac_module();  // Initialize DAC module
+    retval &= init_dac_channel(1); // Initialize DAC #1 used to generate the reference voltage for current sense amplifiers
+    retval &= init_dac_enable(); // Enable DAC setting the reference for current sense amplifiers
     
-    appPowerSupply_Initialize(); // Initialize BUCK converter object and state machine
-    appFaults_Initialize(); // Initialize fault objects and fault handler task
-    
+    retval &= appPowerSupply_Initialize(); // Initialize BUCK converter object and state machine
+    retval &= appFaults_Initialize(); // Initialize fault objects and fault handler task
     
     // Enable Timer1
     T1CONbits.TON = 1; 
 
-    _T1IP = 2;  // Set interrupt priority to zero
+    _T1IP = 0;  // Set interrupt priority to zero
     _T1IF = 0;  // Reset interrupt flag bit
-    _T1IE = 1;  // Enable/Disable Timer1 interrupt
+    _T1IE = 0;  // Enable/Disable Timer1 interrupt
     
     DBGPIN_2_CLEAR;
 
