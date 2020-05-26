@@ -15,7 +15,6 @@
 
 #pragma config ICS = PGD3    //ICD Communication Channel Select bits->Communicate on PGC2 and PGD2
 #pragma config JTAGEN = OFF    //JTAG Enable bit->JTAG is disabled
-//#pragma config NOBTSWP = DISABLED    //BOOTSWP instruction disable bit->BOOTSWP instruction is disabled
 
 /*******************************************************************************************************/
 // FALTREG
@@ -39,23 +38,24 @@
 #pragma config BSLIM = 8191    //Boot Segment Flash Page Address Limit bits->8191
 
 // FOSCSEL
-#pragma config FNOSC = FRC    //Oscillator Source Selection->Fast RC Oscillator with divide-by-N with PLL module (FRCPLL) 
+#pragma config FNOSC = FRCDIVN    //Oscillator Source Selection->Fast RC Oscillator with divide-by-N with PLL module (FRCPLL) 
 #pragma config IESO = OFF    //Two-speed Oscillator Start-up Enable bit->Start up with user-selected oscillator source
 
 // FOSC
 #pragma config POSCMD = NONE    //Primary Oscillator Mode Select bits->Primary Oscillator disabled
 #pragma config OSCIOFNC = ON    //OSC2 Pin Function bit->OSC2 is general purpose digital I/O pin
-#pragma config FCKSM = CSECMD    //Clock Switching Mode bits->Clock switching is enabled,Fail-safe Clock Monitor is disabled
-#pragma config PLLKEN = ON    //PLL Lock Status Control->PLL lock signal will be used to disable PLL clock output if lock is lost
-#pragma config XTCFG = G3    //XT Config->24-32 MHz crystals
-#pragma config XTBST = ENABLE    //XT Boost->Boost the kick-start
+#pragma config FCKSM = CSECMD   //Clock Switching Mode bits->Clock switching is enabled,Fail-safe Clock Monitor is disabled
+#pragma config PLLKEN = ON      //PLL Lock Status Control->PLL lock signal will be used to disable PLL clock output if lock is lost
+#pragma config XTCFG = G1       //XT Config->24-32 MHz crystals
+#pragma config XTBST = DISABLE  //XT Boost->Boost the kick-start
 
 // FWDT
 //#pragma config RWDTPS = PS2147483648    //Run Mode Watchdog Timer Post Scaler select bits->1:2147483648
 #pragma config RCLKSEL = LPRC    //Watchdog Timer Clock Select bits->Always use LPRC
 #pragma config WINDIS = OFF    //Watchdog Timer Window Enable bit->Watchdog Timer in Window mode
 #pragma config WDTWIN = WIN25    //Watchdog Timer Window Select bits->WDT Window is 25% of WDT period
-//#pragma config SWDTPS = PS2147483648    //Sleep Mode Watchdog Timer Post Scaler select bits->1:2147483648
+#pragma config RWDTPS = PS128    //Run Mode Watchdog Timer Post Scaler select bits->1:128
+#pragma config SWDTPS = PS2147483648    //Sleep Mode Watchdog Timer Post Scaler select bits->1:2147483648
 #pragma config FWDTEN = ON_SW    //Watchdog Timer Enable bit->WDT controlled via SW, use WDTCON.ON bit
 
 // FPOR
@@ -79,13 +79,6 @@
 // FDEVOPT
 #pragma config ALTI2C1 = OFF    //Alternate I2C1 Pin bit->I2C1 mapped to SDA1/SCL1 pins
 #pragma config ALTI2C2 = OFF    //Alternate I2C2 Pin bit->I2C2 mapped to SDA2/SCL2 pins
-//#pragma config ALTI2C3 = OFF    //Alternate I2C3 Pin bit->I2C3 mapped to SDA3/SCL3 pins
-//#pragma config SMBEN = SMBUS    //SM Bus Enable->SMBus input threshold is enabled
 #pragma config SPI2PIN = PPS    //SPI2 Pin Select bit->SPI2 uses I/O remap (PPS) pins
+#pragma config SMB3EN = SMBUS3    //SM Bus Enable->SMBus 3.0 input levels
 
-// FBTSEQ
-//#pragma config BSEQ = 4095    //Relative value defining which partition will be active after device Reset; the partition containing a lower boot number will be active->4095
-//#pragma config IBSEQ = 4095    //The one's complement of BSEQ; must be calculated by the user and written during device programming.->4095
-
-// FBOOT
-//#pragma config BTMODE = SINGLE    //Device Boot Mode Configuration->Device is in Single Boot (legacy) mode
