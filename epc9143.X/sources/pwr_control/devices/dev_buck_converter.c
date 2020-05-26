@@ -231,6 +231,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
 
                 buckInstance->v_loop.ctrl_Precharge(buckInstance->v_loop.controller, 0, int_dummy);
                 *buckInstance->v_loop.controller->Ports.Target.ptrAddress = int_dummy; // set initial PWM duty ratio
+                *buckInstance->v_loop.controller->Ports.AltTarget.ptrAddress = int_dummy; // set initial PWM duty ratio
 
             }
             else if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) 
@@ -247,12 +248,13 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                             );
 
                     *buckInstance->i_loop[_i].controller->Ports.Target.ptrAddress = int_dummy; // set initial PWM duty ratio
+                    *buckInstance->i_loop[_i].controller->Ports.AltTarget.ptrAddress = int_dummy; // set initial PWM duty ratio
                 }
             }
 
             // switch to soft-start phase RAMP UP
             buckInstance->mode = BUCK_STATE_V_RAMP_UP;
-            
+
             break;
             
         /*!BUCK_STATE_V_RAMP_UP
