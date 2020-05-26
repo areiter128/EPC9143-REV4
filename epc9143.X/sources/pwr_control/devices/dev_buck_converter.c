@@ -15,7 +15,7 @@
 
 volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
-    volatile uint16_t fres = 1;
+    volatile uint16_t retval = 1;
     volatile uint16_t _i=0;
     
     buckInstance->v_loop.controller->status.bits.enabled = false; // Disable voltage loop
@@ -30,12 +30,12 @@ volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t*
     buckInstance->status.bits.enabled = false;  // Disable Buck Converter
     buckInstance->mode = BUCK_STATE_INITIALIZE; // Reset state machine
     
-    return(fres);
+    return(retval);
 }
 
 volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
-    volatile uint16_t fres = 1;
+    volatile uint16_t retval = 1;
     volatile uint16_t _i = 0;
     volatile float fdummy = 0.0;
     volatile uint16_t int_dummy = 0;
@@ -102,7 +102,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             buckInstance->status.bits.busy = true;
 
             // Disable PWM outputs & control loops (immediate power cut-off)
-            buckPWM_Suspend(buckInstance); // Disable PWM outputs
+            retval &= buckPWM_Suspend(buckInstance); // Disable PWM outputs
 
             // Disable voltage loop controller and reset control loop histories
             buckInstance->v_loop.controller->status.bits.enabled = false; // disable voltage control loop
@@ -271,7 +271,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             if(!buckInstance->v_loop.controller->status.bits.enabled) {
 
                 // Enable input power source
-                buckPWM_Resume(buckInstance);  // Enable PWM outputs
+                retval &= buckPWM_Resume(buckInstance);  // Enable PWM outputs
 
                 if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_VMC)
                 {   
@@ -420,7 +420,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
         case BUCK_STATE_SUSPEND:
 
             // Disable PWM outputs & control loops (immediate power shut-down)
-            buckPWM_Stop(buckInstance); // Disable PWM outputs
+            retval &= buckPWM_Stop(buckInstance); // Disable PWM outputs
             
             buckInstance->v_loop.controller->status.bits.enabled = false;   // disable voltage control loop
             
@@ -447,16 +447,16 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             break;
     }            
     
-    return(fres);
+    return(retval);
 }
 
 volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t _i=0;
     
     // Start PWM with its outputs disabled
-    fres &= buckPWM_Start(buckInstance);
+    retval &= buckPWM_Start(buckInstance);
     
     buckInstance->v_loop.controller->status.bits.enabled = false; // Disable voltage loop
     buckInstance->v_loop.ctrl_Reset(buckInstance->v_loop.controller); // Reset voltage loop histories
@@ -473,16 +473,16 @@ volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buck
     buckInstance->status.bits.enabled = true;   // Enable Buck Converter
     buckInstance->mode = BUCK_STATE_INITIALIZE; // Reset state machine
 
-    return(fres);
+    return(retval);
 }
 
 volatile uint16_t drv_BuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t _i=0;
     
     // Stop PWM completely (shuts down PWM generator)
-    fres &= buckPWM_Stop(buckInstance); // Stop PWM
+    retval &= buckPWM_Stop(buckInstance); // Stop PWM
     
     buckInstance->v_loop.controller->status.bits.enabled = false; // Disable voltage loop
     
@@ -494,27 +494,27 @@ volatile uint16_t drv_BuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckI
     buckInstance->status.bits.enabled = false;  // Disable Buck Converter
     buckInstance->mode = BUCK_STATE_INITIALIZE; // Reset state machine
 
-    return(fres);
+    return(retval);
 }
 
 volatile uint16_t drv_BuckConverter_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     
     buckInstance->mode = BUCK_STATE_SUSPEND;
-    fres &= drv_BuckConverter_Execute(buckInstance);
+    retval &= drv_BuckConverter_Execute(buckInstance);
     
-    return(fres);
+    return(retval);
 }
 
 volatile uint16_t drv_BuckConverter_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     
     buckInstance->mode = BUCK_STATE_RESET;
-    fres &= drv_BuckConverter_Execute(buckInstance);
+    retval &= drv_BuckConverter_Execute(buckInstance);
     
-    return(fres);
+    return(retval);
 }
 
 // END OF FILE
