@@ -69,5 +69,7 @@ extern volatile uint16_t buckADC_Start(void);
 }
 #endif /* __cplusplus */
 
+#else
+    #pragma message "Warning: dev_buck_converter.h inclusion bypassed"
 #endif	/* BUCK_CONVERTER_STATE_MACHINE_H */
 

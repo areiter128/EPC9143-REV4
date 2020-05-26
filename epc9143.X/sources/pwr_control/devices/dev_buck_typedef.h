@@ -331,7 +331,7 @@ typedef struct {
  * *************************************************************************************************/
 extern volatile BUCK_POWER_CONTROLLER_t buck;
 
-
-
+#else
+    #pragma message "Warning: dev_buck_typedef.h inclusion bypassed"
 #endif	/* BUCK_CONVERTER_TYPE_DEF_H */
 

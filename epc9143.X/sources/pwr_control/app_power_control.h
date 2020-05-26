@@ -52,6 +52,9 @@ extern volatile uint16_t appPowerSupply_Execute(void);
 extern volatile uint16_t appPowerSupply_Suspend(void);
 extern volatile uint16_t appPowerSupply_Resume(void);
 
+
+
+
 // ADVANCED CONTROL FUNCTION DECLARATIONS
 extern void v_loop_GetAGCFactor( // Calls the AGC Factor Modulation Function (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
@@ -62,6 +65,6 @@ extern void v_loop_GetAGCFactor( // Calls the AGC Factor Modulation Function (As
 #endif /* __cplusplus */
 
 #else
-#pragma message "drv_buck_converter.h has been recalled"
+  #pragma message "app_power_control.h inclusion bypassed"
 #endif	/* APPLICATION_LAYER_POWER_CONTROL_H */
 
