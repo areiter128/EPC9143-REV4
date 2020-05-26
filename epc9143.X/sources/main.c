@@ -74,19 +74,19 @@ int main(void) {
     return (0);
 }
 
-void __attribute__((__interrupt__, auto_psv)) _T1Interrupt(void)
-{
-    DBGPIN_3_SET; // Set DEBUG-PIN
-    
-    // Execute high priority, time critical tasks
-    appPowerSupply_Execute();
-    appFaults_Execute();
-  
-    LOW_PRIORITY_GO = true; // Set GO trigger for low priority tasks
-    
-    _T1IF = 0;
-    DBGPIN_3_CLEAR; // Clear DEBUG-PIN
-    
-}
+//void __attribute__((__interrupt__, auto_psv)) _T1Interrupt(void)
+//{
+//    DBGPIN_3_SET; // Set DEBUG-PIN
+//    
+//    // Execute high priority, time critical tasks
+//    appPowerSupply_Execute();
+//    appFaults_Execute();
+//  
+//    LOW_PRIORITY_GO = true; // Set GO trigger for low priority tasks
+//    
+//    _T1IF = 0;
+//    DBGPIN_3_CLEAR; // Clear DEBUG-PIN
+//    
+//}
 
 
