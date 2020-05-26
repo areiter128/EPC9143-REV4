@@ -69,7 +69,7 @@ extern "C" {
  *  
  * *************************************************************************************************** */
 
-#define MPHBUCK_NO_OF_PHASES    BUCK_NO_OF_PHASES
+#define MPHBUCK_NO_OF_PHASES            BUCK_NO_OF_PHASES
 
 // Controller Status Bits
 #define BUCK_STAT_READY                  0b0000000000000001
@@ -316,7 +316,6 @@ typedef struct {
     volatile BUCK_LOOP_SETTINGS_t i_loop[MPHBUCK_NO_OF_PHASES]; // BUCK Current control loop objects
     
 } BUCK_POWER_CONTROLLER_t; // BUCK control & monitoring data structure
-
 
 
 /*!BUCK_POWER_CONTROLLER_t data structure

@@ -125,7 +125,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                 
             // Switch to STANDBY mode
             buckInstance->mode = BUCK_STATE_STANDBY;  
-            
+
             break;
             
         /*!BUCK_STATE_STANDBY
@@ -178,7 +178,8 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                 buckInstance->startup.power_on_delay.counter = 
                     (buckInstance->startup.power_on_delay.period + 1); // Saturate power on counter
 
-                if (buckInstance->status.bits.cs_calib_complete) { // if current sensors is calibrated
+                if (buckInstance->status.bits.cs_calib_complete)   // if current sensors is calibrated
+                {
                     buckInstance->mode = BUCK_STATE_LAUNCH_V_RAMP; // ramp up output
                 }
 
@@ -304,7 +305,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                     buckInstance->mode = BUCK_STATE_PWRGOOD_DELAY;
                 else if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC)
                     buckInstance->mode = BUCK_STATE_I_RAMP_UP;
-                
+
             }
 
             break;
@@ -332,6 +333,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                     buckInstance->v_loop.maximum = buckInstance->set_values.i_ref;
                     buckInstance->v_loop.controller->Limits.MaxOutput = buckInstance->v_loop.maximum;
                     buckInstance->mode = BUCK_STATE_PWRGOOD_DELAY;
+
                 }
             
             }
