@@ -1,14 +1,14 @@
 [GUI]
 CreateDate=03/02/2020 10:13:13 PM
-SaveDate=05/26/2020 3:23:54 PM
+SaveDate=05/26/2020 5:50:29 PM
 Name=z-Domain Control Loop Designer
 Version=0.9.8.104
 AGS Version=2.0.11
 CGS Version=2.0.10
 WindoWState=Normal
-Top=86
-Left=251
-Height=900
+Top=0
+Left=217
+Height=1057
 Width=1500
 TabHeight=288
 VersionKey=908
@@ -108,10 +108,10 @@ AddAntiWindupMinimumClampingStatusFlag=0
 AddPTermLoop=1
 MirrorControlOutputToAlternateTarget=1
 [CodeGenerationPaths]
-ExportASMSource=1
-ExportCSource=1
+ExportASMSource=0
+ExportCSource=0
 ExportCHeader=1
-ExportCLib=1
+ExportCLib=0
 EnableOneClickExport=1
 MPLABX_ProjectDirectory=../../../
 ASMSourcePath=.\pwr_control\drivers\
