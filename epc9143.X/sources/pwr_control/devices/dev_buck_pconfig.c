@@ -176,21 +176,27 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
         pg->PGxDTL.value = buckInstance->sw_node[_i].dead_time_falling; // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW
         pg->PGxDTH.value = buckInstance->sw_node[_i].dead_time_rising; // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
         pg->PGxLEBL.value = buckInstance->sw_node[_i].leb_period; // PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW 
+        pg->PGxLEBH.value = REG_PGxLEBH; // PGxLEBH: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
         
         // First switch-node object of array is used as master PWM
         if( _i == 0) {
             pg->PGxCONH.bits.MSTEN = 1; // Make first PWM of switch node objects MASTER
-            pg->PGxCONH.bits.UPDMOD = 0b001; // Master PWM updates PWM registers Immediately
+            pg->PGxCONH.bits.UPDMOD = P33C_PGxCONH_UPDMOD_MSTR; // Master PWM updates PWM registers Immediately
             pg->PGxCONH.bits.SOCS = 0b0000; // Master PWM is self-triggered
             pg->PGxEVTL.bits.PGTRGSEL = 0b011; // Master PWM uses PGxTRIGC as master trigger output
             pg->PGxTRIGC.bits.TRIG = buckInstance->sw_node[_i].phase; // Set phase shift of trigger
         }
         else {
             pg->PGxCONH.bits.MSTEN = 0; // Make all other PWMs of switch node objects SLAVES
-            pg->PGxCONH.bits.UPDMOD = 0b011; // Slave PWMs update PWM registers Immediately at MASTER trigger
+            pg->PGxCONH.bits.UPDMOD = P33C_PGxCONH_UPDMOD_SLV; // Slave PWMs update PWM registers Immediately at MASTER trigger
             pg->PGxCONH.bits.SOCS = BUCK_PWM_MASTER_SOCS; // Slave PWMs are triggered by MASTER PWM
+            pg->PGxEVTL.bits.PGTRGSEL = 0b000; // Slave PWM does not have PWM trigger output 
             pg->PGxTRIGC.bits.TRIG = buckInstance->sw_node[_i].phase; // Set phase shift of trigger
         }
+        
+        // Update PWM generator timing registers
+        pg->PGxSTAT.bits.UPDREQ = 1;
+        
     }
         
     return(retval);    
