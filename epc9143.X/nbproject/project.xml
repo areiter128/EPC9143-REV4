@@ -13,14 +13,13 @@
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>firmware</sourceRootElem>
-                <sourceRootElem>../sources/pwr_control/drivers</sourceRootElem>
-                <sourceRootElem>../sources/pwr_control/devices</sourceRootElem>
-                <sourceRootElem>../sources/switch/drivers</sourceRootElem>
+                <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>sources/config/init</sourceRootElem>
+                <sourceRootElem>sources/common</sourceRootElem>
+                <sourceRootElem>sources/fault_handler</sourceRootElem>
+                <sourceRootElem>sources/fault_handler/drivers</sourceRootElem>
                 <sourceRootElem>sources/pwr_control/drivers</sourceRootElem>
                 <sourceRootElem>sources/pwr_control/devices</sourceRootElem>
-                <sourceRootElem>sources/switch/drivers</sourceRootElem>
-                <sourceRootElem>sources/config/init</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
