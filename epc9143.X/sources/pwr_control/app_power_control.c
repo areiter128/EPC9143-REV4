@@ -6,6 +6,10 @@
  */
 
 
+#include <xc.h> // include processor files - each processor file is guarded.  
+#include <stdint.h> // include standard integer data types
+#include <stdbool.h> // include standard boolean data types
+#include <stddef.h> // include standard definition data types
 
 #include "pwr_control/app_power_control.h"
 #include "config/epc9143_r40_hwdescr.h"
@@ -28,6 +32,10 @@ volatile BUCK_POWER_CONTROLLER_t buck;
 volatile uint16_t appPowerSupply_ConverterObjectInitialize(void);
 volatile uint16_t appPowerSupply_ControllerInitialize(void);
 volatile uint16_t appPowerSupply_PeripheralsInitialize(void);
+
+void appPowerSupply_CurrentBalancing(void); 
+void appPowerSupply_CurrentSenseCalibration(void);
+
 
 /* CUSTOM RUNTIME OPTIONS */
 #define PLANT_MEASUREMENT   false
@@ -90,7 +98,7 @@ volatile uint16_t appPowerSupply_Execute(void)
     volatile uint16_t _i=0;
     volatile uint16_t i_dummy=0;
 
-    // Capture data values
+    // Capture most recent samples
     buck.data.v_in = BUCK_VIN_ADCBUF;
     buck.data.i_sns[0] = BUCK_ISNS1_ADCBUF;
     buck.data.i_sns[1] = BUCK_ISNS2_ADCBUF;
@@ -111,44 +119,24 @@ volatile uint16_t appPowerSupply_Execute(void)
         fltobj_BuckRegErr.status.bits.fault_status 
         );
     
-    // Current Calibration Procedure
-//    if ((buck.mode == BUCK_STATE_STANDBY) && (!buck.status.bits.cs_calib_complete))
-//    {
-//        if (buck.status.bits.adc_active) {
-//            
-//            if (++calib_cs1.cs_calib_cnt < CS_CALIB_STEPS)
-//            {
-//                calib_cs1.cs_calib_offset += buck.data.i_sns[0]; // Read ADC offset value
-//                calib_cs2.cs_calib_offset += buck.data.i_sns[1]; // Read ADC offset value
-//            }
-//            else
-//            {
-//                calib_cs1.cs_calib_offset += buck.data.i_sns[0]; // Read ADC offset value
-//                calib_cs2.cs_calib_offset += buck.data.i_sns[1]; // Read ADC offset value
-//
-//                calib_cs1.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
-//                calib_cs2.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
-//
-//                buck.status.bits.cs_calib_complete = true;   // Set CALIB_DONE flag
-//            }
-//        }
-//    }
-    
     // Execute buck converter state machine
     retval &= drv_BuckConverter_Execute(&buck);
+    
+    // Execute slower, advanced control options
+    appPowerSupply_CurrentSenseCalibration();
+//    appPowerSupply_CurrentBalancing();
 
     // Buck regulation error is only active while controller is running
     // and while being tied to a valid reference
-    if(buck.mode >= BUCK_STATE_V_RAMP_UP) {
-
+    if(buck.mode >= BUCK_STATE_V_RAMP_UP) 
+    {
         fltobj_BuckRegErr.ref_obj = buck.v_loop.controller->Ports.ptrControlReference;
-
         #if (PLANT_MEASUREMENT == false)
         fltobj_BuckRegErr.status.bits.enabled = buck.v_loop.controller->status.bits.enabled;
         #endif
-
     }
-    else {
+    else 
+    {
         fltobj_BuckRegErr.status.bits.enabled = false;
     }
     
@@ -562,74 +550,81 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     return(retval);
 }
 
-/*!Power Converter Control Loop Interrupt
- * **************************************************************************************************
- * 
- * **************************************************************************************************/
 
-/* @@_BUCK_VLOOP_Interrupt
+/* @@<function_name>
  * ********************************************************************************
- * Summary: Main Control Interrupt
+ * Summary:
  * 
  * Parameters:
- *  (none)
  * 
  * Returns:
- *  (none)
  * 
  * Description:
- * The control interrupt is calling the control loop. The point in time where
- * this interrupt is thrown is determined by selecting the BUCK_VOUT_TRIGGER_MODE
- * option. 
  * 
  * ********************************************************************************/
-
-void __attribute__((__interrupt__, auto_psv, context))_BUCK_VLOOP_Interrupt(void)
+inline void appPowerSupply_CurrentBalancing(void) 
 {
-    DBGPIN_1_SET;
-    PWRGOOD_SET;
+    static int16_t offset=0;
+    
+    // Current balancing is only executed in nominal running mode
+    if(buck.mode != BUCK_STATE_ONLINE) 
+        return;
+    
+    // if current in phase #1 is higher than phase current #2...
+    if(buck.data.i_sns[0] > buck.data.i_sns[1]) 
+    { // .. add 1 tick to phase #2 duty cycle
+        offset = ((++offset>0x07) ? 0x07 : offset);
+    }
+    else 
+    { // .. sub 1 tick from phase #2 duty cycle
+        offset = ((--offset<0x00) ? 0x00 : offset);
+    }
 
-    
-    buck.status.bits.adc_active = true;
-    #if (PLANT_MEASUREMENT == false)
-    buck.v_loop.ctrl_Update(buck.v_loop.controller);
-    #else
-    v_loop_PTermUpdate(&v_loop);
-    #endif
+    buck.v_loop.controller->Ports.AltTarget.Offset = (uint16_t)offset;
 
-    Nop();
-    Nop();
-    Nop();
-    Nop();
-    
-    // Sync ADC triggers of VON, VOUT, ISNS1, ISNS2
-//    PG4TRIGA = PG2TRIGA;
-//    PG4TRIGB = PG2TRIGB;
-//    PG2STATbits.UPDREQ = 1;
-//    PG4STATbits.UPDREQ = 1;
-    
-    // Low frequency current balancing
-    // ToDo: Move current balancing out to lower frequency execution
-    //       Check current balancing after applying current calibration
-    
-//    if(buck.v_loop.controller->status.bits.enabled) {
-//
-//        if(buck.data.i_sns[0] > buck.data.i_sns[1]) {
-//            buck.v_loop.controller->Ports.AltTarget.Offset++;
-//            buck.v_loop.controller->Ports.Target.Offset--;
-//        }
-//        else {
-//            buck.v_loop.controller->Ports.AltTarget.Offset--;
-//            buck.v_loop.controller->Ports.Target.Offset++;
-//        }
-//    
-//    }
-    
-    // Clear the ADCANx interrupt flag 
-    _BUCK_VLOOP_ISR_IF = 0;  
-    
-    DBGPIN_1_CLEAR;
-    PWRGOOD_CLEAR;
+}
+
+/* @@<function_name>
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+inline void appPowerSupply_CurrentSenseCalibration(void)
+{
+
+    // Current Calibration Procedure
+    if ((buck.mode != BUCK_STATE_STANDBY) || 
+        (buck.status.bits.cs_calib_complete) || 
+        (!buck.status.bits.adc_active)
+       )
+    { return; }
+        
+        
+    if (++calib_cs1.cs_calib_cnt < CS_CALIB_STEPS)
+    {
+        calib_cs1.cs_calib_offset += buck.data.i_sns[0]; // Read ADC offset value
+        calib_cs2.cs_calib_offset += buck.data.i_sns[1]; // Read ADC offset value
+    }
+    else
+    {
+        calib_cs1.cs_calib_offset += buck.data.i_sns[0]; // Read ADC offset value
+        calib_cs2.cs_calib_offset += buck.data.i_sns[1]; // Read ADC offset value
+
+        calib_cs1.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
+        calib_cs2.cs_calib_offset >>= 3;             // Divide accumulated ADC samples (calculate average)
+
+        buck.status.bits.cs_calib_complete = true;   // Set CALIB_DONE flag
+    }
+
+    return;
     
 }
 
+
+// end of file
