@@ -8,7 +8,7 @@
  *  Controller Type:    4P4Z - Advanced High-Q Compensator
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       3 - Dual Bit-Shift Scaling
+ *  Scaling Mode:       4 - Fast Floating Point Coefficient Scaling
  *  Input Gain:         0.208791
  *
  * *********************************************************************************
@@ -16,7 +16,7 @@
  * CGS Date:            05/20/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           05/22/2020 7:32:46 PM
+ * Date/Time:           05/26/2020 3:24:34 PM
  * ********************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
