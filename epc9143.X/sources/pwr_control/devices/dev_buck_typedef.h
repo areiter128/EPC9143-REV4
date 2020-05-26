@@ -308,8 +308,9 @@ typedef struct {
     volatile BUCK_CONVERTER_STARTUP_t startup; // BUCK startup timing settings 
     volatile BUCK_CONVERTER_CONTROL_t set_values; // Control field for global access to references
     volatile BUCK_CONVERTER_DATA_t data;     // BUCK runtime data
-    volatile BUCK_SWITCH_NODE_SETTINGS_t sw_node[MPHBUCK_NO_OF_PHASES]; // BUCK converter switch node settings
     volatile BUCK_FEEDBACK_SETTINGS_t feedback; // BUCK converter feedback settings
+
+    volatile BUCK_SWITCH_NODE_SETTINGS_t sw_node[MPHBUCK_NO_OF_PHASES]; // BUCK converter switch node settings
     
     volatile BUCK_LOOP_SETTINGS_t v_loop; // BUCK voltage control loop object
     volatile BUCK_LOOP_SETTINGS_t i_loop[MPHBUCK_NO_OF_PHASES]; // BUCK Current control loop objects
