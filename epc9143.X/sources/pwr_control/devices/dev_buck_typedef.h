@@ -37,9 +37,10 @@
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h> // include standard integer number data types
 #include <stdbool.h> // include standard boolean data types (true/false)
+#include <stddef.h> // include standard definition data types
 
-#include "config/epc9143_r40_hwdescr.h"
 #include "pwr_control/drivers/npnz16b.h"
+#include "config/epc9143_r40_hwdescr.h"
 
 
 #ifdef	__cplusplus

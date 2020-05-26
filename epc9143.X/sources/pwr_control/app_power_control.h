@@ -37,8 +37,8 @@
 #include <stddef.h> // include standard definition data types
 
 #include "pwr_control/devices/dev_buck_typedef.h"
+#include "pwr_control/devices/dev_buck_converter.h"
 #include "pwr_control/drivers/v_loop.h"
-#include "devices/dev_buck_converter.h"
 
 #ifdef	__cplusplus
 extern "C" {
