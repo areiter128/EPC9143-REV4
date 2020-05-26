@@ -8,7 +8,7 @@
  *  Controller Type:    4P4Z - Advanced High-Q Compensator
  *  Sampling Frequency: 500000 Hz
  *  Fixed Point Format: 15
- *  Scaling Mode:       4 - Fast Floating Point Coefficient Scaling
+ *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         0.208791
  *
  * *********************************************************************************
@@ -16,7 +16,7 @@
  * CGS Date:            05/20/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           05/26/2020 3:21:46 PM
+ * Date/Time:           05/26/2020 8:54:21 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -48,38 +48,38 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    200 Hz
- *    fP1:    130000 Hz
+ *    fP0:    170 Hz
+ *    fP1:    210000 Hz
  *    fP2:    250000 Hz
  *    fP3:    250000 Hz
  *    fZ1:    1800 Hz
  *    fZ2:    2900 Hz
- *    fZ3:    71200 Hz
+ *    fZ3:    48300 Hz
  *
  * *********************************************************************************
  * Filter Coefficients and Parameters:
  * ********************************************************************************/
 volatile int32_t v_loop_ACoefficients [4] =
 {
-    0x54110000, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x56B60001, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0x4DC80006, // Coefficient A3 will be multiplied with controller output u(n-3)
-    0xAE900007  // Coefficient A4 will be multiplied with controller output u(n-4)
+    0x00006B10, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x000078AA, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x00001A8B, // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x000001BD  // Coefficient A4 will be multiplied with controller output u(n-4)
 };
 
 volatile int32_t v_loop_BCoefficients [5] =
 {
-    0x4154FFFB, // Coefficient B0 will be multiplied with error input e(n-0)
-    0xA988FFFB, // Coefficient B1 will be multiplied with error input e(n-1)
-    0xAC70FFFC, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x5681FFFB, // Coefficient B3 will be multiplied with error input e(n-3)
-    0xA1F4FFFD  // Coefficient B4 will be multiplied with error input e(n-4)
+    0x00002EA4, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0000BB28, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x0000E8E0, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x000044DE, // Coefficient B3 will be multiplied with error input e(n-3)
+    0x0000E883  // Coefficient B4 will be multiplied with error input e(n-4)
 };
 
 // Coefficient normalization factors
 volatile int16_t v_loop_pre_scaler = 3;
-volatile int16_t v_loop_post_shift_A = 0;
-volatile int16_t v_loop_post_shift_B = 0;
+volatile int16_t v_loop_post_shift_A = 1;
+volatile int16_t v_loop_post_shift_B = -6;
 volatile fractional v_loop_post_scaler = 0x0000;
 
 // P-Term Coefficient for Plant Measurements
