@@ -130,7 +130,7 @@ extern "C" {
         union {   
             volatile PG1CONLBITS bits; // Register bit-field
             volatile uint16_t value; // 16-bit wide register value
-        }PGxCONL; // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
+        }PGxCONL; // PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
         union {
             volatile PG1CONHBITS bits; // Register bit-field
             volatile uint16_t value; // 16-bit wide register value
