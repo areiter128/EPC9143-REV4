@@ -30,7 +30,7 @@ volatile uint16_t adcore_diff_mask=0;
 
 volatile uint16_t buckPWM_ModuleInitialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile P33C_PWM_MODULE_t* pwm;
     
     pwm = (volatile P33C_PWM_MODULE_t*) ((volatile uint8_t*) &PCLKCON);
@@ -99,7 +99,7 @@ volatile uint16_t buckPWM_ModuleInitialize(volatile BUCK_POWER_CONTROLLER_t* buc
     pwm->PWMEVTE = 0x0000;
     pwm->PWMEVTF = 0x0000;
 
-    return(fres);    
+    return(retval);    
 }
 
 /* @@<function_name>
@@ -116,7 +116,7 @@ volatile uint16_t buckPWM_ModuleInitialize(volatile BUCK_POWER_CONTROLLER_t* buc
 
 volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t _i=0;
 
     volatile P33C_PWM_INSTANCE_t* pg;
@@ -191,7 +191,7 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
         }
     }
         
-    return(fres);    
+    return(retval);    
 }
 
 /* @@<function_name>
@@ -208,7 +208,7 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
 
 volatile uint16_t buckPWM_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance) 
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t _i=0;
     volatile uint16_t timeout=0;
     volatile uint16_t pwmInstance=0;
@@ -238,9 +238,11 @@ volatile uint16_t buckPWM_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
 
         pg->PGxIOCONH.value |= P33C_PGxIOCONH_PEN; // PWMxH/L Output Port Enable: PWM generator controls the PWMxH output pin
 
+        retval &= (volatile uint16_t)(pg->PGxCONL.bits.ON);
+
     }
     
-    return(fres);    
+    return(retval);    
 }
 
 /* @@<function_name>
@@ -257,7 +259,7 @@ volatile uint16_t buckPWM_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
 
 volatile uint16_t buckPWM_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance) 
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t _i=0;
     volatile uint16_t pwmInstance=0;
     volatile P33C_PWM_INSTANCE_t* pg;
@@ -277,10 +279,12 @@ volatile uint16_t buckPWM_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
         pg->PGxCONL.value &= ~(P33C_PGxCONL_PWM_ON);  // PWM Generator Disable
         pg->PGxDC.value = 0; // Reset Duty Cycle
         pg->PGxSTAT.value |= P33C_PGxSTAT_UPDREQ;     // Set the Update Request bit to update PWM timing
+        
+        retval &= (volatile uint16_t)((volatile bool)(pg->PGxCONL.bits.ON == 0));
 
     }
         
-    return(fres);    
+    return(retval);    
 }
 
 /* @@<function_name>
@@ -297,7 +301,7 @@ volatile uint16_t buckPWM_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
 
 volatile uint16_t buckPWM_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance) 
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t _i=0;
     volatile uint16_t pwmInstance;
     volatile P33C_PWM_INSTANCE_t* pg;
@@ -315,11 +319,11 @@ volatile uint16_t buckPWM_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance
         pg->PGxDC.value = 0;  // Reset Duty Cycle
         pg->PGxSTAT.value |= P33C_PGxSTAT_UPDREQ; // Set the Update Request bit to update PWM timing
 
-        fres &= (bool)(pg->PGxIOCONL.value & P33C_PGxIOCONL_OVREN);
+        retval &= (bool)(pg->PGxIOCONL.value & P33C_PGxIOCONL_OVREN);
 
     }
     
-    return(fres);    
+    return(retval);    
 }
 
 /* @@<function_name>
@@ -336,7 +340,7 @@ volatile uint16_t buckPWM_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance
 
 volatile uint16_t buckPWM_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance) 
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t _i=0;
     volatile uint16_t pwmInstance;
     volatile P33C_PWM_INSTANCE_t* pg;
@@ -354,11 +358,11 @@ volatile uint16_t buckPWM_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
         pg->PGxSTAT.value |= P33C_PGxSTAT_UPDREQ; // Set the Update Request bit to update PWM timing
         pg->PGxIOCONL.value &= ~(P33C_PGxIOCONL_OVREN); // PWMxH/L Output Override Disable
 
-        fres = (bool)(pg->PGxIOCONL.value & P33C_PGxIOCONL_OVREN);
+        retval &= (uint16_t)((bool)(!(pg->PGxIOCONL.value & P33C_PGxIOCONL_OVREN)));
 
     }
         
-    return(fres);    
+    return(retval);    
 }
 
 /* @@<function_name>
@@ -375,7 +379,7 @@ volatile uint16_t buckPWM_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
 
 volatile uint16_t buckADC_ModuleInitialize(void) 
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     
     // Make sure power to peripheral is enabled
     PMD1bits.ADC1MD = 0; // ADC Module Power Disable: ADC module power is enabled
@@ -453,7 +457,7 @@ volatile uint16_t buckADC_ModuleInitialize(void)
     ADCORE1Hbits.ADCS = 0b0000000; // ADC Core x Input Clock Divider: 2 Source Clock Periods
     ADCORE1Hbits.EISEL = 0b111; // Early interrupt is set and an interrupt is generated 8 TADCORE clocks prior
     
-    return(fres);    
+    return(retval);    
 }
 
 /* @@<function_name>
@@ -470,7 +474,7 @@ volatile uint16_t buckADC_ModuleInitialize(void)
 
 volatile uint16_t buckADC_Channel_Initialize(volatile BUCK_ADC_INPUT_SETTINGS_t* adcInstance) 
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint8_t* ptrADCRegister;
     volatile uint8_t bit_offset;
     
@@ -543,7 +547,7 @@ volatile uint16_t buckADC_Channel_Initialize(volatile BUCK_ADC_INPUT_SETTINGS_t*
         
     }
     
-    return(fres);
+    return(retval);
 }
 
 /* @@<function_name>
@@ -560,7 +564,7 @@ volatile uint16_t buckADC_Channel_Initialize(volatile BUCK_ADC_INPUT_SETTINGS_t*
 
 volatile uint16_t buckADC_Start(void) 
 {
-    volatile uint16_t fres=1;
+    volatile uint16_t retval=1;
     volatile uint16_t timeout=0;
     volatile uint16_t adcore_mask_compare=0;
     
@@ -575,7 +579,7 @@ volatile uint16_t buckADC_Start(void)
     ADCON3H = adcore_mask; // Enable ADC cores
 
 
-    return(fres);    
+    return(retval);    
 }
 
 // end of file
