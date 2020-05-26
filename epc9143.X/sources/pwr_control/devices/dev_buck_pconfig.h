@@ -300,6 +300,9 @@ extern "C" {
 #define P33C_PGxSTAT_UPDREQ     0x0008  // Control bit in PGxSTAT setting the Update Request bit
 #define P33C_PGxCONH_MPERSEL    0x4000  // Control bit in PGxCONH seting the PERIOD register source
     
+#define P33C_PGxCONH_UPDMOD_MSTR 0b001  // Master Immediate Update
+#define P33C_PGxCONH_UPDMOD_SLV  0b011  // Slaved immediate Update
+    
 // ==============================================================================================
 // BUCK converter Peripheral Configuration for Voltage Mode Control (VMC)
 // ==============================================================================================
@@ -344,7 +347,7 @@ extern "C" {
                           |||||||||||||| __ BIT  1: 
                           ||||||||||||||| _ BIT  0: 
                           ||||||||||||||||  */
-#define REG_PGxCONH     0b0000000101000000
+#define REG_PGxCONH     0b0000000100000000
 
 
 /* PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER LOW
