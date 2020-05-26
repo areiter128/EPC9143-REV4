@@ -5,8 +5,12 @@
  * Created on March 12, 2020, 4:31 PM
  */
 
-#include "pwr_control/devices/dev_buck_pconfig.h"
+#if (__XC16_VERSION__ > 1500)
+  #pragma message ("Warning: Library file '" __FILE__ "' has not been tested with the recently selected compiler version")
+#endif
+
 #include "pwr_control/devices/dev_buck_typedef.h"
+#include "pwr_control/devices/dev_buck_pconfig.h"
 
 /* PRIVATE VARIABLES */
 volatile uint16_t adcore_mask=0;

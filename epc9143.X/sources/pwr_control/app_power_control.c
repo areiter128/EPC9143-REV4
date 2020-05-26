@@ -5,8 +5,9 @@
  * Created on March 12, 2020, 11:55 AM
  */
 
+
+
 #include "pwr_control/app_power_control.h"
-#include "pwr_control/devices/dev_buck_typedef.h"
 #include "config/epc9143_r40_hwdescr.h"
 #include "fault_handler/app_faults.h"
 
