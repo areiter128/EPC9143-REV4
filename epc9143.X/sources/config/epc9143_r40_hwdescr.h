@@ -136,9 +136,9 @@ extern "C" {
 #define SWITCHING_PERIOD        (float)(1.0/SWITCHING_FREQUENCY)    // Switching period in [sec]
 
 #define SWITCHING_PHASE_SHIFT   (float)0        // Phase Shift of PWM output in [sec]
-#define SWITCHING_LEB           (float)120.0e-9 // Leading Edge Blanking in [sec]
-#define SWITCHING_DEAD_TIME_LE  (float)20e-9    // Leading Edge Dead Time in [sec]
-#define SWITCHING_DEAD_TIME_FE  (float)30e-9    // Falling Edge Dead Time in [sec]
+//#define SWITCHING_LEB           (float)120.0e-9 // Leading Edge Blanking in [sec]
+//#define SWITCHING_DEAD_TIME_LE  (float)40e-9    // Leading Edge Dead Time in [sec]
+//#define SWITCHING_DEAD_TIME_FE  (float)20e-9    // Falling Edge Dead Time in [sec]
     
 /*!Fundamental PWM Settings
  * *************************************************************************************************
@@ -160,8 +160,8 @@ extern "C" {
 #define BUCK_PWM_DUTY_CYCLE_MIN        (float)0.010 // ~1.0% On Time 
 #define BUCK_PWM_DUTY_CYCLE_MAX        (float)0.600 // ~80% On Time 
 #define BUCK_LEADING_EDGE_BLANKING     (float)120.0e-9 // Leading Edge Blanking in [sec]
-#define BUCK_DEAD_TIME_LEADING_EDGE    (float)100.0e-9 // Leading Edge Dead Time in [sec]
-#define BUCK_DEAD_TIME_FALLING_EDGE    (float)100.0e-9 // Falling Edge Dead Time in [sec]
+#define BUCK_DEAD_TIME_LEADING_EDGE    (float)50.0e-9 // Leading Edge Dead Time in [sec]
+#define BUCK_DEAD_TIME_FALLING_EDGE    (float)40.0e-9 // Falling Edge Dead Time in [sec]
 
 // PWM Phase #1 Configuration
 #define BUCK_PWM1_CHANNEL              2U // PWM Instance Index (e.g. 1=PWM1, 2=PWM2, etc.)
