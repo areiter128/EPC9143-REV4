@@ -15,8 +15,8 @@
  * CGS Version:         2.0.10
  * CGS Date:            05/20/2020
  * *********************************************************************************
- * User:                M91406
- * Date/Time:           05/26/2020 8:54:21 PM
+ * User:                Yuanzhe
+ * Date/Time:           5/29/2020 4:00:12 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -48,38 +48,38 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    170 Hz
- *    fP1:    210000 Hz
+ *    fP0:    150 Hz
+ *    fP1:    250000 Hz
  *    fP2:    250000 Hz
- *    fP3:    250000 Hz
- *    fZ1:    1800 Hz
- *    fZ2:    2900 Hz
- *    fZ3:    48300 Hz
+ *    fP3:    80000 Hz
+ *    fZ1:    6300 Hz
+ *    fZ2:    15000 Hz
+ *    fZ3:    32000 Hz
  *
  * *********************************************************************************
  * Filter Coefficients and Parameters:
  * ********************************************************************************/
 volatile int32_t v_loop_ACoefficients [4] =
 {
-    0x00006B10, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x000078AA, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0x00001A8B, // Coefficient A3 will be multiplied with controller output u(n-3)
-    0x000001BD  // Coefficient A4 will be multiplied with controller output u(n-4)
+    0x00007187, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x00001AFB, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x0000F596, // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x0000FDEA  // Coefficient A4 will be multiplied with controller output u(n-4)
 };
 
 volatile int32_t v_loop_BCoefficients [5] =
 {
-    0x00002EA4, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x0000BB28, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x0000E8E0, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x000044DE, // Coefficient B3 will be multiplied with error input e(n-3)
-    0x0000E883  // Coefficient B4 will be multiplied with error input e(n-4)
+    0x000041B8, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0000A2E5, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x0000E001, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x00005D65, // Coefficient B3 will be multiplied with error input e(n-3)
+    0x0000DE93  // Coefficient B4 will be multiplied with error input e(n-4)
 };
 
 // Coefficient normalization factors
 volatile int16_t v_loop_pre_scaler = 3;
-volatile int16_t v_loop_post_shift_A = 1;
-volatile int16_t v_loop_post_shift_B = -6;
+volatile int16_t v_loop_post_shift_A = 0;
+volatile int16_t v_loop_post_shift_B = -1;
 volatile fractional v_loop_post_scaler = 0x0000;
 
 // P-Term Coefficient for Plant Measurements

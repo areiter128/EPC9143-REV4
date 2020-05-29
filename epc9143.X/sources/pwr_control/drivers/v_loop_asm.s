@@ -2,8 +2,8 @@
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.8.104
 ;  AGS Version: Assembly Generator Script v2.0.11 (05/20/2020)
-;  Author:      M91406
-;  Date/Time:   05/26/2020 8:54:22 PM
+;  Author:      Yuanzhe
+;  Date/Time:   5/29/2020 4:00:13 PM
 ; **********************************************************************************
 ;  4P4Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
