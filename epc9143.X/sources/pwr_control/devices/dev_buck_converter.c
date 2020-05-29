@@ -223,6 +223,9 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             fdummy = (float)(buckInstance->data.v_out) / (float)(buckInstance->data.v_in << 1);
             int_dummy = (uint16_t)(fdummy * (float)buckInstance->sw_node[0].period);
             
+            // ToDo: Startup Scaling Workaround effectively bypassing controller output pre-charge
+            int_dummy = (uint16_t)buckInstance->sw_node[0].duty_ratio_min;
+            
             if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_VMC)
             {
                 if(int_dummy < buckInstance->v_loop.minimum) 
