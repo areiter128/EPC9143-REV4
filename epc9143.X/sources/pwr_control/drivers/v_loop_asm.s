@@ -2,8 +2,8 @@
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.8.104
 ;  AGS Version: Assembly Generator Script v2.0.11 (05/20/2020)
-;  Author:      Yuanzhe
-;  Date/Time:   5/29/2020 4:00:13 PM
+;  Author:      M91406
+;  Date/Time:   06/03/2020 4:40:07 PM
 ; **********************************************************************************
 ;  4P4Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -369,6 +369,12 @@ _v_loop_PTermUpdate:
 ; Write control output value to target
 	mov [w0 + #ptrTargetRegister], w8    ; move pointer to target to working register
 	mov w4, [w8]    ; move control output to target address
+	mov [w0 + #ptrAltTargetRegister], w8    ; move pointer to alternate target to working register
+	mov w4, [w8]    ; move control output to alternate target address
+	
+;------------------------------------------------------------------------------
+; Update ADC trigger locations
+	asr w4, #1, w6    ; half control output by shifting value one bit to the right
 	; Update ADC trigger A position
 	mov [w0 + #ADCTriggerAOffset], w8    ; load user-defined ADC trigger A offset value into working register
 	add w6, w8, w10    ; add user-defined ADC trigger A offset to half of control output
