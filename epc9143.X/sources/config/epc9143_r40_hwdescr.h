@@ -141,6 +141,9 @@ extern "C" {
 //#define SWITCHING_DEAD_TIME_LE  (float)40.0e-9    // Leading Edge Dead Time in [sec]
 //#define SWITCHING_DEAD_TIME_FE  (float)20.0e-9    // Falling Edge Dead Time in [sec]
 
+/* CUSTOM RUNTIME OPTIONS */
+#define PLANT_MEASUREMENT   false
+
     
 /*!Fundamental PWM Settings
  * *************************************************************************************************
