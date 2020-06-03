@@ -165,8 +165,8 @@ extern "C" {
 #define BUCK_PWM_DUTY_CYCLE_MIN        (float)0.010 // ~1.0% On Time 
 #define BUCK_PWM_DUTY_CYCLE_MAX        (float)0.600 // ~80% On Time 
 #define BUCK_LEADING_EDGE_BLANKING     (float)120.0e-9 // Leading Edge Blanking in [sec]
-#define BUCK_DEAD_TIME_LEADING_EDGE    (float)30.0e-9 // Leading Edge Dead Time in [sec]
-#define BUCK_DEAD_TIME_FALLING_EDGE    (float)50.0e-9 // Falling Edge Dead Time in [sec]
+#define BUCK_DEAD_TIME_LEADING_EDGE    (float)40.0e-9 // Leading Edge Dead Time in [sec]
+#define BUCK_DEAD_TIME_FALLING_EDGE    (float)60.0e-9 // Falling Edge Dead Time in [sec]
 
 // PWM Phase #1 Configuration
 #define BUCK_PWM1_CHANNEL              2U // PWM Instance Index (e.g. 1=PWM1, 2=PWM2, etc.)
@@ -297,7 +297,7 @@ extern "C" {
  * *************************************************************************************************/
 
 // Feedback Declarations
-#define BUCK_VOUT_NOMINAL           (float)6.000   // Nominal output voltage
+#define BUCK_VOUT_NOMINAL           (float)12.000   // Nominal output voltage
 #define BUCK_VOUT_TOLERANCE_MAX     (float)0.500   // Output voltage tolerance [+/-]
 #define BUCK_VOUT_TOLERANCE_MIN     (float)0.100   // Output voltage tolerance [+/-]
     
