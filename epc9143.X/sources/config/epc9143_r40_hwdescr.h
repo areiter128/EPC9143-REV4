@@ -293,7 +293,7 @@ extern "C" {
  * *************************************************************************************************/
 
 // Feedback Declarations
-#define BUCK_VOUT_NOMINAL           (float)12.000   // Nominal output voltage
+#define BUCK_VOUT_NOMINAL           (float)6.000   // Nominal output voltage
 #define BUCK_VOUT_TOLERANCE_MAX     (float)0.500   // Output voltage tolerance [+/-]
 #define BUCK_VOUT_TOLERANCE_MIN     (float)0.100   // Output voltage tolerance [+/-]
     
