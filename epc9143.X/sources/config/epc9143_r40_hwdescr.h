@@ -136,10 +136,11 @@ extern "C" {
 #define SWITCHING_PERIOD        (float)(1.0/SWITCHING_FREQUENCY)    // Switching period in [sec]
 #define SWITCHING_PHASE_SHIFT   (float)0.0        // Phase Shift of PWM output in [sec]
 
-#define SWITCHING_PHASE_SHIFT   (float)0        // Phase Shift of PWM output in [sec]
+// ToDo: Remove -> dead times are set below    
 //#define SWITCHING_LEB           (float)120.0e-9 // Leading Edge Blanking in [sec]
-//#define SWITCHING_DEAD_TIME_LE  (float)40e-9    // Leading Edge Dead Time in [sec]
-//#define SWITCHING_DEAD_TIME_FE  (float)20e-9    // Falling Edge Dead Time in [sec]
+//#define SWITCHING_DEAD_TIME_LE  (float)40.0e-9    // Leading Edge Dead Time in [sec]
+//#define SWITCHING_DEAD_TIME_FE  (float)20.0e-9    // Falling Edge Dead Time in [sec]
+
     
 /*!Fundamental PWM Settings
  * *************************************************************************************************
