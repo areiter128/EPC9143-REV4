@@ -37,9 +37,6 @@ void appPowerSupply_CurrentBalancing(void);
 void appPowerSupply_CurrentSenseCalibration(void);
 
 
-/* CUSTOM RUNTIME OPTIONS */
-#define PLANT_MEASUREMENT   false
-
 /* CURRENT SENSE CALIBRATION */
 #define  CS_CALIB_STEPS         8
 typedef struct {
