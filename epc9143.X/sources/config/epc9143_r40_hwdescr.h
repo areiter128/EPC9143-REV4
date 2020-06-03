@@ -53,17 +53,17 @@ extern "C" {
  * (integer) numbers to be written to SFRs
  * 
  * *************************************************************************************************/
-#define CPU_FREQUENCY        100000000  // CPU frequency in [Hz]
-#define CPU_TCY              (float)(1.0/CPU_FREQUENCY) // Instruction period
+#define CPU_FREQUENCY       (float)100000000.0  // CPU frequency in [Hz]
+#define CPU_TCY             (float)(1.0/CPU_FREQUENCY) // Instruction period
 
 // ADC(DAC Reference and Resolution Settings    
-#define ADC_REF              (float)3.300 // ADC reference voltage in V
-#define ADC_RES              (float)12.0  // ADC resolution in [bit]
-#define ADC_GRAN             (float)(ADC_REF / pow(2.0, ADC_RES)) // ADC granularity in [V/tick]
+#define ADC_REF             (float)3.300 // ADC reference voltage in V
+#define ADC_RES             (float)12.0  // ADC resolution in [bit]
+#define ADC_GRAN            (float)(ADC_REF / pow(2.0, ADC_RES)) // ADC granularity in [V/tick]
     
 // PWM/ADC Clock Settings    
-#define PWM_CLOCK_FREQUENCY     (float)4.0e+9   // PWM Clock Frequency in [Hz]
-#define PWM_CLOCK_PERIOD        (float)(1.0/PWM_CLOCK_FREQUENCY) // PWM Clock Period in [sec]
+#define PWM_CLOCK_FREQUENCY (float)4.0e+9   // PWM Clock Frequency in [Hz]
+#define PWM_CLOCK_PERIOD    (float)(1.0/PWM_CLOCK_FREQUENCY) // PWM Clock Period in [sec]
     
 /*!State Machine Settings
  * *************************************************************************************************
@@ -76,7 +76,7 @@ extern "C" {
  * written to SFRs and variables.
  * 
  * *************************************************************************************************/
-#define MAIN_EXECUTION_PERIOD   (float)100e-6     // main state machine pace period in [sec]
+#define MAIN_EXECUTION_PERIOD   (float)100.0e-6     // main state machine pace period in [sec]
 #define MAIN_EXEC_PER           (uint16_t)((CPU_FREQUENCY * MAIN_EXECUTION_PERIOD)-1)
 
     
@@ -132,8 +132,9 @@ extern "C" {
  * 
  * *************************************************************************************************/
 
-#define SWITCHING_FREQUENCY     (float)500e+3   // Switching frequency in [Hz]
+#define SWITCHING_FREQUENCY     (float)500.0e+3   // Switching frequency in [Hz]
 #define SWITCHING_PERIOD        (float)(1.0/SWITCHING_FREQUENCY)    // Switching period in [sec]
+#define SWITCHING_PHASE_SHIFT   (float)0.0        // Phase Shift of PWM output in [sec]
 
 #define SWITCHING_PHASE_SHIFT   (float)0        // Phase Shift of PWM output in [sec]
 //#define SWITCHING_LEB           (float)120.0e-9 // Leading Edge Blanking in [sec]
@@ -160,8 +161,8 @@ extern "C" {
 #define BUCK_PWM_DUTY_CYCLE_MIN        (float)0.010 // ~1.0% On Time 
 #define BUCK_PWM_DUTY_CYCLE_MAX        (float)0.600 // ~80% On Time 
 #define BUCK_LEADING_EDGE_BLANKING     (float)120.0e-9 // Leading Edge Blanking in [sec]
-#define BUCK_DEAD_TIME_LEADING_EDGE    (float)10.0e-9 // Leading Edge Dead Time in [sec]
-#define BUCK_DEAD_TIME_FALLING_EDGE    (float)10.0e-9 // Falling Edge Dead Time in [sec]
+#define BUCK_DEAD_TIME_LEADING_EDGE    (float)30.0e-9 // Leading Edge Dead Time in [sec]
+#define BUCK_DEAD_TIME_FALLING_EDGE    (float)50.0e-9 // Falling Edge Dead Time in [sec]
 
 // PWM Phase #1 Configuration
 #define BUCK_PWM1_CHANNEL              2U // PWM Instance Index (e.g. 1=PWM1, 2=PWM2, etc.)
