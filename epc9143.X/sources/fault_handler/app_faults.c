@@ -72,7 +72,7 @@ volatile uint16_t appFaults_Initialize(void)
     fltobj_BuckRegErr.status.bits.type = FLTCMP_GREATER_THAN; // Select Compare-Type
     fltobj_BuckRegErr.counter = 0;        // Clear fault event counter
     fltobj_BuckRegErr.trip_level = BUCK_VOUT_DEV_TRIP;    // Set fault trip level
-    fltobj_BuckRegErr.tripcnt_max = 100;    // Set counter level at which a FAULT condition will be tripped
+    fltobj_BuckRegErr.tripcnt_max = 250;    // Set counter level at which a FAULT condition will be tripped
     fltobj_BuckRegErr.reset_level = BUCK_VOUT_DEV_RELEASE;   // Set fault reset level
     fltobj_BuckRegErr.rstcnt_max = 500;     // Set counter level at which a FAULT condition will be cleared
     
