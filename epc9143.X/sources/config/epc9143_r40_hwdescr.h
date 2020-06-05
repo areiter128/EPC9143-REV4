@@ -273,8 +273,9 @@ extern "C" {
 #define BUCK_VIN_ADC_TRGDLY     (uint16_t)(BUCK_VIN_ADC_TRG_DELAY / PWM_CLOCK_PERIOD) // Input voltage ADC trigger delay
 #define BUCK_VIN_FB_OFFSET      (uint16_t)(BUCK_VIN_OVER_VOLTAGE / ADC_GRAN) // Input voltage feedback offset
 
-#define BUCK_VIN_NORM_SCALER (int16_t)(floor(log(BUCK_VIN_FB_GAIN)) + 1) // VIN normalization  
-#define BUCK_VIN_NORM_FACTOR (int16_t)((BUCK_VIN_FB_GAIN / pow(2.0, BUCK_VIN_NORM_SCALER)) * pow(2.0, 15)) // VIN normalization factor scaled in Q15
+#define BUCK_VIN_NORM_INV_G     (float)(1.0/BUCK_VIN_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
+#define BUCK_VIN_NORM_SCALER    (int16_t)(ceil(log(BUCK_VIN_NORM_INV_G)) + 1) // VIN normalization  
+#define BUCK_VIN_NORM_FACTOR    (int16_t)((BUCK_VIN_NORM_INV_G / pow(2.0, BUCK_VIN_NORM_SCALER)) * pow(2.0, 15)) // VIN normalization factor scaled in Q15
 
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
     
@@ -323,8 +324,9 @@ extern "C" {
 #define BUCK_VOUT_OFFSET        (uint16_t)(BUCK_VOUT_FB_OFFSET / ADC_GRAN)
 #define BUCK_VOUT_ADC_TRGDLY    (uint16_t)(BUCK_VOUT_ADC_TRG_DELAY / PWM_CLOCK_PERIOD)
 
-#define BUCK_VOUT_NORM_SCALER   (int16_t)(floor(log(BUCK_VOUT_FB_GAIN)) + 1) // VOUT normalization  
-#define BUCK_VOUT_NORM_FACTOR   (int16_t)((BUCK_VOUT_FB_GAIN / pow(2.0, BUCK_VOUT_NORM_SCALER)) * pow(2.0, 15)) // VOUT normalization factor scaled in Q15
+#define BUCK_VOUT_NORM_INV_G    (float)(1.0/BUCK_VOUT_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
+#define BUCK_VOUT_NORM_SCALER   (int16_t)(ceil(log(BUCK_VOUT_NORM_INV_G)) + 1) // VOUT normalization  
+#define BUCK_VOUT_NORM_FACTOR   (int16_t)((BUCK_VOUT_NORM_INV_G / pow(2.0, BUCK_VOUT_NORM_SCALER)) * pow(2.0, 15)) // VOUT normalization factor scaled in Q15
 
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
 
@@ -377,6 +379,10 @@ extern "C" {
 #define BUCK_ISNS2_OFFFSET      (uint16_t)(BUCK_ISNS2_FB_OFFSET / ADC_GRAN)
 #define BUCK_ISNS_ADC_TRGDLY    (uint16_t)(BUCK_ISNS_ADC_TRG_DELAY / PWM_CLOCK_PERIOD)
 
+#define BUCK_ISNS_NORM_INV_G    (float)(1.0/BUCK_ISNS_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
+#define BUCK_ISNS_NORM_SCALER   (int16_t)(ceil(log(BUCK_ISNS_NORM_INV_G)) + 1) // ISNS normalization  
+#define BUCK_ISNS_NORM_FACTOR   (int16_t)((BUCK_ISNS_NORM_INV_G / pow(2.0, BUCK_ISNS_NORM_SCALER)) * pow(2.0, 15)) // ISNS normalization factor scaled in Q15
+    
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
 
     
