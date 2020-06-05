@@ -275,18 +275,26 @@ typedef struct {
  * limits.
  * 
  * *************************************************************************************************** */
+
+typedef struct {
+    volatile int16_t factor; // Fractional scaling factor (range -1 ... 0.99969)
+    volatile int16_t scaler; // Feedback number scaler used for number normalization
+    volatile int16_t offset; // Signal offset as signed integer to be subtracted from ADC input
+} BUCK_ADC_INPUT_SCALING_t; // ADC input signal scaling = (ADCBUF - <offset>) * <factor> >> 2^<scaler>
+
 typedef struct {
     volatile bool enabled; // input channel enable bit
     volatile uint16_t* adc_buffer; // pointer to ADC result buffer
     volatile uint16_t gpio_instance; // GPIO instance of the selected PWM generator
     volatile uint8_t adc_input; // number of the ADC input channel used
-    volatile uint8_t adc_core; // Number of the ADC core connected to the selected channel
+    volatile uint8_t adc_core; // number of the ADC core connected to the selected channel
     volatile uint8_t trigger_source; // input channel trigger source
     volatile bool interrupt_enable; // input channel interrupt enable bit
     volatile bool early_interrupt_enable; // input channel early interrupt enable bit
     volatile bool differential_input; // input channel differential mode enable bit
     volatile bool signed_result; // input channel singed result mode enable bit
     volatile bool level_trigger; // input channel level trigger mode enable bit
+    volatile BUCK_ADC_INPUT_SCALING_t scaling; // normalization scaling settings
 } BUCK_ADC_INPUT_SETTINGS_t; // ADC input channel configuration
 
 typedef struct {
