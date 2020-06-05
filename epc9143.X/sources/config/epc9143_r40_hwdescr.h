@@ -255,23 +255,23 @@ extern "C" {
     
 #define BUCK_VIN_R1             (float)(110.0)  // Upper voltage divider resistor in kOhm
 #define BUCK_VIN_R2             (float)(4.870)  // Lower voltage divider resistor in kOhm
-#define BUCK_VIN_FB_GAIN        (float)((BUCK_VIN_R2) / (BUCK_VIN_R1 + BUCK_VIN_R2))
+#define BUCK_VIN_FEEDBACK_GAIN  (float)((BUCK_VIN_R2) / (BUCK_VIN_R1 + BUCK_VIN_R2))
     
 #define BUCK_VIN_FEEDBACK_OFFSET    (float)(0.0)
 #define BUCK_VIN_ADC_TRG_DELAY      (float)(120.0e-9) // ADC trigger delay in [sec]
     
 // ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
     
-#define BUCK_VIN_MIN            (uint16_t)(BUCK_VIN_MINIMUM * BUCK_VIN_FB_GAIN / ADC_GRAN)   // Minimum input voltage
-#define BUCK_VIN_NOM            (uint16_t)(BUCK_VIN_NOMINAL * BUCK_VIN_FB_GAIN / ADC_GRAN)   // Nominal input voltage
-#define BUCK_VIN_MAX            (uint16_t)(BUCK_VIN_MAXIMUM * BUCK_VIN_FB_GAIN / ADC_GRAN)   // Maximum input voltage
-#define BUCK_VIN_HYST           (uint16_t)(BUCK_VIN_HYSTERESIS * BUCK_VIN_FB_GAIN / ADC_GRAN)  // Over Voltage LOck Out voltage    
-#define BUCK_VIN_UVLO_TRIP      (uint16_t)(BUCK_VIN_UNDER_VOLTAGE * BUCK_VIN_FB_GAIN / ADC_GRAN) // Under Voltage LOck Out voltage
-#define BUCK_VIN_UVLO_RELEASE   (uint16_t)((BUCK_VIN_UNDER_VOLTAGE + BUCK_VIN_HYSTERESIS) * BUCK_VIN_FB_GAIN / ADC_GRAN) // Under Voltage LOck Out voltage
-#define BUCK_VIN_OVLO_TRIP      (uint16_t)(BUCK_VIN_OVER_VOLTAGE * BUCK_VIN_FB_GAIN / ADC_GRAN)  // Over Voltage LOck Out voltage
-#define BUCK_VIN_OVLO_RELEASE   (uint16_t)((BUCK_VIN_OVER_VOLTAGE - BUCK_VIN_HYSTERESIS) * BUCK_VIN_FB_GAIN / ADC_GRAN)  // Over Voltage LOck Out voltage
+#define BUCK_VIN_MIN            (uint16_t)(BUCK_VIN_MINIMUM * BUCK_VIN_FEEDBACK_GAIN / ADC_GRAN)   // Minimum input voltage
+#define BUCK_VIN_NOM            (uint16_t)(BUCK_VIN_NOMINAL * BUCK_VIN_FEEDBACK_GAIN / ADC_GRAN)   // Nominal input voltage
+#define BUCK_VIN_MAX            (uint16_t)(BUCK_VIN_MAXIMUM * BUCK_VIN_FEEDBACK_GAIN / ADC_GRAN)   // Maximum input voltage
+#define BUCK_VIN_HYST           (uint16_t)(BUCK_VIN_HYSTERESIS * BUCK_VIN_FEEDBACK_GAIN / ADC_GRAN)  // Over Voltage LOck Out voltage    
+#define BUCK_VIN_UVLO_TRIP      (uint16_t)(BUCK_VIN_UNDER_VOLTAGE * BUCK_VIN_FEEDBACK_GAIN / ADC_GRAN) // Under Voltage LOck Out voltage
+#define BUCK_VIN_UVLO_RELEASE   (uint16_t)((BUCK_VIN_UNDER_VOLTAGE + BUCK_VIN_HYSTERESIS) * BUCK_VIN_FEEDBACK_GAIN / ADC_GRAN) // Under Voltage LOck Out voltage
+#define BUCK_VIN_OVLO_TRIP      (uint16_t)(BUCK_VIN_OVER_VOLTAGE * BUCK_VIN_FEEDBACK_GAIN / ADC_GRAN)  // Over Voltage LOck Out voltage
+#define BUCK_VIN_OVLO_RELEASE   (uint16_t)((BUCK_VIN_OVER_VOLTAGE - BUCK_VIN_HYSTERESIS) * BUCK_VIN_FEEDBACK_GAIN / ADC_GRAN)  // Over Voltage LOck Out voltage
 #define BUCK_VIN_ADC_TRGDLY     (uint16_t)(BUCK_VIN_ADC_TRG_DELAY / PWM_CLOCK_PERIOD) // Input voltage ADC trigger delay
-#define BUCK_VIN_FB_OFFSET      (uint16_t)(BUCK_VIN_OVER_VOLTAGE / ADC_GRAN) // Input voltage feedback offset
+#define BUCK_VIN_OFFSET         (uint16_t)(BUCK_VIN_FEEDBACK_OFFSET / ADC_GRAN) // Input voltage feedback offset
 
 #define BUCK_VIN_NORM_INV_G     (float)(1.0/BUCK_VIN_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
 #define BUCK_VIN_NORM_SCALER    (int16_t)(ceil(log(BUCK_VIN_NORM_INV_G)) + 1) // VIN normalization  
@@ -302,10 +302,10 @@ extern "C" {
 #define BUCK_VOUT_TOLERANCE_MAX     (float)0.500   // Output voltage tolerance [+/-]
 #define BUCK_VOUT_TOLERANCE_MIN     (float)0.100   // Output voltage tolerance [+/-]
     
-#define BUCK_VOUT_R1                (float)(18.00) // Upper voltage divider resistor in kOhm
-#define BUCK_VOUT_R2                (float)(4.750) // Lower voltage divider resistor in kOhm
-#define BUCK_VOUT_FB_GAIN           (float)((BUCK_VOUT_R2) / (BUCK_VOUT_R1 + BUCK_VOUT_R2))
-#define BUCK_VOUT_FB_OFFSET         (float)(0.0)
+#define BUCK_VOUT_DIV_R1            (float)(18.00) // Upper voltage divider resistor in kOhm
+#define BUCK_VOUT_DIV_R2            (float)(4.750) // Lower voltage divider resistor in kOhm
+#define BUCK_VOUT_FEEDBACK_GAIN     (float)((BUCK_VOUT_DIV_R2) / (BUCK_VOUT_DIV_R1 + BUCK_VOUT_DIV_R2))
+#define BUCK_VOUT_FEEDBACK_OFFSET   (float)(0.0)
 #define BUCK_VOUT_ADC_TRG_DELAY     (float)(120.0e-9) // Trigger delay in [sec]
 
 // Peripheral Assignments
@@ -318,10 +318,10 @@ extern "C" {
     
 // ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
 
-#define BUCK_VOUT_REF           (uint16_t)(BUCK_VOUT_NOMINAL * BUCK_VOUT_FB_GAIN / ADC_GRAN)
-#define BUCK_VOUT_DEV_TRIP      (uint16_t)(BUCK_VOUT_TOLERANCE_MAX * BUCK_VOUT_FB_GAIN / ADC_GRAN)
-#define BUCK_VOUT_DEV_RELEASE   (uint16_t)(BUCK_VOUT_TOLERANCE_MIN * BUCK_VOUT_FB_GAIN / ADC_GRAN)
-#define BUCK_VOUT_OFFSET        (uint16_t)(BUCK_VOUT_FB_OFFSET / ADC_GRAN)
+#define BUCK_VOUT_REF           (uint16_t)(BUCK_VOUT_NOMINAL * BUCK_VOUT_FEEDBACK_GAIN / ADC_GRAN)
+#define BUCK_VOUT_DEV_TRIP      (uint16_t)(BUCK_VOUT_TOLERANCE_MAX * BUCK_VOUT_FEEDBACK_GAIN / ADC_GRAN)
+#define BUCK_VOUT_DEV_RELEASE   (uint16_t)(BUCK_VOUT_TOLERANCE_MIN * BUCK_VOUT_FEEDBACK_GAIN / ADC_GRAN)
+#define BUCK_VOUT_OFFSET        (uint16_t)(BUCK_VOUT_FEEDBACK_OFFSET / ADC_GRAN)
 #define BUCK_VOUT_ADC_TRGDLY    (uint16_t)(BUCK_VOUT_ADC_TRG_DELAY / PWM_CLOCK_PERIOD)
 
 #define BUCK_VOUT_NORM_INV_G    (float)(1.0/BUCK_VOUT_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
@@ -330,6 +330,14 @@ extern "C" {
 
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
 
+/*!Ideal Duty Cycle
+ * *************************************************************************************************
+ * Summary:
+ * 
+ * Description:
+ * 
+ * *************************************************************************************************/
+#define BUCK_NORM_IDEAL_DC(x, y) (float)(((float)x/(float)y)*(((float)BUCK_VOUT_NORM_FACTOR/(float)BUCK_VIN_NORM_FACTOR)*pow(2, (BUCK_VOUT_NORM_SCALER-BUCK_VIN_NORM_SCALER))))
 
 /*!Phase Current Feedback
  * *************************************************************************************************
@@ -342,13 +350,13 @@ extern "C" {
 #define BUCK_ISNS_NEED_CALIBRATION  false //true                // Flag indicating that current feedback needs calibration
     
 // Feedback Declarations
-#define BUCK_ISNS_FB_GAIN           (float) 0.050       // Current Gain in V/A
+#define BUCK_ISNS_FEEDBACK_GAIN     (float) 0.050       // Current Gain in V/A
 #define BUCK_ISNS_MAXIMUM           (float) 2.500       // absolute maximum output current (average)
 #define BUCK_ISNS_REFERENCE         (float) 1.000       // output current reference (average)
 #define BUCK_ISNS_ADC_TRG_DELAY     (float) 120.0e-9    // ADC trigger delay for current sense in [sec]
 
-#define BUCK_ISNS1_FB_OFFSET        (float) 1.650       // current sense #1 feedback offset (average)
-#define BUCK_ISNS2_FB_OFFSET        (float) 1.650       // current sense #2 feedback offset (average)
+#define BUCK_ISNS1_FEEDBACK_OFFSET  (float) 1.650       // current sense #1 feedback offset (average)
+#define BUCK_ISNS2_FEEDBACK_OFFSET  (float) 1.650       // current sense #2 feedback offset (average)
     
 // Peripheral Assignments
 #define _BUCK_ISNS1_ADCInterrupt    _ADCAN1Interrupt   
@@ -373,10 +381,10 @@ extern "C" {
 
 // ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
 
-#define BUCK_ISNS_OCL           (uint16_t)(BUCK_ISNS_MAXIMUM * BUCK_ISNS_FB_GAIN / ADC_GRAN)  // Over Current Limit
-#define BUCK_ISNS_REF           (uint16_t)(BUCK_ISNS_REFERENCE * BUCK_ISNS_FB_GAIN / ADC_GRAN)  // Output Current Reference
-#define BUCK_ISNS1_OFFFSET      (uint16_t)(BUCK_ISNS1_FB_OFFSET / ADC_GRAN)
-#define BUCK_ISNS2_OFFFSET      (uint16_t)(BUCK_ISNS2_FB_OFFSET / ADC_GRAN)
+#define BUCK_ISNS_OCL           (uint16_t)(BUCK_ISNS_MAXIMUM * BUCK_ISNS_FEEDBACK_GAIN / ADC_GRAN)  // Over Current Limit
+#define BUCK_ISNS_REF           (uint16_t)(BUCK_ISNS_REFERENCE * BUCK_ISNS_FEEDBACK_GAIN / ADC_GRAN)  // Output Current Reference
+#define BUCK_ISNS1_OFFFSET      (uint16_t)(BUCK_ISNS1_FEEDBACK_OFFSET / ADC_GRAN)
+#define BUCK_ISNS2_OFFFSET      (uint16_t)(BUCK_ISNS2_FEEDBACK_OFFSET / ADC_GRAN)
 #define BUCK_ISNS_ADC_TRGDLY    (uint16_t)(BUCK_ISNS_ADC_TRG_DELAY / PWM_CLOCK_PERIOD)
 
 #define BUCK_ISNS_NORM_INV_G    (float)(1.0/BUCK_ISNS_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
@@ -398,7 +406,7 @@ extern "C" {
 #define BUCK_VL_NOMINAL         (float)(BUCK_VIN_NOMINAL - BUCK_VOUT_NOMINAL) // Nominal input voltage - output voltate
 #define BUCK_VL_MAXIMUM         (float)(BUCK_VIN_MAXIMUM - BUCK_VOUT_NOMINAL) // Maximum input voltage - output voltate
 
-#define BUCK_VIN_NORM_FCT       (float)(BUCK_VOUT_FB_GAIN / BUCK_VIN_FB_GAIN)   // VIN-2-VOUT Normalization Factor
+#define BUCK_VIN_NORM_FCT       (float)(BUCK_VOUT_FEEDBACK_GAIN / BUCK_VIN_FEEDBACK_GAIN)   // VIN-2-VOUT Normalization Factor
 
 #define BUCK_AGC_NORM_SCALER    (int16_t)(ceil(log(BUCK_VIN_NORM_FCT)) + 1) // Nominal VL Q15 scaler  
 #define BUCK_AGC_NORM_FACTOR    (int16_t)((BUCK_VIN_NORM_FCT / pow(2.0, BUCK_AGC_NORM_SCALER)) * pow(2.0, 15)) // Nominal VL Q15 factor 
