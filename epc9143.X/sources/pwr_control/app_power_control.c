@@ -193,7 +193,7 @@ volatile uint16_t appPowerSupply_Suspend(void)
     return(retval); 
 }
 
-/* @@<function_name>
+/* @@appPowerSupply_Resume
  * ********************************************************************************
  * Summary:
  * 
@@ -305,6 +305,10 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.feedback.ad_vout.level_trigger = false;
     buck.feedback.ad_vout.signed_result = false;
     
+    buck.feedback.ad_vout.scaling.factor = BUCK_VOUT_NORM_FACTOR;
+    buck.feedback.ad_vout.scaling.scaler = BUCK_VOUT_NORM_SCALER;
+    buck.feedback.ad_vout.scaling.offset = BUCK_VOUT_OFFSET;
+    
     BUCK_VOUT_ANSEL = (int)buck.feedback.ad_vout.enabled;
     
     // ~~~ OUTPUT VOLTAGE FEEDBACK END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -324,6 +328,10 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.feedback.ad_vin.level_trigger = false;
     buck.feedback.ad_vin.signed_result = false;
 
+    buck.feedback.ad_vin.scaling.factor = BUCK_VIN_NORM_FACTOR;
+    buck.feedback.ad_vin.scaling.scaler = BUCK_VIN_NORM_SCALER;
+    buck.feedback.ad_vin.scaling.offset = BUCK_VIN_OFFSET;
+    
     BUCK_VIN_ANSEL = (int)buck.feedback.ad_vin.enabled;
     
     // ~~~ INPUT VOLTAGE FEEDBACK END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -343,6 +351,11 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.feedback.ad_isns[0].level_trigger = false;
     buck.feedback.ad_isns[0].signed_result = false;
 
+    buck.feedback.ad_isns[0].scaling.factor = BUCK_ISNS_NORM_FACTOR;
+    buck.feedback.ad_isns[0].scaling.scaler = BUCK_ISNS_NORM_SCALER;
+    buck.feedback.ad_isns[0].scaling.offset = BUCK_ISNS1_OFFFSET;
+    
+    
     BUCK_ISNS1_ANSEL = (int)buck.feedback.ad_isns[0].enabled;
 
     
@@ -474,7 +487,7 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->Ports.Source.NormFactor = BUCK_VOUT_NORM_FACTOR; // Output voltage normalization factor fractional
     
     buck.v_loop.controller->Ports.AltSource.ptrAddress = &BUCK_VIN_ADCBUF; // Input Voltage Is Alternate Source
-    buck.v_loop.controller->Ports.AltSource.Offset = BUCK_VIN_FB_OFFSET; // Input Voltage feedback signal offset 
+    buck.v_loop.controller->Ports.AltSource.Offset = BUCK_VIN_OFFSET; // Input Voltage feedback signal offset 
     buck.v_loop.controller->Ports.AltSource.NormScaler = BUCK_VIN_NORM_SCALER; // Input voltage normalization factor bit-shift scaler 
     buck.v_loop.controller->Ports.AltSource.NormFactor = BUCK_VIN_NORM_FACTOR; // Input voltage normalization factor fractional
 
