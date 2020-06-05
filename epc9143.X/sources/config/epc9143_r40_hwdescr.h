@@ -400,7 +400,7 @@ extern "C" {
 
 #define BUCK_VIN_NORM_FCT       (float)(BUCK_VOUT_FB_GAIN / BUCK_VIN_FB_GAIN)   // VIN-2-VOUT Normalization Factor
 
-#define BUCK_AGC_NORM_SCALER    (int16_t)(floor(log(BUCK_VIN_NORM_FCT)) + 1) // Nominal VL Q15 scaler  
+#define BUCK_AGC_NORM_SCALER    (int16_t)(ceil(log(BUCK_VIN_NORM_FCT)) + 1) // Nominal VL Q15 scaler  
 #define BUCK_AGC_NORM_FACTOR    (int16_t)((BUCK_VIN_NORM_FCT / pow(2.0, BUCK_AGC_NORM_SCALER)) * pow(2.0, 15)) // Nominal VL Q15 factor 
 
     
