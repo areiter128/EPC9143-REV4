@@ -16,7 +16,7 @@
  * CGS Date:            05/20/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           06/18/2020 6:16:22 PM
+ * Date/Time:           06/18/2020 7:22:12 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -48,32 +48,32 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    115 Hz
- *    fP1:    21800 Hz
+ *    fP0:    95 Hz
+ *    fP1:    23800 Hz
  *    fP2:    217400 Hz
  *    fP3:    250000 Hz
  *    fZ1:    2060 Hz
  *    fZ2:    8440 Hz
- *    fZ3:    32250 Hz
+ *    fZ3:    25250 Hz
  *
  * *********************************************************************************
  * Filter Coefficients and Parameters:
  * ********************************************************************************/
 volatile int32_t v_loop_ACoefficients [4] =
 {
-    0x00005879, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x0000F7A2, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0x0000F191, // Coefficient A3 will be multiplied with controller output u(n-3)
-    0x0000FE55  // Coefficient A4 will be multiplied with controller output u(n-4)
+    0x0000573E, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x0000F867, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x0000F1FD, // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x0000FE60  // Coefficient A4 will be multiplied with controller output u(n-4)
 };
 
 volatile int32_t v_loop_BCoefficients [5] =
 {
-    0x00002B69, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x0000BD4C, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x0000EDDA, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x000042BF, // Coefficient B3 will be multiplied with error input e(n-3)
-    0x0000E6C8  // Coefficient B4 will be multiplied with error input e(n-4)
+    0x00002FA6, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0000B3C6, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x0000EEB5, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x00004C43, // Coefficient B3 will be multiplied with error input e(n-3)
+    0x0000E1AF  // Coefficient B4 will be multiplied with error input e(n-4)
 };
 
 // Coefficient normalization factors
