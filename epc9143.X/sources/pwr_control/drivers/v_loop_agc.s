@@ -92,8 +92,8 @@
 ; This function calls the z-domain controller processing the latest data point input
 ;------------------------------------------------------------------------------
 	
-	.global _v_loop_GetAGCFactor
-_v_loop_GetAGCFactor:
+	.global _v_loop_AGCFactorUpdate
+_v_loop_AGCFactorUpdate:
     
     nop ; (debugging break point anchor)
 

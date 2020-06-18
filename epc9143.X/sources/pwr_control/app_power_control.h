@@ -56,7 +56,7 @@ extern volatile uint16_t appPowerSupply_Resume(void);
 
 
 // ADVANCED CONTROL FUNCTION DECLARATIONS
-extern void v_loop_GetAGCFactor( // Calls the AGC Factor Modulation Function (Assembly)
+extern void v_loop_AGCFactorUpdate( // Calls the AGC Factor Modulation Function (Assembly)
         volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
