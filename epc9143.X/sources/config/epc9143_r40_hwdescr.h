@@ -278,6 +278,8 @@ extern "C" {
 #define BUCK_VIN_NORM_SCALER    (int16_t)(ceil(log(BUCK_VIN_NORM_INV_G)) + 1) // VIN normalization  
 #define BUCK_VIN_NORM_FACTOR    (int16_t)((BUCK_VIN_NORM_INV_G / pow(2.0, BUCK_VIN_NORM_SCALER)) * (pow(2.0, 15)-1)) // VIN normalization factor scaled in Q15
 
+#define BUCK_VIN_RANGE_MAX     (float)(ADC_REF * BUCK_VIN_NORM_INV_G)
+    
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
     
 #define _BUCK_VIN_ADCInterrupt      _ADCAN9Interrupt   
@@ -330,6 +332,8 @@ extern "C" {
 #define BUCK_VOUT_NORM_SCALER   (int16_t)(ceil(log(BUCK_VOUT_NORM_INV_G)) + 1) // VOUT normalization  
 #define BUCK_VOUT_NORM_FACTOR   (int16_t)((BUCK_VOUT_NORM_INV_G / pow(2.0, BUCK_VOUT_NORM_SCALER)) * (pow(2.0, 15)-1)) // VOUT normalization factor scaled in Q15
 
+#define BUCK_VOUT_RANGE_MAX     (float)(ADC_REF * BUCK_VOUT_NORM_INV_G)
+    
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
 
 /*!Ideal Duty Cycle
