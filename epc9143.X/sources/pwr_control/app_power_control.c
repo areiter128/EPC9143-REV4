@@ -437,6 +437,7 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
     retval &= buckADC_Channel_Initialize(&buck.feedback.ad_temp); // Initialize Temperature Channel
     
     // Custom configurations
+    // ToDo: Incorporate hard coded register settings into generic data structure scheme
     ADCON4Hbits.C1CHS = 1; // Set ADC  input channel to read from ANA1
     
     // Synchronize PWM channels #1 and #2
