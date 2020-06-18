@@ -408,9 +408,9 @@ extern "C" {
  * 
  * *************************************************************************************************/
     
-#define BUCK_VL_MINIMUM         (float)(BUCK_VIN_MINIMUM - BUCK_VOUT_NOMINAL) // Minimum input voltage - output voltate
-#define BUCK_VL_NOMINAL         (float)(BUCK_VIN_NOMINAL - BUCK_VOUT_NOMINAL) // Nominal input voltage - output voltate
-#define BUCK_VL_MAXIMUM         (float)(BUCK_VIN_MAXIMUM - BUCK_VOUT_NOMINAL) // Maximum input voltage - output voltate
+#define BUCK_VL_MINIMUM         (float)(BUCK_VIN_UNDER_VOLTAGE - BUCK_VOUT_RANGE_MAX) // Minimum input voltage - maximum output voltate
+#define BUCK_VL_NOMINAL         (float)(BUCK_VIN_NOMINAL       - BUCK_VOUT_NOMINAL) // Nominal input voltage - nominal output voltate
+#define BUCK_VL_MAXIMUM         (float)(BUCK_VIN_RANGE_MAX     - 0) // Maximum input voltage - 0
 
 #define BUCK_VIN_NORM_FCT       (float)(BUCK_VOUT_FEEDBACK_GAIN / BUCK_VIN_FEEDBACK_GAIN)   // VIN-2-VOUT Normalization Factor
 
