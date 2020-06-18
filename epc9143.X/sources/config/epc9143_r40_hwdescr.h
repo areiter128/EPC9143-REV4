@@ -282,15 +282,15 @@ extern "C" {
     
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
     
-#define _BUCK_VIN_ADCInterrupt      _ADCAN9Interrupt   
-#define _BUCK_VIN_ADCISR_IF         _ADCAN9IF
+#define _BUCK_VIN_ADCInterrupt  _ADCAN9Interrupt   
+#define _BUCK_VIN_ADCISR_IF     _ADCAN9IF
 
-#define BUCK_VIN_ANSEL              _ANSELA2    // GPIO analog function mode enable bit
-#define BUCK_VIN_ADCCORE            8           // 0=Dedicated Core #0, 1=Dedicated Core #1, 8=Shared ADC Core
-#define BUCK_VIN_ADCIN              9           // Analog input number (e.g. '5' for 'AN5')
-#define BUCK_VIN_ADCBUF             ADCBUF9     // ADC input buffer of this ADC channel
-#define BUCK_VIN_ADCTRIG            PG2TRIGA    // Register used for trigger placement
-#define BUCK_VIN_TRGSRC             BUCK_PWM1_TRGSRC_TRG1 // PWM1 (=PG2) Trigger 2 via PGxTRIGB
+#define BUCK_VIN_ANSEL          _ANSELA2    // GPIO analog function mode enable bit
+#define BUCK_VIN_ADCCORE        8           // 0=Dedicated Core #0, 1=Dedicated Core #1, 8=Shared ADC Core
+#define BUCK_VIN_ADCIN          9           // Analog input number (e.g. '5' for 'AN5')
+#define BUCK_VIN_ADCBUF         ADCBUF9     // ADC input buffer of this ADC channel
+#define BUCK_VIN_ADCTRIG        PG2TRIGA    // Register used for trigger placement
+#define BUCK_VIN_TRGSRC         BUCK_PWM1_TRGSRC_TRG1 // PWM1 (=PG2) Trigger 2 via PGxTRIGB
 
 /*!Output Voltage Feedback
  * *************************************************************************************************
@@ -400,7 +400,7 @@ extern "C" {
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
 
     
-/*!Adaptive Gain Control Feed Forward Control
+/*!Adaptive Gain Control Feed Forward
  * *************************************************************************************************
  * Summary:
  * 
