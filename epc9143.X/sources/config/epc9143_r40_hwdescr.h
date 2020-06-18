@@ -414,10 +414,24 @@ extern "C" {
 
 #define BUCK_VIN_NORM_FCT       (float)(BUCK_VOUT_FEEDBACK_GAIN / BUCK_VIN_FEEDBACK_GAIN)   // VIN-2-VOUT Normalization Factor
 
-#define BUCK_AGC_NORM_SCALER    (int16_t)(ceil(log(BUCK_VIN_NORM_FCT)) + 1) // Nominal VL Q15 scaler  
-#define BUCK_AGC_NORM_FACTOR    (int16_t)((BUCK_VIN_NORM_FCT / pow(2.0, BUCK_AGC_NORM_SCALER)) * pow(2.0, 15)) // Nominal VL Q15 factor 
-
+// ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
     
+#define BUCK_AGC_IO_NORM_SCALER (int16_t)(ceil(log(BUCK_VIN_NORM_FCT)) + 1) // Nominal VL Q15 scaler  
+#define BUCK_AGC_IO_NORM_FACTOR (int16_t)((BUCK_VIN_NORM_FCT / pow(2.0, BUCK_AGC_IO_NORM_SCALER)) * (pow(2.0, 15)-1)) // Nominal VL Q15 factor 
+
+// The AGC compare value is defined at the lowest input voltage and highest output voltage 
+// (= lowest voltage across inductor)
+// ToDo: Remove - min VIN turned out to be too cumbersome when tuning coefficients to nominal conditions
+//#define BUCK_AGC_MEDIAN         (int16_t)((float)BUCK_VIN_UVLO_TRIP * BUCK_VIN_NORM_FCT)
+
+// The AGC compare value is defined at nominal input voltage and output voltage 
+#define BUCK_AGC_MEDIAN         (int16_t)(((float)BUCK_VIN_NOM * BUCK_VIN_NORM_FCT) - BUCK_VOUT_NOM)
+
+#define BUCK_AGC_FACTOR_MAX     (float)(BUCK_VL_NOMINAL / BUCK_VL_MINIMUM)
+#define BUCK_AGC_NOM_SCALER     (uint16_t)(ceil(log(BUCK_AGC_FACTOR_MAX)) + 1)
+#define BUCK_AGC_NOM_FACTOR     (uint16_t)(0x7FFF >> BUCK_AGC_NOM_SCALER)
+// ~ conversion macros end ~~~~~~~~~~~~~~~~~
+
 /*!Startup Behavior
  * *************************************************************************************************
  * Summary:
