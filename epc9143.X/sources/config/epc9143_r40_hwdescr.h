@@ -60,6 +60,7 @@ extern "C" {
 #define ADC_REF             (float)3.300 // ADC reference voltage in V
 #define ADC_RES             (float)12.0  // ADC resolution in [bit]
 #define ADC_GRAN            (float)(ADC_REF / pow(2.0, ADC_RES)) // ADC granularity in [V/tick]
+#define ADC_VALUE_MAX       (uint16_t) (pow(2.0, ADC_RES) - 1.0)
     
 // PWM/ADC Clock Settings    
 #define PWM_CLOCK_FREQUENCY (float)4.0e+9   // PWM Clock Frequency in [Hz]
@@ -275,7 +276,7 @@ extern "C" {
 
 #define BUCK_VIN_NORM_INV_G     (float)(1.0/BUCK_VIN_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
 #define BUCK_VIN_NORM_SCALER    (int16_t)(ceil(log(BUCK_VIN_NORM_INV_G)) + 1) // VIN normalization  
-#define BUCK_VIN_NORM_FACTOR    (int16_t)((BUCK_VIN_NORM_INV_G / pow(2.0, BUCK_VIN_NORM_SCALER)) * pow(2.0, 15)) // VIN normalization factor scaled in Q15
+#define BUCK_VIN_NORM_FACTOR    (int16_t)((BUCK_VIN_NORM_INV_G / pow(2.0, BUCK_VIN_NORM_SCALER)) * (pow(2.0, 15)-1)) // VIN normalization factor scaled in Q15
 
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
     
@@ -327,7 +328,7 @@ extern "C" {
 
 #define BUCK_VOUT_NORM_INV_G    (float)(1.0/BUCK_VOUT_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
 #define BUCK_VOUT_NORM_SCALER   (int16_t)(ceil(log(BUCK_VOUT_NORM_INV_G)) + 1) // VOUT normalization  
-#define BUCK_VOUT_NORM_FACTOR   (int16_t)((BUCK_VOUT_NORM_INV_G / pow(2.0, BUCK_VOUT_NORM_SCALER)) * pow(2.0, 15)) // VOUT normalization factor scaled in Q15
+#define BUCK_VOUT_NORM_FACTOR   (int16_t)((BUCK_VOUT_NORM_INV_G / pow(2.0, BUCK_VOUT_NORM_SCALER)) * (pow(2.0, 15)-1)) // VOUT normalization factor scaled in Q15
 
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
 
@@ -390,7 +391,7 @@ extern "C" {
 
 #define BUCK_ISNS_NORM_INV_G    (float)(1.0/BUCK_ISNS_FEEDBACK_GAIN) // Inverted feedback gain required for value normalization
 #define BUCK_ISNS_NORM_SCALER   (int16_t)(ceil(log(BUCK_ISNS_NORM_INV_G)) + 1) // ISNS normalization  
-#define BUCK_ISNS_NORM_FACTOR   (int16_t)((BUCK_ISNS_NORM_INV_G / pow(2.0, BUCK_ISNS_NORM_SCALER)) * pow(2.0, 15)) // ISNS normalization factor scaled in Q15
+#define BUCK_ISNS_NORM_FACTOR   (int16_t)((BUCK_ISNS_NORM_INV_G / pow(2.0, BUCK_ISNS_NORM_SCALER)) * (pow(2.0, 15)-1)) // ISNS normalization factor scaled in Q15
     
 // ~ conversion macros end ~~~~~~~~~~~~~~~~~
 
