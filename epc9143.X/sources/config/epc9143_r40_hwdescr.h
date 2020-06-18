@@ -245,13 +245,13 @@ extern "C" {
  * 
  * *************************************************************************************************/
     
-#define BUCK_VIN_MINIMUM        (float)10.000   // Minimum input voltage
+#define BUCK_VIN_MINIMUM        (float)18.000   // Minimum input voltage
 #define BUCK_VIN_NOMINAL        (float)48.000   // Nominal input voltage
-#define BUCK_VIN_MAXIMUM        (float)60.000   // Maximum input voltage
+#define BUCK_VIN_MAXIMUM        (float)72.000   // Maximum input voltage
 
-#define BUCK_VIN_UNDER_VOLTAGE  (float)9.500    // Under Voltage Lock Out Cut Off
-#define BUCK_VIN_OVER_VOLTAGE   (float)62.00    // Over Voltage Lock Out Cut Off
-#define BUCK_VIN_HYSTERESIS     (float)1.000    // UVLO/OVLO Hysteresis
+#define BUCK_VIN_UNDER_VOLTAGE  (float)17.50    // Under Voltage Lock Out Cut Off
+#define BUCK_VIN_OVER_VOLTAGE   (float)72.50    // Over Voltage Lock Out Cut Off
+#define BUCK_VIN_HYSTERESIS     (float)1.500    // UVLO/OVLO Hysteresis
     
 #define BUCK_VIN_R1             (float)(110.0)  // Upper voltage divider resistor in kOhm
 #define BUCK_VIN_R2             (float)(4.870)  // Lower voltage divider resistor in kOhm
