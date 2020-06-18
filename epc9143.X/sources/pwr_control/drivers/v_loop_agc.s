@@ -7,7 +7,7 @@
 ; **********************************************************************************
 ;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
 ; **********************************************************************************
-	
+
 ;------------------------------------------------------------------------------
 ;file start
 	.nolist
@@ -40,35 +40,50 @@ _v_loop_AGCFactorUpdate:
     
     nop ; (debugging break point anchor)
 
-    return
+;    return
     
     ; determine most recent VL
     
-    ; read and normalize input voltage 
+    ; read and normalize input voltage (normalize to output voltage, not absolute!)
     mov [w0 + #ptrAltSourceRegister], w1    ; load pointer to most recent input voltage register
-    mov [w1], w1                            ; load value into w1
-    mov [w0 + AltSourceNormShift], w3       ; load most recent input voltage normalization scaler
-    sl  w1, w3, w1                          ; normalize input voltage value
+    mov [w1], w4                            ; load value into w1
+    mov [w0 + AdvParam2], w5                ; load Q15 factor of input-2-output voltage normalization
+    mpy w4*w5, b                            ; multiply ADC reading of input voltage with normalization factor
+    mov [w0 + AdvParam1], w2                ; load bit-shift scaler of input-2-output voltage normalization factor 
+    sftac b, w2                             ; shift result by input voltage normalization scaler
+    sac.r b, w1                             ; store most recent accumulator result in working register
     
-    ; read and normalize output voltage 
+    ; read output voltage 
     mov [w0 + #ptrSourceRegister], w2       ; load pointer to most recent output voltage register
     mov [w2], w2                            ; load value into w2
-    mov [w0 + SourceNormShift], w3          ; load most recent input voltage normalization scaler
-    sl  w2, w3, w2                          ; normalize output voltage value
     
     ; Calculate instantaneous VL
-    sub w1, w2, w6                          ; calculate most recent VL, place result in w6
+    sub w1, w2, w5                          ; calculate most recent VL, place result in w5
     
     ; Load modulation median
     mov [w0 + #agcGainModMedian], w4        ; load pointer to nominal VL
+; ToDo: Remove - AGC Median is a constant value and so is factor scaling 
+;       (no need to calculate at runtime)
+;    mov [w0 + #agcGainModScaler], w2        ; load AGC factor scaler
+;    neg w2, w2                              ; invert sign of AGC factor scaler
+;    asr w4, w2, w4                          ; shift AGC median by factor scaler
     
     ; Divide median by instatneous VL
     push.s      ; Save pointer to cNPNZ16b_t data structure
     repeat #5   ; run divide in 6 steps
-    divf w4, w6 ; divide VL_nom/VL
+    divf w4, w5 ; divide VL_nom/VL
     mov w0, w4  ; move result to w4
+    
+    ; ----------------------------------------------------------------------------------
+    ; ToDo: Possible improvement would be to find first bit from left and pack result in
+    ;       factor and scaler. This doesn't work due to number format of division result 
+    ;       and remainer. Packing result as floating point won't increase number 
+    ;       resolution.
+    ; ----------------------------------------------------------------------------------
+    
     pop.s       ; restore pointer to cNPNZ16b_t data structure
-    mov w4, [w0 + #agcGainModFactor] ; load result into cNPNZ16b_t data structure
+    mov w4, [w0 + #agcGainModFactor] ; load result into cNPNZ16b_t data structure 
+                                     ; for further processing
     
 ;------------------------------------------------------------------------------
 ; End of routine
