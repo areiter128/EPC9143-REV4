@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
 ;  SDK Version: z-Domain Control Loop Designer v0.9.8.104
-;  AGS Version: Assembly Generator Script v2.0.11 (05/20/2020)
+;  AGS Version: Assembly Generator Script v2.0.12 (06/18/2020)
 ;  Author:      M91406
-;  Date/Time:   06/03/2020 6:17:34 PM
+;  Date/Time:   06/18/2020 6:16:23 PM
 ; **********************************************************************************
 ;  4P4Z Control Library File (Dual Bitshift-Scaling Mode)
 ; **********************************************************************************
@@ -169,11 +169,11 @@ _v_loop_Update:    ; provide global scope to routine
 	
 ;------------------------------------------------------------------------------
 ; Adaptive Loop Gain Modulation
+	sac.r b, w6    ; store result of accumulator B in working register
 	mov [w0 + ptrAgcObserverFunction], w1    ; load function pointer to observer function
 	call w1    ; call extern observer function to update gain modulation factor
 	mov [w0 + #agcGainModFactor], w4    ; load AGC modulation factor into working register
 	mov [w0 + #agcGainModScaler], w2    ; load AGC modulation factor scaler into working register
-	sac.r b, w6    ; store result of accumulator B in working register
 	mpy w4*w6, b    ; multiply accumulator B result with AGC modulation factor
 	sftac b, w2    ; shift result by AGC scaler
 	
