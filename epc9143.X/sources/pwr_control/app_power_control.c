@@ -527,24 +527,19 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
     buck.v_loop.controller->CascadeTrigger.CascadedFunParam = 0;
     
     // Initialize Advanced Control Settings (not used in this code example)
-    buck.v_loop.controller->GainControl.AgcFactor = 0x7FFF; // Adaptive Gain Control factor fractional
-    buck.v_loop.controller->GainControl.AgcScaler = 0x0000; // Adaptive Gain Control factor bit-shift scaler
-    buck.v_loop.controller->GainControl.AgcMedian = 0x0000; // Q15 number representing normalized Nominal Operating Point
-    buck.v_loop.controller->GainControl.ptrAgcObserverFunction = (uint16_t)&v_loop_GetAGCFactor;
+    buck.v_loop.controller->GainControl.AgcFactor = BUCK_AGC_NOM_FACTOR;
+    buck.v_loop.controller->GainControl.AgcScaler = -BUCK_AGC_NOM_SCALER;
+    buck.v_loop.controller->GainControl.AgcMedian = (int16_t)(BUCK_AGC_MEDIAN >> BUCK_AGC_NOM_SCALER);
 
-//    // Initialize Advanced Control Settings (not used in this code example)
-//    buck.v_loop.controller->GainControl.AgcFactor = 0x1FFF; // Adaptive Gain Control factor fractional
-//    buck.v_loop.controller->GainControl.AgcScaler = 0xFFFE; // Adaptive Gain Control factor bit-shift scaler
-//    buck.v_loop.controller->GainControl.AgcMedian = (0x1BA2 >> 2); // Q15 number representing normalized Nominal Operating Point
-//    buck.v_loop.controller->GainControl.ptrAgcObserverFunction = (uint16_t)&v_loop_GetGainFactor; // Declare pointer to Modulation Factor Update function
-    
-    
+    buck.v_loop.controller->GainControl.ptrAgcObserverFunction = (uint16_t)&v_loop_AGCFactorUpdate;
+
     // Custom Advanced Control Settings
-    buck.v_loop.controller->Advanced.advParam1 = 0; // No additional advanced control options used
-    buck.v_loop.controller->Advanced.advParam2 = 0; // No additional advanced control options used
+    // Use proprietary control parameters to place VIN-2-VOUT scaling factor
+    buck.v_loop.controller->Advanced.advParam1 = (uint16_t)(-BUCK_AGC_IO_NORM_SCALER);
+    buck.v_loop.controller->Advanced.advParam2 = BUCK_AGC_IO_NORM_FACTOR;
     buck.v_loop.controller->Advanced.advParam3 = 0; // No additional advanced control options used
     buck.v_loop.controller->Advanced.advParam4 = 0; // No additional advanced control options used
-    
+
     // Reset Controller Status
     buck.v_loop.controller->status.bits.enabled = false; // Keep controller disabled
     buck.v_loop.controller->status.bits.swap_source = false; // use SOURCE as major control input
