@@ -1,5 +1,5 @@
 /*
- * File:   drv_cuck_pconfig.c
+ * File:   drv_buck_pconfig.c
  * Author: M91406
  *
  * Created on March 12, 2020, 4:31 PM
@@ -102,7 +102,7 @@ volatile uint16_t buckPWM_ModuleInitialize(volatile BUCK_POWER_CONTROLLER_t* buc
     return(retval);    
 }
 
-/* @@<function_name>
+/* @@buckPWM_ChannelInitialize
  * ********************************************************************************
  * Summary:
  * 
@@ -567,7 +567,7 @@ volatile uint16_t buckADC_Channel_Initialize(volatile BUCK_ADC_INPUT_SETTINGS_t*
     return(retval);
 }
 
-/* @@<function_name>
+/* @@buckADC_Start
  * ********************************************************************************
  * Summary:
  * 
@@ -591,8 +591,8 @@ volatile uint16_t buckADC_Start(void)
     ADCON5L = adcore_mask;    // Enable power to all used ADC cores
     adcore_mask_compare = ((adcore_mask << 8) | adcore_mask); // Set ADC Core Ready Bit Mask
     
-    while ((ADCON5L != adcore_mask_compare) & (timeout++ < ADC_POWRUP_TIMEOUT)); // Wait until ADC cores are ready
-    if (timeout >= ADC_POWRUP_TIMEOUT) return(0); // Skip if powering up ADC cores was unsuccessful
+    while ((ADCON5L != adcore_mask_compare) & (timeout++ < ADC_POWERUP_TIMEOUT)); // Wait until ADC cores are ready
+    if (timeout >= ADC_POWERUP_TIMEOUT) return(0); // Skip if powering up ADC cores was unsuccessful
     ADCON3H = adcore_mask; // Enable ADC cores
 
 

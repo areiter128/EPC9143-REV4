@@ -13,7 +13,8 @@
 #include "pwr_control/devices/dev_buck_typedef.h"
 #include "pwr_control/devices/dev_buck_converter.h"
 
-volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
+volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance) 
+{
 
     volatile uint16_t retval = 1;
     volatile uint16_t _i=0;
