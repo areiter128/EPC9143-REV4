@@ -87,6 +87,10 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             else
                 buckInstance->status.bits.cs_calib_complete = true; 
             
+            // If defined, set POWER_GOOD output
+            if(buckInstance->gpio.PowerGood.enabled)
+                buckGPIO_Clear(&buckInstance->gpio.PowerGood);
+            
             // switch to soft-start phase RESUME
             buckInstance->mode = BUCK_STATE_RESET;
 
@@ -125,6 +129,10 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                 }
             }
                 
+            // If defined, set POWER_GOOD output
+            if(buckInstance->gpio.PowerGood.enabled)
+                buckGPIO_Clear(&buckInstance->gpio.PowerGood);
+
             // Switch to STANDBY mode
             buckInstance->mode = BUCK_STATE_STANDBY;  
 
@@ -381,6 +389,10 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
                 buckInstance->mode = BUCK_STATE_ONLINE; // Set COMPLETE flag
                 buckInstance->startup.power_good_delay.counter = 
                     (buckInstance->startup.power_good_delay.period + 1); // Clamp to PERIOD_EXPIRED for future startups
+                
+                // If defined, set POWER_GOOD output
+                if(buckInstance->gpio.PowerGood.enabled)
+                    buckGPIO_Set(&buckInstance->gpio.PowerGood);
             }
 
             break;
