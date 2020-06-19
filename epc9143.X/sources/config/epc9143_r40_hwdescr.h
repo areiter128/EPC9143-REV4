@@ -114,6 +114,8 @@ extern "C" {
     #define DBGPIN_3_INIT	{ _LATB10 = 0; _TRISB10 = 0; }
 
     // Device Pin #14 on EPC9243
+    #define PWRGOOD_PORT    1   // GPIO port declaration where 0=A, 1=B, 2=C, etc.
+    #define PWRGOOD_PIN     1   // GPIO port pin declaration where 0=Rx0, 1=Rx1, 2=Rx3, etc.
     #define PWRGOOD_SET     { _LATB1 = 1; }
     #define PWRGOOD_CLEAR	{ _LATB1 = 0; }
     #define PWRGOOD_TOGGLE	{ _LATB1 ^= 1; }
@@ -171,7 +173,7 @@ extern "C" {
 
 // PWM Phase #1 Configuration
 #define BUCK_PWM1_CHANNEL              2U // PWM Instance Index (e.g. 1=PWM1, 2=PWM2, etc.)
-#define BUCK_PWM1_GPIO_INSTANCE        2U // Number indicating device port, where 1=A, 2=B, 3=C, etc.
+#define BUCK_PWM1_GPIO_INSTANCE        1U // Number indicating device port, where 0=A, 1=B, 2=C, etc.
 #define BUCK_PWM1_GPIO_PORT_PINH       12U // Port Pin Number
 #define BUCK_PWM1_GPIO_PORT_PINL       13U // Port Pin Number
     
@@ -198,7 +200,7 @@ extern "C" {
 
 // PWM Phase #2 Configuration
 #define BUCK_PWM2_CHANNEL              4U    // PWM Instance Index (e.g. 1=PWM1, 2=PWM2, etc.)
-#define BUCK_PWM2_GPIO_INSTANCE        2U // Number indicating device port, where 1=A, 2=B, 3=C, etc.
+#define BUCK_PWM2_GPIO_INSTANCE        1U // Number indicating device port, where 0=A, 1=B, 2=C, etc.
 #define BUCK_PWM2_GPIO_PORT_PINH       9U // Port Pin Number
 #define BUCK_PWM2_GPIO_PORT_PINL       8U // Port Pin Number
 
