@@ -599,4 +599,168 @@ volatile uint16_t buckADC_Start(void)
     return(retval);    
 }
 
+/* @@buckGPIO_Set
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
+volatile uint16_t buckGPIO_Set(volatile BUCK_GPIO_INSTANCE_t* buckGPIOInstance)
+{
+    volatile uint16_t retval=1;
+    volatile P33C_GPIO_INSTANCE_t* gpio;
+
+    // Capture register of GPIO port
+    gpio = (volatile P33C_GPIO_INSTANCE_t*) 
+        ((volatile uint8_t*)&ANSELA + (buckGPIOInstance->port * P33C_GPIO_SFR_OFFSET));
+    
+    // Set pin to ACTIVE state
+    if (buckGPIOInstance->polarity == 0)
+        gpio->LATx.value |= (0x0001 << buckGPIOInstance->pin); // Set pin bit in register
+    else
+        gpio->LATx.value &= ~(0x0001 << buckGPIOInstance->pin); // Clear pin bit in register            
+    
+    return(retval);
+}
+
+/* @@buckGPIO_Clear
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
+volatile uint16_t buckGPIO_Clear(volatile BUCK_GPIO_INSTANCE_t* buckGPIOInstance)
+{
+    volatile uint16_t retval=1;
+    volatile P33C_GPIO_INSTANCE_t* gpio;
+
+    // Capture register of GPIO port
+    gpio = (volatile P33C_GPIO_INSTANCE_t*) 
+        ((volatile uint8_t*)&ANSELA + (buckGPIOInstance->port * P33C_GPIO_SFR_OFFSET));
+    
+    // Set pin to INACTIVE state
+    if (buckGPIOInstance->polarity == 0)
+        gpio->LATx.value &= ~(0x0001 << buckGPIOInstance->pin); // Clear pin bit in register            
+    else
+        gpio->LATx.value |= (0x0001 << buckGPIOInstance->pin); // Set pin bit in register
+    
+    return(retval);
+}
+
+
+/* @@buckGPIO_GetPinState
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
+volatile bool buckGPIO_GetPinState(volatile BUCK_GPIO_INSTANCE_t* buckGPIOInstance)
+{
+    volatile bool retval=1;
+    volatile P33C_GPIO_INSTANCE_t* gpio;
+
+    // Capture register of GPIO port
+    gpio = (volatile P33C_GPIO_INSTANCE_t*) 
+        ((volatile uint8_t*)&ANSELA + (buckGPIOInstance->port * P33C_GPIO_SFR_OFFSET));
+    
+    // Read pin 
+    retval = (bool)(gpio->PORTx.value & (0x0001 << buckGPIOInstance->pin));
+    
+    // If polarity is inverted (ACTIVE LOW), invert result
+    if(buckGPIOInstance->polarity == 1)
+        retval = (1-retval);
+    
+    return(retval);
+}
+
+/* @@buckGPIO_PrivateInitialize
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
+volatile uint16_t buckGPIO_PrivateInitialize(volatile BUCK_GPIO_INSTANCE_t* buckGPIOInstance)
+{
+    volatile uint16_t retval=1;
+    volatile P33C_GPIO_INSTANCE_t* gpio;
+
+    // Capture register of GPIO port
+    gpio = (volatile P33C_GPIO_INSTANCE_t*) 
+        ((volatile uint8_t*)&ANSELA + (buckGPIOInstance->port * P33C_GPIO_SFR_OFFSET));
+    
+    // Set pin to INACTIVE state
+    if (buckGPIOInstance->polarity == 0)
+        gpio->LATx.value &= ~(0x0001 << buckGPIOInstance->pin); // Clear pin bit in register            
+    else
+        gpio->LATx.value |= (0x0001 << buckGPIOInstance->pin); // Set pin bit in register
+
+    // Set INPUT or OUTPUT in TRIS register
+    if(buckGPIOInstance->io_type == 0)
+        gpio->TRISx.value &= ~(0x0001 << buckGPIOInstance->pin); // Clear pin bit in register
+    else
+        gpio->TRISx.value |= (0x0001 << buckGPIOInstance->pin); // Set pin bit in register
+    
+    // Set pin as DIGITAL IO
+    gpio->ANSELx.value &= ~(0x0001 << buckGPIOInstance->pin); // Clear pin bit in register
+
+    // ToDo: Enable register value testing to validate function result
+    retval = 1;
+
+    return(retval);
+}
+
+
+/* @@buckGPIO_Initialize
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
+volatile uint16_t buckGPIO_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
+{
+    volatile uint16_t retval=1;
+
+    // Initialize ENABLE input pin
+    if(buckInstance->gpio.Enable.enabled)
+        retval = buckGPIO_PrivateInitialize(&buckInstance->gpio.Enable);
+    
+    // Initialize POWER GOOD output pin
+    if(buckInstance->gpio.PowerGood.enabled)
+        retval = buckGPIO_PrivateInitialize(&buckInstance->gpio.PowerGood);
+
+
+    return(retval);
+    
+}
+
 // end of file

@@ -64,6 +64,10 @@ extern volatile uint16_t buckADC_ModuleInitialize(void);
 extern volatile uint16_t buckADC_Channel_Initialize(volatile BUCK_ADC_INPUT_SETTINGS_t* adcInstance);
 extern volatile uint16_t buckADC_Start(void);
     
+extern volatile uint16_t buckGPIO_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t buckGPIO_Set(volatile BUCK_GPIO_INSTANCE_t* buckGPIOInstance);
+extern volatile uint16_t buckGPIO_Clear(volatile BUCK_GPIO_INSTANCE_t* buckGPIOInstance);
+extern volatile bool buckGPIO_GetPinState(volatile BUCK_GPIO_INSTANCE_t* buckGPIOInstance);
 
 #ifdef	__cplusplus
 }
