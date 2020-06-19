@@ -451,10 +451,17 @@ extern "C" {
  * 
  * *************************************************************************************************/
 
-#define BUCK_POWER_ON_DELAY          (float) 500e-3 // power on delay in [sec]
-#define BUCK_VRAMP_PERIOD            (float) 200e-3 // ramp period in [sec]
-#define BUCK_IRAMP_PERIOD            (float) 200e-3 // ramp period in [sec]
-#define BUCK_POWER_GOOD_DELAY        (float) 100e-3 // power good in [sec]
+// On EPC9143 Rev 4 it takes roughly 50 ms until the auxiliary power has been started
+// and the controller completes self-test and peripheral configuration. After this period
+// the controller starts to execute the power control state machine.
+    
+// This additional startup delay of ~50 ms is not considered here and needs to be taken into 
+// account when adjusting startup timing.
+    
+#define BUCK_POWER_ON_DELAY          (float) 200e-3 // power on delay in [sec]
+#define BUCK_VRAMP_PERIOD            (float) 100e-3 // ramp period in [sec]
+#define BUCK_IRAMP_PERIOD            (float) 100e-3 // ramp period in [sec]
+#define BUCK_POWER_GOOD_DELAY        (float) 200e-3 // power good in [sec]
 
 // ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
 
