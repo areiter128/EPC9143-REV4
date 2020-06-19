@@ -42,24 +42,73 @@ extern "C" {
 #endif /* __cplusplus */
 
 // Digital-To-Analog Converter and High Speed Comparator Special Function Register Set 
-#define ADC_POWRUP_TIMEOUT  5000
+#define ADC_POWERUP_TIMEOUT  5000
     
 // GENERIC GPIO INSTANCE SPECIAL FUNCTION REGISTER SET
+// DO NOT REORDER ELEMENTS AS THEY MAP ONTO DEVICE REGISTER MEMORY !!!
 #ifndef P33C_GPIO_INSTANCE_t
     typedef struct {
-        volatile uint16_t ANSELx;   // ANSELx: ANALOG SELECT FOR PORTx REGISTER
-        volatile uint16_t TRISx;    // TRISx: OUTPUT ENABLE FOR PORTx REGISTER
-        volatile uint16_t PORTx;    // PORTx: INPUT DATA FOR PORTx REGISTER
-        volatile uint16_t LATx;     // LATx: OUTPUT DATA FOR PORTx REGISTER
-        volatile uint16_t ODCx;     // ODCx: OPEN-DRAIN ENABLE FOR PORTx REGISTER
-        volatile uint16_t CNPUx;    // CNPUx: CHANGE NOTIFICATION PULL-UP ENABLE FOR PORTx REGISTER
-        volatile uint16_t CNPDx;    // CNPDx: CHANGE NOTIFICATION PULL-DOWN ENABLE FOR PORTx REGISTER
-        volatile uint16_t CNCONx;   // CNCONx: CHANGE NOTIFICATION CONTROL FOR PORTx REGISTER
-        volatile uint16_t CNEN0x;   // CNEN0x: CHANGE NOTIFICATION INTERRUPT ENABLE FOR PORTx REGISTER
-        volatile uint16_t CNSTATx;  // CNSTATx: CHANGE NOTIFICATION STATUS FOR PORTx REGISTER
-        volatile uint16_t CNEN1x;   // CNEN1x: CHANGE NOTIFICATION EDGE SELECT FOR PORTx REGISTER
-        volatile uint16_t CNFx;     // CNFx: CHANGE NOTIFICATION INTERRUPT FLAG FOR PORTx REGISTER
-    } P33C_GPIO_INSTANCE_t; // GPIO REGISTER SET
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }ANSELx; // ANSELx: ANALOG SELECT FOR PORTx REGISTER
+        //volatile uint16_t ANSELx;   // ANSELx: ANALOG SELECT FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }TRISx; // TRISx: OUTPUT ENABLE FOR PORTx REGISTER
+        //volatile uint16_t TRISx;    // TRISx: OUTPUT ENABLE FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PORTx; // PORTx: INPUT DATA FOR PORTx REGISTER
+        //volatile uint16_t PORTx;    // PORTx: INPUT DATA FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }LATx; // LATx: OUTPUT DATA FOR PORTx REGISTER
+        //volatile uint16_t LATx;     // LATx: OUTPUT DATA FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }ODCx; // ODCx: OPEN-DRAIN ENABLE FOR PORTx REGISTER
+        //volatile uint16_t ODCx;     // ODCx: OPEN-DRAIN ENABLE FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNPUx; // CNPUx: CHANGE NOTIFICATION PULL-UP ENABLE FOR PORTx REGISTER
+        //volatile uint16_t CNPUx;    // CNPUx: CHANGE NOTIFICATION PULL-UP ENABLE FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNPDx; // CNPDx: CHANGE NOTIFICATION PULL-DOWN ENABLE FOR PORTx REGISTER
+        //volatile uint16_t CNPDx;    // CNPDx: CHANGE NOTIFICATION PULL-DOWN ENABLE FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNCONx; // CNCONx: CHANGE NOTIFICATION CONTROL FOR PORTx REGISTER
+        //volatile uint16_t CNCONx;   // CNCONx: CHANGE NOTIFICATION CONTROL FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNEN0x; // CNEN0x: CHANGE NOTIFICATION INTERRUPT ENABLE FOR PORTx REGISTER
+        //volatile uint16_t CNEN0x;   // CNEN0x: CHANGE NOTIFICATION INTERRUPT ENABLE FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNSTATx; // CNSTATx: CHANGE NOTIFICATION STATUS FOR PORTx REGISTER
+        //volatile uint16_t CNSTATx;  // CNSTATx: CHANGE NOTIFICATION STATUS FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNEN1x; // CNEN1x: CHANGE NOTIFICATION EDGE SELECT FOR PORTx REGISTER
+        //volatile uint16_t CNEN1x;   // CNEN1x: CHANGE NOTIFICATION EDGE SELECT FOR PORTx REGISTER
+        union {   
+            volatile LATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNFx; // CNFx: CHANGE NOTIFICATION INTERRUPT FLAG FOR PORTx REGISTER
+        //volatile uint16_t CNFx;     // CNFx: CHANGE NOTIFICATION INTERRUPT FLAG FOR PORTx REGISTER
+    } __attribute__((packed)) P33C_GPIO_INSTANCE_t; // GPIO REGISTER SET
     #define P33C_GPIO_SFR_OFFSET  ((volatile uint16_t)&ANSELB - (volatile uint16_t)&ANSELA)
 #endif
 
