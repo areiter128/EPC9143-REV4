@@ -154,6 +154,10 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             if ((buckInstance->status.bits.enabled) && (buckInstance->status.bits.autorun))
             { buckInstance->status.bits.GO = true; }
             
+            // If converter supports external ENABLE pin, the pin state may override the GO bit
+            if (buckInstance->gpio.Enable.enabled)
+                buckInstance->status.bits.GO &= buckGPIO_GetPinState(&buckInstance->gpio.Enable);
+            
             // Wait for all startup conditions to be met
             if ((buckInstance->status.bits.enabled) &&          // state machine needs to be enabled
                 (buckInstance->status.bits.GO) &&               // GO-bit needs to be set
