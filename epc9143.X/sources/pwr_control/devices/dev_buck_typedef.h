@@ -267,12 +267,12 @@ typedef struct {
 /*!MPHBUCK_FEEDBACK_SETTINGS_t
  * ***************************************************************************************************
  * Summary:
- * Generic power converter switch-node specifications
+ * Generic power converter feedback specifications
  * 
  * Description:
- * This data structure is used to set the converter switch-node specifications declaring which
- * PWM channel is used as well as its switching frequency, phase-shift, dead times and duty ratio
- * limits.
+ * This data structure is used to set the converter feedback specifications declaring which
+ * ADC channels are used including the individual AD input configuration such as trigger mode,
+ * input mode, result format and value normalization.
  * 
  * *************************************************************************************************** */
 
@@ -304,6 +304,28 @@ typedef struct {
     volatile BUCK_ADC_INPUT_SETTINGS_t ad_temp; // ADC input sampling temperature
 } BUCK_FEEDBACK_SETTINGS_t;
 
+/*!MPHBUCK_GPIO_SETTINGS_t
+ * ***************************************************************************************************
+ * Summary:
+ * Generic power converter GPIO specifications
+ * 
+ * Description:
+ * This data structure is used to set the converter GPIO specifications declaring which
+ * if and which additional GPIOs are used by the converter controller, such as POWER_GOOD.
+ * 
+ * *************************************************************************************************** */
+typedef struct {
+    volatile bool enabled; // Specifies, if this IO is used or not
+    volatile uint16_t port; // GPIO port instance number (0=A, 1=B, 2=C, etc.)
+    volatile uint16_t pin; // GPIO port pin number
+    volatile uint16_t polarity; // Output polarity, where 0=ACTIVE HIGH, 1=ACTIVE_LOW
+    volatile uint16_t io_type; // Input/Output definition (0=output, 1=input)
+} BUCK_GPIO_INSTANCE_t; // GPIO instance of the converter control GPIO
+
+typedef struct {
+    volatile BUCK_GPIO_INSTANCE_t Enable; // External ENABLE input
+    volatile BUCK_GPIO_INSTANCE_t PowerGood; // Power Good Output
+} BUCK_GPIO_SETTINGS_t; // GPIO instance of the converter control GPIO
 
 // ==============================================================================================
 // BUCK converter state machine data structure and defines
@@ -319,6 +341,7 @@ typedef struct {
     volatile BUCK_FEEDBACK_SETTINGS_t feedback; // BUCK converter feedback settings
 
     volatile BUCK_SWITCH_NODE_SETTINGS_t sw_node[MPHBUCK_NO_OF_PHASES]; // BUCK converter switch node settings
+    volatile BUCK_GPIO_SETTINGS_t gpio; // BUCK converter additional GPIO specification
     
     volatile BUCK_LOOP_SETTINGS_t v_loop; // BUCK voltage control loop object
     volatile BUCK_LOOP_SETTINGS_t i_loop[MPHBUCK_NO_OF_PHASES]; // BUCK Current control loop objects
