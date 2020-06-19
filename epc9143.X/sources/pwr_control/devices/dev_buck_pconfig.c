@@ -131,19 +131,19 @@ volatile uint16_t buckPWM_ChannelInitialize(volatile BUCK_POWER_CONTROLLER_t* bu
         gpio_Instance = buckInstance->sw_node[_i].gpio_instance;
 
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
-        gpio = (volatile P33C_GPIO_INSTANCE_t*) (volatile uint16_t*)
-            (&ANSELA + ((gpio_Instance - 1) * P33C_GPIO_SFR_OFFSET));
+        gpio = (volatile P33C_GPIO_INSTANCE_t*)
+            ((volatile uint8_t*)&ANSELA + (gpio_Instance * P33C_GPIO_SFR_OFFSET));
 
-        pg   = (volatile P33C_PWM_INSTANCE_t*) (volatile uint16_t*)
-            (&PG1CONL + (volatile uint16_t)((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
+        pg   = (volatile P33C_PWM_INSTANCE_t*) 
+            ((volatile uint16_t*)&PG1CONL + ((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
 
         // WRITE GPIO CONFIGURATION OF PWM OUTPUT(S)
-        gpio->LATx  &= ~(0x0001 << buckInstance->sw_node[_i].gpio_high);  // Clear PWMxH output LOW
-        gpio->LATx  &= ~(0x0001 << buckInstance->sw_node[_i].gpio_low);   // Clear PWMxL output LOW
-        gpio->TRISx &= ~(0x0001 << buckInstance->sw_node[_i].gpio_high);  // Clear PWMxH output to OUTPUT
-        gpio->TRISx &= ~(0x0001 << buckInstance->sw_node[_i].gpio_low);   // Clear PWMxL output to OUTPUT
-        gpio->CNPDx |= (0x0001 << buckInstance->sw_node[_i].gpio_high); // Enable intern pull down register (PWM1H)
-        gpio->CNPDx |= (0x0001 << buckInstance->sw_node[_i].gpio_low); // Enable intern pull down register (PWM1L)
+        gpio->LATx.value  &= ~(0x0001 << buckInstance->sw_node[_i].gpio_high); // Clear PWMxH output LOW
+        gpio->LATx.value  &= ~(0x0001 << buckInstance->sw_node[_i].gpio_low);  // Clear PWMxL output LOW
+        gpio->TRISx.value &= ~(0x0001 << buckInstance->sw_node[_i].gpio_high); // Clear PWMxH output to OUTPUT
+        gpio->TRISx.value &= ~(0x0001 << buckInstance->sw_node[_i].gpio_low);  // Clear PWMxL output to OUTPUT
+        gpio->CNPDx.value |= (0x0001 << buckInstance->sw_node[_i].gpio_high);  // Enable intern pull down register (PWM1H)
+        gpio->CNPDx.value |= (0x0001 << buckInstance->sw_node[_i].gpio_low);   // Enable intern pull down register (PWM1L)
     
         // COPY CONFIGURATION FROM TEMPLATE TO PWM GENERATOR x CONTROL REGISTERS
         pg->PGxCONL.value = REG_PGxCONL; // PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
