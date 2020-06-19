@@ -229,8 +229,8 @@ volatile uint16_t buckPWM_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
         pwm_Instance = buckInstance->sw_node[_i].pwm_instance;
         
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
-        pg   = (volatile P33C_PWM_INSTANCE_t*) (volatile uint16_t*)
-            (&PG1CONL + (volatile uint16_t)((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
+        pg   = (volatile P33C_PWM_INSTANCE_t*) 
+            ((volatile uint16_t*)&PG1CONL + ((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
 
         pg->PGxIOCONL.value |= P33C_PGxIOCONL_OVREN; // PWMxH/L Output Override Enable: PWM generator controls the PWMxH output pin
         pg->PGxIOCONH.value &= ~(P33C_PGxIOCONH_PEN); // PWMxH/L Output Port Disable: PWM generator controls the PWMxH output pin
@@ -283,8 +283,8 @@ volatile uint16_t buckPWM_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
         pwm_Instance = buckInstance->sw_node[_i].pwm_instance;
 
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
-        pg   = (volatile P33C_PWM_INSTANCE_t*) (volatile uint16_t*)
-            (&PG1CONL + (volatile uint16_t)((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
+        pg   = (volatile P33C_PWM_INSTANCE_t*) 
+            ((volatile uint16_t*)&PG1CONL + ((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
 
         pg->PGxIOCONL.value |= P33C_PGxIOCONL_OVREN;  // PWMxH/L Output Override Enable
         pg->PGxIOCONH.value &= ~(P33C_PGxIOCONH_PEN); // PWMxH/L Output Pint Control Disable
@@ -325,9 +325,9 @@ volatile uint16_t buckPWM_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance
         pwm_Instance = buckInstance->sw_node[_i].pwm_instance;
 
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
-        pg   = (volatile P33C_PWM_INSTANCE_t*) (volatile uint16_t*)
-            (&PG1CONL + (volatile uint16_t)((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
-
+        pg   = (volatile P33C_PWM_INSTANCE_t*) 
+            ((volatile uint16_t*)&PG1CONL + ((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
+        
         pg->PGxIOCONL.value |= P33C_PGxIOCONL_OVREN; // PWMxH/L Output Override Enable
         pg->PGxDC.value = 0;  // Reset Duty Cycle
         pg->PGxSTAT.value |= P33C_PGxSTAT_UPDREQ; // Set the Update Request bit to update PWM timing
@@ -365,8 +365,8 @@ volatile uint16_t buckPWM_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance)
         pwm_Instance = (uint16_t)buckInstance->sw_node[_i].pwm_instance;
 
         // CAPTURE MEMORY ADDRESS OF GIVEN PWM GENERATOR INSTANCE
-        pg   = (volatile P33C_PWM_INSTANCE_t*) (volatile uint16_t*)
-            (&PG1CONL + (volatile uint16_t)((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
+        pg   = (volatile P33C_PWM_INSTANCE_t*) 
+            ((volatile uint16_t*)&PG1CONL + ((pwm_Instance - 1) * P33C_PWMGEN_SFR_OFFSET));
     
         pg->PGxSTAT.bits.UPDREQ = 1; // Set the Update Request bit to update PWM timing
         pg->PGxIOCONL.value &= (volatile uint16_t)(~(P33C_PGxIOCONL_OVREN)); // PWMxH/L Output Override Disable
