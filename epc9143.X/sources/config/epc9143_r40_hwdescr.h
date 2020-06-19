@@ -311,7 +311,7 @@ extern "C" {
 #define BUCK_VOUT_DIV_R2            (float)(4.750) // Lower voltage divider resistor in kOhm
 #define BUCK_VOUT_FEEDBACK_GAIN     (float)((BUCK_VOUT_DIV_R2) / (BUCK_VOUT_DIV_R1 + BUCK_VOUT_DIV_R2))
 #define BUCK_VOUT_FEEDBACK_OFFSET   (float)(0.0)
-#define BUCK_VOUT_ADC_TRG_DELAY     (float)(120.0e-9) // Trigger delay in [sec]
+#define BUCK_VOUT_ADC_TRG_DELAY     (float)(0.0e-9) // Trigger delay in [sec]
 
 // Peripheral Assignments
 #define BUCK_VOUT_ANSEL             _ANSELA0    // GPIO analog function mode enable bit
