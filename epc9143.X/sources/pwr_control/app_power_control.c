@@ -286,6 +286,21 @@ volatile uint16_t appPowerSupply_ConverterObjectInitialize(void)
     buck.sw_node[1].trigger_offset = BUCK_PWM2_ADTR1OFS;
     buck.sw_node[1].trigger_scaler = BUCK_PWM2_ADTR1PS;
     
+    // Initialize additional GPIOs 
+    
+    // ~~~ EXTERNAL ENABLE INPUT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    buck.gpio.Enable.enabled = false; // this converter doesn't support external enable control
+    // ~~~ EXTERNAL ENABLE INPUT END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    // ~~~ POWER GOOD OUTPUT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    buck.gpio.PowerGood.enabled = true; // This converter supports an additional POWER GOOD output
+    buck.gpio.PowerGood.port = PWRGOOD_PORT; // Number of the GPIO port (0=A, 1=B, 2=C, etc.)
+    buck.gpio.PowerGood.pin = PWRGOOD_PIN; // Number of the GPIO port pin
+    buck.gpio.PowerGood.polarity = 0;   // This pin is ACTIVE HIGH (only required if io_type = OUTPUT)
+    buck.gpio.PowerGood.io_type = 0;    // This pin is configured as OUTPUT
+    
+    // ~~~ POWER GOOD OUTPUT END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     // Initialize Feedback Channels
     
@@ -436,12 +451,19 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
     retval &= buckADC_Channel_Initialize(&buck.feedback.ad_isns[1]); // Initialize Phase Current #2 Channel
     retval &= buckADC_Channel_Initialize(&buck.feedback.ad_temp); // Initialize Temperature Channel
     
+    retval &= buckGPIO_Initialize(&buck); // Initialize additional control IOs
+    
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Custom configurations
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     // ToDo: Incorporate hard coded register settings into generic data structure scheme
     ADCON4Hbits.C1CHS = 1; // Set ADC  input channel to read from ANA1
     
     // Synchronize PWM channels #1 and #2
-    
+    // => taken car of by the state machine automatically, when multiple phases are defined
+    // If PWM channels need to be synchronized to other converter PWMs, this needs to be done 
+    // manually here
     
     return(retval);
 }
