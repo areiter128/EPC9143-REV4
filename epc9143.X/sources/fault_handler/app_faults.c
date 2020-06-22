@@ -74,7 +74,7 @@ volatile uint16_t appFaults_Initialize(void)
     fltobj_BuckRegErr.trip_level = BUCK_VOUT_DEV_TRIP;    // Set fault trip level
     fltobj_BuckRegErr.tripcnt_max = 250;    // Set counter level at which a FAULT condition will be tripped
     fltobj_BuckRegErr.reset_level = BUCK_VOUT_DEV_RELEASE;   // Set fault reset level
-    fltobj_BuckRegErr.rstcnt_max = 500;     // Set counter level at which a FAULT condition will be cleared
+    fltobj_BuckRegErr.rstcnt_max = 1000;     // Set counter level at which a FAULT condition will be cleared
     
     // User-function declarations
     fltobj_BuckRegErr.trip_response = &appPowerSupply_Suspend; // Set pointer to user-function which should be called when a FAULT is tripped
