@@ -13,7 +13,7 @@ The control loop is based on a digital type IV compensator (4P4Z controller).
 
 
 **Operation Parameters:**
-  * Input Voltage: 18 V to 72.5 V
+  * Input Voltage: 18 V to 61 V
   * Output Voltage: 12.0 V
   * Switching Frequency:	500 kHz
   * Control Frequency:	500 kHz
