@@ -64,15 +64,15 @@ int main(void) {
         _T1IF = 0;
         timeout = 0;    // Reset timeout counter
 
-        // Execute non-time critical, low-priority tasks
-        /* PLACE LOW_PRIORITY TASKS CALLS HERE */
+        // Execute main application tasks
         DBGPIN_2_SET;               // Set the CPU debugging pin HIGH
 
-        appPowerSupply_Execute();
-        appFaults_Execute();
+        appPowerSupply_Execute();   // Execute power supply state machine
+        appFaults_Execute();        // Execute fault handler
 
-        Nop();
         DBGPIN_2_CLEAR;             // Clear the CPU debugging pin
+        
+        Nop();                      // No-Operation instruction for placing breakpoints
     }
 
     CPU_RESET();    // if the firmware ever ends up here, reset the CPU
