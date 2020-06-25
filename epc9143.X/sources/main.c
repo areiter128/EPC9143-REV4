@@ -32,6 +32,7 @@ int main(void) {
     retval &= init_timer1();      // Set up Timer1 as scheduler time base
     retval &= init_gpio();        // Initialize common device GPIOs
     
+    DBGPIN_2_SET;         // Set the CPU debugging pin HIGH
     
     retval &= init_opa(); // Initialize op-amp #2 used to drive the reference voltage for current sense amplifiers
     
@@ -49,7 +50,7 @@ int main(void) {
     _T1IF = 0;  // Reset interrupt flag bit
     _T1IE = 0;  // Enable/Disable Timer1 interrupt
     
-    DBGPIN_2_CLEAR;
+    DBGPIN_2_CLEAR;         // Clear the CPU debugging pin
 
     
     while (1) {
@@ -64,11 +65,13 @@ int main(void) {
 
         // Execute non-time critical, low-priority tasks
         /* PLACE LOW_PRIORITY TASKS CALLS HERE */
+        DBGPIN_2_SET;               // Set the CPU debugging pin HIGH
 
         appPowerSupply_Execute();
         appFaults_Execute();
 
         Nop();
+        DBGPIN_2_CLEAR;             // Clear the CPU debugging pin
     }
 
     return (0);
