@@ -52,7 +52,11 @@ int main(void) {
     
     DBGPIN_2_CLEAR;         // Clear the CPU debugging pin
 
-    
+    // Last line of defense: when configuration of any block failed 
+    if (!retval)
+        CPU_RESET();        // reset the CPU and try again
+
+    // Main program execution
     while (1) {
 
         // wait for timer1 to overrun
