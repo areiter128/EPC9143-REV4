@@ -457,7 +457,7 @@ volatile uint16_t appPowerSupply_PeripheralsInitialize(void)
     // Custom configurations
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    // ToDo: Incorporate hard coded register settings into generic data structure scheme
+    // ToDo: Incorporate hard coded register settings into generic data structure scheme, if possible
     ADCON4Hbits.C1CHS = 1; // Set ADC  input channel to read from ANA1
     
     // Synchronize PWM channels #1 and #2

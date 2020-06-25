@@ -177,53 +177,53 @@ extern "C" {
 #define BUCK_PWM1_GPIO_PORT_PINH       12U // Port Pin Number
 #define BUCK_PWM1_GPIO_PORT_PINL       13U // Port Pin Number
     
-#define BUCK_PWM1_PDC                  PG2DC    // PWM Instance Duty Cycle Register
-#define BUCK_PWM1H_TRIS                _TRISB12 // Device Port TRIS register
-#define BUCK_PWM1H_WR                  _LATB12  // Device Pin WRITE
-#define BUCK_PWM1H_RD                  _RB12    // Device Pin READ
-#define BUCK_PWM1L_TRIS                _TRISB13 // Device Port TRIS register
-#define BUCK_PWM1L_WR                  _LATB13  // Device Pin WRITE
-#define BUCK_PWM1L_RD                  _RB13    // Device Pin READ
+#define BUCK_PWM1_PDC                   PG2DC    // PWM Instance Duty Cycle Register
+#define BUCK_PWM1H_TRIS                 _TRISB12 // Device Port TRIS register
+#define BUCK_PWM1H_WR                   _LATB12  // Device Pin WRITE
+#define BUCK_PWM1H_RD                   _RB12    // Device Pin READ
+#define BUCK_PWM1L_TRIS                 _TRISB13 // Device Port TRIS register
+#define BUCK_PWM1L_WR                   _LATB13  // Device Pin WRITE
+#define BUCK_PWM1L_RD                   _RB13    // Device Pin READ
 
-#define _BUCK_PWM1_Interrupt           _PWM2Interrupt // PWM Interrupt Service Routine label
-#define BUCK_PWM1_IF                   _PWM2IF  // PWM Interrupt Flag Bit
-#define BUCK_PWM1_IE                   _PWM2IE  // PWM Interrupt Enable Bit
-#define BUCK_PWM1_IP                   _PWM2IP  // PWM Interrupt Priority
-#define BUCK_PWM1_TRGSRC_TRG1          0b00110  // PWM Trigger #1 Trigger Source of this channel
-#define BUCK_PWM1_TRGSRC_TRG2          0b00111  // PWM Trigger #2 Trigger Source of this channel
-#define BUCK_PWM1_PGxTRIGA             PG2TRIGA // PWM trigger register A
-#define BUCK_PWM1_PGxTRIGB             PG2TRIGB // PWM trigger register B
-#define BUCK_PWM1_PGxTRIGC             PG2TRIGC // PWM trigger register C
+#define _BUCK_PWM1_Interrupt            _PWM2Interrupt // PWM Interrupt Service Routine label
+#define BUCK_PWM1_IF                    _PWM2IF  // PWM Interrupt Flag Bit
+#define BUCK_PWM1_IE                    _PWM2IE  // PWM Interrupt Enable Bit
+#define BUCK_PWM1_IP                    _PWM2IP  // PWM Interrupt Priority
+#define BUCK_PWM1_TRGSRC_TRG1           0b00110  // PWM Trigger #1 Trigger Source of this channel
+#define BUCK_PWM1_TRGSRC_TRG2           0b00111  // PWM Trigger #2 Trigger Source of this channel
+#define BUCK_PWM1_PGxTRIGA              PG2TRIGA // PWM trigger register A
+#define BUCK_PWM1_PGxTRIGB              PG2TRIGB // PWM trigger register B
+#define BUCK_PWM1_PGxTRIGC              PG2TRIGC // PWM trigger register C
     
-#define BUCK_PWM1_ADTR1OFS             0U // ADC Trigger 1 Offset:  0...31
-#define BUCK_PWM1_ADTR1PS              0U // ADC Trigger 1 Postscaler: 0...31
+#define BUCK_PWM1_ADTR1OFS              0U // ADC Trigger 1 Offset:  0...31
+#define BUCK_PWM1_ADTR1PS               0U // ADC Trigger 1 Postscaler: 0...31
 
 // PWM Phase #2 Configuration
-#define BUCK_PWM2_CHANNEL              4U    // PWM Instance Index (e.g. 1=PWM1, 2=PWM2, etc.)
-#define BUCK_PWM2_GPIO_INSTANCE        1U // Number indicating device port, where 0=A, 1=B, 2=C, etc.
-#define BUCK_PWM2_GPIO_PORT_PINH       9U // Port Pin Number
-#define BUCK_PWM2_GPIO_PORT_PINL       8U // Port Pin Number
+#define BUCK_PWM2_CHANNEL               4U    // PWM Instance Index (e.g. 1=PWM1, 2=PWM2, etc.)
+#define BUCK_PWM2_GPIO_INSTANCE         1U // Number indicating device port, where 0=A, 1=B, 2=C, etc.
+#define BUCK_PWM2_GPIO_PORT_PINH        9U // Port Pin Number
+#define BUCK_PWM2_GPIO_PORT_PINL        8U // Port Pin Number
 
-#define BUCK_PWM2_PDC                  PG4DC    // PWM Instance Duty Cycle Register
-#define BUCK_PWM2H_TRIS                _TRISB9  // Device Port TRIS register
-#define BUCK_PWM2H_WR                  _LATB9   // Device Pin WRITE
-#define BUCK_PWM2H_RD                  _RB9     // Device Pin READ
-#define BUCK_PWM2L_TRIS                _TRISB8  // Device Port TRIS register
-#define BUCK_PWM2L_WR                  _LATB8   // Device Pin WRITE
-#define BUCK_PWM2L_RD                  _RB8     // Device Pin READ
+#define BUCK_PWM2_PDC                   PG4DC    // PWM Instance Duty Cycle Register
+#define BUCK_PWM2H_TRIS                 _TRISB9  // Device Port TRIS register
+#define BUCK_PWM2H_WR                   _LATB9   // Device Pin WRITE
+#define BUCK_PWM2H_RD                   _RB9     // Device Pin READ
+#define BUCK_PWM2L_TRIS                 _TRISB8  // Device Port TRIS register
+#define BUCK_PWM2L_WR                   _LATB8   // Device Pin WRITE
+#define BUCK_PWM2L_RD                   _RB8     // Device Pin READ
     
-#define _BUCK_PWM2_Interrupt           _PWM4Interrupt // PWM Interrupt Serivice Routine label
-#define BUCK_PWM2_IF                   _PWM4IF        // PWM Interrupt Flag Bit
-#define BUCK_PWM2_IE                   _PWM4IE        // PWM Interrupt Enable Bit
-#define BUCK_PWM2_IP                   _PWM4IP        // PWM Interrupt Priority
-#define BUCK_PWM2_TRGSRC_TRG1          0b01010  // PWM2 Trigger #1 Trigger Source of this channel
-#define BUCK_PWM2_TRGSRC_TRG2          0b01011  // PWM2 Trigger #2 Trigger Source of this channel
-#define BUCK_PWM2_PGxTRIGA             PG4TRIGA // PWM2 trigger register A
-#define BUCK_PWM2_PGxTRIGB             PG4TRIGB // PWM2 trigger register B
-#define BUCK_PWM2_PGxTRIGC             PG4TRIGC // PWM2 trigger register C
+#define _BUCK_PWM2_Interrupt            _PWM4Interrupt // PWM Interrupt Serivice Routine label
+#define BUCK_PWM2_IF                    _PWM4IF        // PWM Interrupt Flag Bit
+#define BUCK_PWM2_IE                    _PWM4IE        // PWM Interrupt Enable Bit
+#define BUCK_PWM2_IP                    _PWM4IP        // PWM Interrupt Priority
+#define BUCK_PWM2_TRGSRC_TRG1           0b01010  // PWM2 Trigger #1 Trigger Source of this channel
+#define BUCK_PWM2_TRGSRC_TRG2           0b01011  // PWM2 Trigger #2 Trigger Source of this channel
+#define BUCK_PWM2_PGxTRIGA              PG4TRIGA // PWM2 trigger register A
+#define BUCK_PWM2_PGxTRIGB              PG4TRIGB // PWM2 trigger register B
+#define BUCK_PWM2_PGxTRIGC              PG4TRIGC // PWM2 trigger register C
 
-#define BUCK_PWM2_ADTR1OFS             0 // ADC Trigger 1 Offset:  0...31
-#define BUCK_PWM2_ADTR1PS              0 // ADC Trigger 1 Postscaler: 0...31
+#define BUCK_PWM2_ADTR1OFS              0 // ADC Trigger 1 Offset:  0...31
+#define BUCK_PWM2_ADTR1PS               0 // ADC Trigger 1 Postscaler: 0...31
     
 #define BUCK_PWM_MASTER_SOCS            0b0010  // PWM2 provides Master Trigger
     

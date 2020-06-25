@@ -13,6 +13,18 @@
 #include "pwr_control/devices/dev_buck_typedef.h"
 #include "pwr_control/devices/dev_buck_converter.h"
 
+/* @@drv_BuckConverter_Initialize
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
 volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance) 
 {
 
@@ -33,6 +45,18 @@ volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t*
     
     return(retval);
 }
+
+/* @@drv_BuckConverter_Execute
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
 
 volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
@@ -491,6 +515,18 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
     return(retval);
 }
 
+/* @@drv_BuckConverter_Start
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
 volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
     volatile uint16_t retval=1;
@@ -517,6 +553,18 @@ volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buck
     return(retval);
 }
 
+/* @@drv_BuckConverter_Stop
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
 volatile uint16_t drv_BuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
 
     volatile uint16_t retval=1;
@@ -538,6 +586,18 @@ volatile uint16_t drv_BuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckI
     return(retval);
 }
 
+/* @@drv_BuckConverter_Suspend
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
+
 volatile uint16_t drv_BuckConverter_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
     volatile uint16_t retval=1;
@@ -547,6 +607,18 @@ volatile uint16_t drv_BuckConverter_Suspend(volatile BUCK_POWER_CONTROLLER_t* bu
     
     return(retval);
 }
+
+/* @@drv_BuckConverter_Resume
+ * ********************************************************************************
+ * Summary:
+ * 
+ * Parameters:
+ * 
+ * Returns:
+ * 
+ * Description:
+ * 
+ * ********************************************************************************/
 
 volatile uint16_t drv_BuckConverter_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance) {
     
