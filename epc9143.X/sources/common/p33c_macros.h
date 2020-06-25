@@ -20,39 +20,33 @@
  */
 
 /* 
- * File:   globals.h
+ * File:   p33c_macros.h
  * Author: M91406
- * Comments: global defines of this application
+ * Comments: Header files providing inline assembly macros for basic CPU instructions
  * Revision history: 
- * v1.0 initial version
+ * 1.0	Initial release		06/22/20
  */
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef APPLICATION_GLOBALS_HEADER_H
-#define	APPLICATION_GLOBALS_HEADER_H
+#ifndef P33C_CPU_MACROS_H
+#define	P33C_CPU_MACROS_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-#include <stdint.h> // include standard integer data types
-#include <stdbool.h> // include standard boolean data types
-#include <stddef.h> // include standard definition data types
 
-// COMMON SOFTWARE MODULES
-#include "common/p33c_macros.h"
-
-// APPLICATION LAYER HEADER FILES
-#include "fault_handler/app_faults.h"
-#include "pwr_control/app_power_control.h"
 
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
+#define WDT_RESET()     asm volatile ("CRLWDT\n")
+#define PWRSAV_IDLE()   asm volatile ("PWRSAV #1\n")
+#define PWRSAV_SLEEP()  asm volatile ("PWRSAV #0\n")
+#define CPU_RESET()     asm volatile ("RESET\n")
 
-    
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */
 
-#endif	/* APPLICATION_GLOBALS_HEADER_H */
+#endif	/* P33C_CPU_MACROS_H */
 

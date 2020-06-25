@@ -6,6 +6,7 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="common" projectFiles="true">
         <itemPath>sources/common/fdrv_TrapHandler.h</itemPath>
+        <itemPath>sources/common/p33c_macros.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="init" projectFiles="true">
