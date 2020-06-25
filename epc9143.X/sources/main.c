@@ -78,6 +78,8 @@ int main(void) {
         DBGPIN_2_CLEAR;             // Clear the CPU debugging pin
     }
 
+    CPU_RESET();    // if the firmware ever ends up here, reset the CPU
+    
     return (0);
 }
 
