@@ -1,7 +1,7 @@
 <p><a href="https://www.microchip.com" rel="nofollow"><img src="https://www.microchip.com/ResourcePackages/Microchip/assets/dist/images/logo.png" alt="Microchip Technology" style="max-width:100%;"></a></p>
 
-## EPC9143 16th Brick Non-Isolated Step Down Converter Firmware
-**2-Phase Synchronous Buck Converter with Advanced Voltage Mode Control and Current Balancing**
+## EPC9143 300W 16th Brick Non-Isolated Step Down Converter Firmware
+**2-Phase Synchronous Buck Converter with Advanced Type IV Voltage Mode Control, Adaptive Gain Control and Current Balancing**
 
 **Description:**
 This code example demonstrates a closed loop voltage mode control implementation for dsPIC33CK. It has specifically been developed for the Digital Power Starter Kit 3 (DPSK3) buck converter.
@@ -22,9 +22,11 @@ The control loop is based on a digital type III compensator (3P3Z controller).
   * Phase Margin: ~ 50°
 
 **Required Hardware:** 
-  * EPC9143: EPC9143 16th Brick Non-Isolated Step Down Converter
-  * Digital Power Libraries System Blocks used:
-    * Buck Converter
+  * EPC9143: EPC9143 16th Brick Non-Isolated Step Down Converter, Revision 4.0
+  * EPC9531: EPC9531 test fixture for EPC9143 16th brick reference design
+  * Digital Power Libraries System Blocks used (see below)
+    * Multiphase Buck Converter
+	* Fault Handler
 
 **Device Support:**
   * [dsPIC33CK32MP102](https://www.microchip.com/dsPIC33CK32MP102)
@@ -34,7 +36,7 @@ The control loop is based on a digital type III compensator (3P3Z controller).
   * [FUNLIB_FAULT_HANDLER](https://bitbucket.microchip.com/projects/MCU16ASMPSL/repos/funlib_faulthandler/browse) - Generic Fault Handler Template
 
 **Software Tools:**
-  * DCLD - Digital Control Library Designer, version v0.9.7.99 or higher
+  * DCLD - Digital Control Library Designer, version v0.9.7.104 or higher
   * [Download Digital Control Library SDK for Windows here](https://areiter128.github.io/DCLD/)
     (Using previous versions will result in naming conflicts of labels and function names)
 
@@ -43,5 +45,6 @@ The control loop is based on a digital type III compensator (3P3Z controller).
   * MPLAB X XC16 C-Compiler, v1.50
 
 **History:**
-  * | 03/24/2020  | 1.0  |  M91406  | Initial Release
+  * | 03/24/2020  | 1.0  |  M91406  | Initial Development Version
+  * | 06/25/2020  | 1.3  |  M91406  | Reviewed and tested AGC implementation (first release version)  
 
