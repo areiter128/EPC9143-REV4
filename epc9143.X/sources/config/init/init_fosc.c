@@ -95,11 +95,6 @@ volatile uint16_t init_aclk(void) {
         
     // Wait 5000 while loops for APLL to Lock
     while((ACLKCON1bits.APLLCK != 1) && (timeout++<TIMEOUT_LIMIT));		
-	if ((ACLKCON1bits.APLLCK != 1) || (timeout++ >= TIMEOUT_LIMIT))	// PLL still not locked in? 
-	{ return (0); } // => If so, return error code
-    else
-    { return(ACLKCON1bits.APLLCK); }
-
         
     return(1);
 }
