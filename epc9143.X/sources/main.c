@@ -60,9 +60,6 @@ int main(void) {
     while (1) {
 
         // wait for timer1 to overrun
-//        while ((!LOW_PRIORITY_GO) && (timeout++ < TMR1_TIMEOUT));
-//        LOW_PRIORITY_GO = false;
-        
         while ((!_T1IF) && (timeout++ < TMR1_TIMEOUT));
         _T1IF = 0;
         timeout = 0;    // Reset timeout counter
