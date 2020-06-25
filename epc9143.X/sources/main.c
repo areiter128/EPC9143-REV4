@@ -44,11 +44,11 @@ int main(void) {
     retval &= appFaults_Initialize(); // Initialize fault objects and fault handler task
     
     // Enable Timer1
-    T1CONbits.TON = 1; 
-
     _T1IP = 0;  // Set interrupt priority to zero
     _T1IF = 0;  // Reset interrupt flag bit
     _T1IE = 0;  // Enable/Disable Timer1 interrupt
+    T1CONbits.TON = 1; // Turn on Timer1
+    retval &= T1CONbits.TON; // Add timer enable bit to list of checked bits
     
     DBGPIN_2_CLEAR;         // Clear the CPU debugging pin
 
