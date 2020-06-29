@@ -359,7 +359,8 @@ extern "C" {
     
 // Feedback Declarations
 #define BUCK_ISNS_FEEDBACK_GAIN     (float) 0.050       // Current Gain in V/A
-#define BUCK_ISNS_MAXIMUM           (float) 2.500       // absolute maximum output current (average)
+#define BUCK_ISNS_MAXIMUM           (float) 26.50       // absolute total maximum output current (average)
+#define BUCK_ISNS_RELEASE           (float) 25.00       // current reset level after over current event
 #define BUCK_ISNS_REFERENCE         (float) 1.000       // output current reference (average)
 #define BUCK_ISNS_ADC_TRG_DELAY     (float) 120.0e-9    // ADC trigger delay for current sense in [sec]
 
@@ -389,7 +390,8 @@ extern "C" {
 
 // ~ conversion macros ~~~~~~~~~~~~~~~~~~~~~
 
-#define BUCK_ISNS_OCL           (uint16_t)(BUCK_ISNS_MAXIMUM * BUCK_ISNS_FEEDBACK_GAIN / ADC_GRAN)  // Over Current Limit
+#define BUCK_ISNS_OCL           (uint16_t)((BUCK_ISNS_MAXIMUM * BUCK_ISNS_FEEDBACK_GAIN + BUCK_ISNS1_FEEDBACK_OFFSET + BUCK_ISNS2_FEEDBACK_OFFSET) / ADC_GRAN)  // Over Current Limit
+#define BUCK_ISNS_OCL_RELEASE   (uint16_t)((BUCK_ISNS_RELEASE * BUCK_ISNS_FEEDBACK_GAIN + BUCK_ISNS1_FEEDBACK_OFFSET + BUCK_ISNS2_FEEDBACK_OFFSET) / ADC_GRAN)  // Over Current Release Level
 #define BUCK_ISNS_REF           (uint16_t)(BUCK_ISNS_REFERENCE * BUCK_ISNS_FEEDBACK_GAIN / ADC_GRAN)  // Output Current Reference
 #define BUCK_ISNS1_OFFFSET      (uint16_t)(BUCK_ISNS1_FEEDBACK_OFFSET / ADC_GRAN)
 #define BUCK_ISNS2_OFFFSET      (uint16_t)(BUCK_ISNS2_FEEDBACK_OFFSET / ADC_GRAN)
