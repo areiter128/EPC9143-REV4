@@ -47,6 +47,7 @@ extern "C" {
 extern volatile FAULT_OBJECT_t fltobj_BuckUVLO;
 extern volatile FAULT_OBJECT_t fltobj_BuckOVLO;
 extern volatile FAULT_OBJECT_t fltobj_BuckRegErr;
+extern volatile FAULT_OBJECT_t fltobj_BuckOCP;
 
 // PUBLIC FUNCTION PROTOTYPE DECLARATIONS
 extern volatile uint16_t appFaults_Initialize(void);
