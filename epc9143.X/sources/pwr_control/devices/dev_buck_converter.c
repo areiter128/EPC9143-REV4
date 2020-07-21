@@ -65,7 +65,7 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
     volatile uint16_t _i = 0;
 
     // auxiliary variables for calculation of estimated duty cycle
-    volatile uint32_t vout=0, vin=0, start_dc=0; 
+    volatile uint32_t _vout=0, _vin=0, _start_dc=0; 
     
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     /* DISABLE-RESET                                                                      */
@@ -261,52 +261,52 @@ volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* bu
             if(((buckInstance->data.v_in - buckInstance->feedback.ad_vin.scaling.offset) > 0) &&
                ((buckInstance->data.v_out - buckInstance->feedback.ad_vout.scaling.offset) > 0) )
             {
-                vout = __builtin_muluu(
+                _vout = __builtin_muluu(
                     (buckInstance->data.v_out - buckInstance->feedback.ad_vout.scaling.offset), 
                     buckInstance->feedback.ad_vout.scaling.factor);
-                vout >>= (16 - buckInstance->feedback.ad_vout.scaling.scaler);
+                _vout >>= (16 - buckInstance->feedback.ad_vout.scaling.scaler);
 
-                vin = __builtin_muluu(
+                _vin = __builtin_muluu(
                     (buckInstance->data.v_in - buckInstance->feedback.ad_vin.scaling.offset), 
                     buckInstance->feedback.ad_vin.scaling.factor);
-                vin >>= (16 - buckInstance->feedback.ad_vin.scaling.scaler);
+                _vin >>= (16 - buckInstance->feedback.ad_vin.scaling.scaler);
 
-                start_dc = __builtin_muluu(vout, buckInstance->sw_node[0].period);
-                start_dc = __builtin_divud(start_dc, (uint16_t)vin);
+                _start_dc = __builtin_muluu(_vout, buckInstance->sw_node[0].period);
+                _start_dc = __builtin_divud(_start_dc, (uint16_t)_vin);
             }
             else
             // If there is no input voltage or no output voltage, start with minimum duty ratio
             {
-                start_dc = (uint16_t)buckInstance->sw_node[0].duty_ratio_min;
+                _start_dc = (uint16_t)buckInstance->sw_node[0].duty_ratio_min;
             }
             
             if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_VMC)
             {
-                if(start_dc < buckInstance->v_loop.minimum) 
-                { start_dc = buckInstance->v_loop.minimum; }
-                else if(start_dc > buckInstance->v_loop.maximum) 
-                { start_dc = buckInstance->v_loop.maximum; }
+                if(_start_dc < buckInstance->v_loop.minimum) 
+                { _start_dc = buckInstance->v_loop.minimum; }
+                else if(_start_dc > buckInstance->v_loop.maximum) 
+                { _start_dc = buckInstance->v_loop.maximum; }
 
-                buckInstance->v_loop.ctrl_Precharge(buckInstance->v_loop.controller, 0, start_dc);
-                *buckInstance->v_loop.controller->Ports.Target.ptrAddress = start_dc; // set initial PWM duty ratio
-                *buckInstance->v_loop.controller->Ports.AltTarget.ptrAddress = start_dc; // set initial PWM duty ratio
+                buckInstance->v_loop.ctrl_Precharge(buckInstance->v_loop.controller, 0, _start_dc);
+                *buckInstance->v_loop.controller->Ports.Target.ptrAddress = _start_dc; // set initial PWM duty ratio
+                *buckInstance->v_loop.controller->Ports.AltTarget.ptrAddress = _start_dc; // set initial PWM duty ratio
 
             }
             else if (buckInstance->set_values.control_mode == BUCK_CONTROL_MODE_ACMC) 
             {   
                 for (_i=0; _i<buck.set_values.phases; _i++)  
                 { 
-                    if(start_dc < buckInstance->i_loop[_i].minimum) 
-                    { start_dc = buckInstance->i_loop[_i].minimum; }
-                    else if(start_dc > buckInstance->i_loop[_i].maximum) 
-                    { start_dc = buckInstance->i_loop[_i].maximum; }
+                    if(_start_dc < buckInstance->i_loop[_i].minimum) 
+                    { _start_dc = buckInstance->i_loop[_i].minimum; }
+                    else if(_start_dc > buckInstance->i_loop[_i].maximum) 
+                    { _start_dc = buckInstance->i_loop[_i].maximum; }
 
                     buckInstance->i_loop[_i].ctrl_Precharge(
-                                buckInstance->i_loop[_i].controller, 0, start_dc
+                                buckInstance->i_loop[_i].controller, 0, _start_dc
                             );
 
-                    *buckInstance->i_loop[_i].controller->Ports.Target.ptrAddress = start_dc; // set initial PWM duty ratio
-                    *buckInstance->i_loop[_i].controller->Ports.AltTarget.ptrAddress = start_dc; // set initial PWM duty ratio
+                    *buckInstance->i_loop[_i].controller->Ports.Target.ptrAddress = _start_dc; // set initial PWM duty ratio
+                    *buckInstance->i_loop[_i].controller->Ports.AltTarget.ptrAddress = _start_dc; // set initial PWM duty ratio
                 }
             }
 

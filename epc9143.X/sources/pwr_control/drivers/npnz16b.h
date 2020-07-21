@@ -5,8 +5,8 @@
  * CGS Version: 2.0.10
  * CGS Date:    05/20/2020
  * ********************************************************************************/
-#ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
-#define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
+#ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ16B_H__
+#define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ16B_H__
 
 #include <xc.h> // include processor files - each processor file is guarded
 #include <dsp.h> // include DSP data types (e.g. fractional)
@@ -77,6 +77,7 @@ typedef union {
     } __attribute__((packed))bits;    // Controller status bit-field for direct bit access
     volatile uint16_t value;          // Controller status full register access
 } __attribute__((packed))CONTROLLER_STATUS_t; // Controller status data structure
+extern volatile CONTROLLER_STATUS_t CONTROLLER_STATUS_t;
 
 typedef struct {
     volatile uint16_t* ptrAddress; // Pointer to register or variable where the value is read from (e.g. ADCBUFx) or written to (e.g. PGxDC)
@@ -84,6 +85,7 @@ typedef struct {
     volatile fractional NormFactor; // Q15 normalization factor
     volatile int16_t   Offset; // Value/signal offset of this port
 } __attribute__((packed))CONTROLLER_PORT_t;
+extern volatile CONTROLLER_PORT_t CONTROLLER_PORT_t;
 
 typedef struct {
     // External control and monitoring
@@ -167,10 +169,10 @@ typedef struct {
         volatile uint16_t advParam4; // generic 16-bit wide, user-defined parameter #4 for advanced control options
     } __attribute__((packed))Advanced; // Parameter section for advanced control options
 
-} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
+} __attribute__((packed))NPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
 
 /* ********************************************************************************/
-#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
+#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ16B_H__ header file section
 
 
 //**********************************************************************************

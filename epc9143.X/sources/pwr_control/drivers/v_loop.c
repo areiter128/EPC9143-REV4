@@ -92,7 +92,7 @@ volatile int16_t v_loop_agc_scaler_default = 0x0000;
 
 
 // User-defined cNPNZ_t controller data object
-volatile cNPNZ16b_t v_loop; // user-controller data object
+volatile NPNZ16b_t v_loop; // user-controller data object
 
 /* ********************************************************************************/
 
@@ -101,7 +101,7 @@ volatile cNPNZ16b_t v_loop; // user-controller data object
  * Summary: Initializes controller coefficient arrays and normalization
  *
  * Parameters:
- *     - cNPNZ16b_t* controller
+ *     - NPNZ16b_t* controller
  *
  * Returns:
  *     - uint16_t:  0->failure
@@ -118,7 +118,7 @@ volatile cNPNZ16b_t v_loop; // user-controller data object
  * target registers, output minima and maxima and further, design-dependent
  * settings, need to be specified in user code.
  * ********************************************************************************/
-volatile uint16_t v_loop_Initialize(volatile cNPNZ16b_t* controller)
+volatile uint16_t v_loop_Initialize(volatile NPNZ16b_t* controller)
 {
     volatile uint16_t i=0;
 

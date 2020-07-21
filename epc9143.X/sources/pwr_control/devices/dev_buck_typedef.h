@@ -227,12 +227,12 @@ typedef struct {
     volatile int16_t  minimum; // output clamping value (minimum)
     volatile uint16_t maximum; // output clamping value (maximum)
     // Control Loop Object
-    volatile cNPNZ16b_t* controller; // pointer to control loop object data structure
+    volatile NPNZ16b_t* controller; // pointer to control loop object data structure
     // Function pointers
-    volatile uint16_t (*ctrl_Initialization)(volatile cNPNZ16b_t*); // Function pointer to INIT routine
-    void (*ctrl_Reset)(volatile cNPNZ16b_t*); // Function pointer to RESET routine
-    void (*ctrl_Update)(volatile cNPNZ16b_t*); // Function pointer to UPDATE routine
-    void (*ctrl_Precharge)(volatile cNPNZ16b_t*, volatile fractional, volatile fractional); // Function pointer to PRECHARGE routine
+    volatile uint16_t (*ctrl_Initialization)(volatile NPNZ16b_t*); // Function pointer to INIT routine
+    void (*ctrl_Reset)(volatile NPNZ16b_t*); // Function pointer to RESET routine
+    void (*ctrl_Update)(volatile NPNZ16b_t*); // Function pointer to UPDATE routine
+    void (*ctrl_Precharge)(volatile NPNZ16b_t*, volatile fractional, volatile fractional); // Function pointer to PRECHARGE routine
 } BUCK_LOOP_SETTINGS_t; // User defined settings for control loops; 
 
 /*!MPHBUCK_SWITCH_NODE_SETTINGS_t

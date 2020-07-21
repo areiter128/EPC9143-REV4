@@ -69,7 +69,7 @@ _v_loop_AGCFactorUpdate:
 ;    asr w4, w2, w4                          ; shift AGC median by factor scaler
     
     ; Divide median by instatneous VL
-    push.s      ; Save pointer to cNPNZ16b_t data structure
+    push.s      ; Save pointer to NPNZ16b_t data structure
     repeat #5   ; run divide in 6 steps
     divf w4, w5 ; divide VL_nom/VL
     mov w0, w4  ; move result to w4
@@ -81,8 +81,8 @@ _v_loop_AGCFactorUpdate:
     ;       resolution.
     ; ----------------------------------------------------------------------------------
     
-    pop.s       ; restore pointer to cNPNZ16b_t data structure
-    mov w4, [w0 + #agcGainModFactor] ; load result into cNPNZ16b_t data structure 
+    pop.s       ; restore pointer to NPNZ16b_t data structure
+    mov w4, [w0 + #agcGainModFactor] ; load result into NPNZ16b_t data structure 
                                      ; for further processing
     
 ;------------------------------------------------------------------------------

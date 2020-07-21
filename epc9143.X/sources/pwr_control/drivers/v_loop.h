@@ -64,7 +64,7 @@ extern volatile int16_t v_loop_agc_scaler_default;
 
 
 // User-defined cNPNZ_t controller data object
-extern volatile cNPNZ16b_t v_loop; // user-controller data object
+extern volatile NPNZ16b_t v_loop; // user-controller data object
 
 /* *******************************************************************************
  * Function call prototypes for initialization routines and control loops
@@ -72,24 +72,24 @@ extern volatile cNPNZ16b_t v_loop; // user-controller data object
 
 // Initialization of v_loop controller object
 extern volatile uint16_t v_loop_Initialize( // v_loop initialization function call
-        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+        volatile NPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
 // Clears the 4P4Z controller output and error histories
 extern void v_loop_Reset( // v_loop reset function call (Assembly)
-        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+        volatile NPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
 // Loads user-defined values into 4P4Z controller output and error histories
 extern void v_loop_Precharge( // v_loop history pre-charge function call (Assembly)
-        volatile cNPNZ16b_t* controller, // Pointer to nPnZ data type object
+        volatile NPNZ16b_t* controller, // Pointer to nPnZ data type object
         volatile fractional ctrl_input, // user-defined, constant error history value
         volatile fractional ctrl_output // user-defined, constant control output history value
     );
 
 // Calls the v_loop control loop
 extern void v_loop_Update( // Calls the 4P4Z controller (Assembly)
-        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+        volatile NPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
 // Calls the v_loop P-Term controller during measurements of plant transfer functions
@@ -97,7 +97,7 @@ extern void v_loop_Update( // Calls the 4P4Z controller (Assembly)
 // THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
 // DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
 extern void v_loop_PTermUpdate( // Calls the P-Term controller (Assembly)
-        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+        volatile NPNZ16b_t* controller // Pointer to nPnZ data type object
     );
 
 
