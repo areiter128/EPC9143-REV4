@@ -1,9 +1,9 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.7.99
-;  AGS Version: Assembly Generator Script v2.0.8 (04/21/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.9.312
+;  AGS Version: Assembly Generator Script v2.0.16 (07/22/2020)
 ;  Author:      M91406
-;  Date/Time:   04/24/2020 3:26:49 PM
+;  Date/Time:   07/23/2020 3:26:49 PM
 ; **********************************************************************************
 ;  3P3Z Control Library File (Fast Floating Point Coefficient Scaling Mode)
 ; **********************************************************************************
@@ -17,7 +17,7 @@
 ;local inclusions.
 	.section .data    ; place constant data in the data section
 	
-    ; include NPNZ object data structure value offsets and status flag labels
+    ; include NPNZ16b_t object data structure value offsets and status flag labels
     .include "./pwr_control/drivers/npnz16b.inc"
 
 ;------------------------------------------------------------------------------
@@ -40,16 +40,14 @@ _v_loop_AGCFactorUpdate:
     
     nop ; (debugging break point anchor)
 
-;    return
-    
     ; determine most recent VL
     
     ; read and normalize input voltage (normalize to output voltage, not absolute!)
     mov [w0 + #ptrAltSourceRegister], w1    ; load pointer to most recent input voltage register
     mov [w1], w4                            ; load value into w1
-    mov [w0 + AdvParam2], w5                ; load Q15 factor of input-2-output voltage normalization
+    mov [w0 + usrParam2], w5                ; load Q15 factor of input-2-output voltage normalization
     mpy w4*w5, b                            ; multiply ADC reading of input voltage with normalization factor
-    mov [w0 + AdvParam1], w2                ; load bit-shift scaler of input-2-output voltage normalization factor 
+    mov [w0 + usrParam1], w2                ; load bit-shift scaler of input-2-output voltage normalization factor 
     sftac b, w2                             ; shift result by input voltage normalization scaler
     sac.r b, w1                             ; store most recent accumulator result in working register
     

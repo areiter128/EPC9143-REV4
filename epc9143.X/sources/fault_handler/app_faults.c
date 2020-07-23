@@ -16,6 +16,7 @@
 volatile FAULT_OBJECT_t fltobj_BuckUVLO;
 volatile FAULT_OBJECT_t fltobj_BuckOVLO;
 volatile FAULT_OBJECT_t fltobj_BuckRegErr;
+volatile FAULT_OBJECT_t fltobj_BuckOCP;
 
 
 volatile uint16_t appFaults_Initialize(void) 
@@ -63,7 +64,7 @@ volatile uint16_t appFaults_Initialize(void)
     fltobj_BuckOVLO.status.bits.fault_status = true; // Set fault flag (must be cleared by fault check)
     fltobj_BuckOVLO.status.bits.enabled = true; // Enable fault checks
             
-    // Initialize OVLO fault object
+    // Initialize regulation error fault object
 
     fltobj_BuckRegErr.source_obj = &buck.data.v_out; // Set pointer to variable to monitor
     fltobj_BuckRegErr.ref_obj = &buck.set_values.v_ref; // Set pointer to "compare against" variable 
@@ -83,7 +84,27 @@ volatile uint16_t appFaults_Initialize(void)
     fltobj_BuckRegErr.status.bits.fault_active = false; // Set fault condition flag (must be cleared by fault check)
     fltobj_BuckRegErr.status.bits.fault_status = false; // Set fault flag (must be cleared by fault check)
     fltobj_BuckRegErr.status.bits.enabled = false; // Disable fault checks at startup
-            
+    
+    // Initialize OCP fault object
+
+    fltobj_BuckOCP.source_obj = &buck.data.i_out;   // Set pointer to variable to monitor
+    fltobj_BuckOCP.ref_obj = NULL;      // Clear pointer to "compare against" variable 
+    fltobj_BuckOCP.bit_mask = 0xFFFF;  // Compare all bits of SOURCE (no bit filter)
+    
+    fltobj_BuckOCP.status.bits.type = FLTCMP_GREATER_THAN; // Select Compare-Type
+    fltobj_BuckOCP.counter = 0;        // Clear fault event counter
+    fltobj_BuckOCP.trip_level = BUCK_ISNS_OCL;    // Set fault trip level
+    fltobj_BuckOCP.tripcnt_max = 50;    // Set counter level at which a FAULT condition will be tripped
+    fltobj_BuckOCP.reset_level = BUCK_ISNS_OCL_RELEASE;   // Set fault reset level
+    fltobj_BuckOCP.rstcnt_max = 2000;     // Set counter level at which a FAULT condition will be cleared
+    
+    // User-function declarations
+    fltobj_BuckOCP.trip_response = &appPowerSupply_Suspend; // Set pointer to user-function which should be called when a FAULT is tripped
+    fltobj_BuckOCP.reset_response = &appPowerSupply_Resume; // Set pointer to user-function which should be called when a FAULT is cleared
+    
+    fltobj_BuckOCP.status.bits.fault_active = true; // Set fault condition flag (must be cleared by fault check)
+    fltobj_BuckOCP.status.bits.fault_status = true; // Set fault flag (must be cleared by fault check)
+    fltobj_BuckOCP.status.bits.enabled = true; // Enable fault checks    
 
     return(1);
 }
@@ -105,6 +126,7 @@ volatile uint16_t appFaults_Execute(void)
     fres &= fault_check(&fltobj_BuckUVLO);
     fres &= fault_check(&fltobj_BuckOVLO);
     fres &= fault_check(&fltobj_BuckRegErr);
+    fres &= fault_check(&fltobj_BuckOCP);
     
     return (fres);
 }

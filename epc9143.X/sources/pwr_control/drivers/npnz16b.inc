@@ -1,13 +1,22 @@
 ;LICENSE / DISCLAIMER
 ; **********************************************************************************
-;  SDK Version: z-Domain Control Loop Designer v0.9.8.104
-;  AGS Version: Assembly Generator Script v2.0.12 (06/18/2020)
+;  SDK Version: z-Domain Control Loop Designer v0.9.9.312
+;  AGS Version: Assembly Generator Script v2.0.16 (07/22/2020)
 ;  Author:      M91406
-;  Date/Time:   06/18/2020 10:53:15 AM
+;  Date/Time:   07/22/2020 20:28:47
 ; **********************************************************************************
-;  definition of NPNZ object data structure and status flag labels
-; **********************************************************************************;------------------------------------------------------------------------------
-
+;  4P4Z Control Library File (Dual Bitshift-Scaling Mode)
+; **********************************************************************************
+	
+;------------------------------------------------------------------------------
+;file start
+	.nolist
+	.list
+	
+;------------------------------------------------------------------------------
+;local inclusions.
+	.section .data    ; place constant data in the data section
+	
 ;------------------------------------------------------------------------------
 ; Define status flags bit positions
 	.equ NPNZ16_STATUS_ENABLED,      15    ; bit position of the ENABLE control bit
@@ -19,7 +28,7 @@
 	.equ NPNZ16_STATUS_LSAT,         0    ; bit position of the LOWER_SATURATION_FLAG status bit
 	
 ;------------------------------------------------------------------------------
-; Address offset declarations for data structure addressing (double bit-shift scaling)
+; NPNZ16b_t data structure address offset declarations for data structure addressing
 	.equ Status,                    0    ; controller object status word at address-offset = 0
 	.equ ptrSourceRegister,         2    ; parameter group Ports.Source: pointer to source memory address
 	.equ SourceNormShift,           4    ; parameter group Ports.Source: bit-shift scaler of normalization factor
@@ -49,7 +58,7 @@
 	.equ PreShift,                  52    ; parameter group Filter: value of input value normalization bit-shift scaler
 	.equ PostShiftA,                54    ; parameter group Filter: value of A-term normalization bit-shift scaler
 	.equ PostShiftB,                56    ; parameter group Filter: value of B-term normalization bit-shift scaler
-	.equ reserved_2,                58    ; parameter group Filter: (reserved)
+	.equ PostScaler,                58    ; parameter group Filter: control loop output normalization factor
 	.equ pterm_scaler,              60    ; parameter group Filter: P-Term coefficient scaler
 	.equ pterm_factor,              62    ; parameter group Filter: P-Term coefficient fractional factor
 	.equ MinOutput,                 64    ; parameter group Limits: minimum clamping value of primary control output
@@ -60,19 +69,20 @@
 	.equ ADCTriggerAOffset,         74    ; parameter group ADCTriggerControl: value of ADC trigger A offset
 	.equ ptrADCTriggerBRegister,    76    ; parameter group ADCTriggerControl: pointer to ADC trigger B register memory address
 	.equ ADCTriggerBOffset,         78    ; parameter group ADCTriggerControl: value of ADC trigger B offset
-	.equ ptrDProvControlInput,      80    ; parameter group DataProviders: pointer to external variable/register the most recent control input will be pushed to
-	.equ ptrDProvControlError,      82    ; parameter group DataProviders: pointer to external variable/register the most recent control error will be pushed to
-	.equ ptrDProvControlOutput,     84    ; parameter group DataProviders: pointer to external variable/register the most recent control output will be pushed to
-	.equ ptrCascadedFunction,       86    ; parameter group CascadeTrigger: pointer to external, cascaded function which will be called by this controller
-	.equ CascadedFunParam,          88    ; parameter group CascadeTrigger: 16-bit wide function parameter or pointer to a parameter data structure of cascaded function
-	.equ agcGainModScaler,          90    ; parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
-	.equ agcGainModFactor,          92    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
-	.equ agcGainModMedian,          94    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
-	.equ ptrAgcObserverFunction,    96    ; parameter group GainControl: function pointer to observer function updating the AGC modulation factor
-	.equ AdvParam1,                 98    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
-	.equ AdvParam2,                 100    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
-	.equ AdvParam3,                 102    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
-	.equ AdvParam4,                 104    ; parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
+	.equ ptrDProvControlInput,      80    ; parameter group DataProviders: pointer to external variable/register the most recent, raw control input will be pushed to
+	.equ ptrDProvControlInputComp,  82    ; parameter group DataProviders: pointer to external variable/register the most recent, compensated control input will be pushed to
+	.equ ptrDProvControlError,      84    ; parameter group DataProviders: pointer to external variable/register the most recent control error will be pushed to
+	.equ ptrDProvControlOutput,     86    ; parameter group DataProviders: pointer to external variable/register the most recent control output will be pushed to
+	.equ ptrCascadedFunction,       88    ; parameter group CascadeTrigger: pointer to external, cascaded function which will be called by this controller
+	.equ CascadedFunParam,          90    ; parameter group CascadeTrigger: 16-bit wide function parameter or pointer to a parameter data structure of cascaded function
+	.equ agcGainModScaler,          92    ; parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
+	.equ agcGainModFactor,          94    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
+	.equ agcGainModMedian,          96    ; parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
+	.equ ptrAgcObserverFunction,    98    ; parameter group GainControl: function pointer to observer function updating the AGC modulation factor
+	.equ usrParam1,                 100   ; parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for user-defined, advanced control options
+	.equ usrParam2,                 102   ; parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for user-defined, advanced control options
+	.equ usrParam3,                 104   ; parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for user-defined, advanced control options
+	.equ usrParam4,                 106   ; parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for user-defined, advanced control options
 	
 ;------------------------------------------------------------------------------
 ;end of file

@@ -113,7 +113,8 @@ volatile uint16_t appPowerSupply_Execute(void)
     buck.status.bits.fault_active = (bool) (
         fltobj_BuckUVLO.status.bits.fault_status | 
         fltobj_BuckOVLO.status.bits.fault_status |
-        fltobj_BuckRegErr.status.bits.fault_status 
+        fltobj_BuckRegErr.status.bits.fault_status |
+        fltobj_BuckOCP.status.bits.fault_status
         );
     
     // Execute buck converter state machine
@@ -558,10 +559,10 @@ volatile uint16_t appPowerSupply_ControllerInitialize(void)
 
     // Custom Advanced Control Settings
     // Use proprietary control parameters to place VIN-2-VOUT scaling factor
-    buck.v_loop.controller->Advanced.advParam1 = (uint16_t)(-BUCK_AGC_IO_NORM_SCALER);
-    buck.v_loop.controller->Advanced.advParam2 = BUCK_AGC_IO_NORM_FACTOR;
-    buck.v_loop.controller->Advanced.advParam3 = 0; // No additional advanced control options used
-    buck.v_loop.controller->Advanced.advParam4 = 0; // No additional advanced control options used
+    buck.v_loop.controller->Advanced.usrParam1 = (uint16_t)(-BUCK_AGC_IO_NORM_SCALER);
+    buck.v_loop.controller->Advanced.usrParam2 = BUCK_AGC_IO_NORM_FACTOR;
+    buck.v_loop.controller->Advanced.usrParam3 = 0; // No additional advanced control options used
+    buck.v_loop.controller->Advanced.usrParam4 = 0; // No additional advanced control options used
 
     // Reset Controller Status
     buck.v_loop.controller->status.bits.enabled = false; // Keep controller disabled
