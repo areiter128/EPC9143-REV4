@@ -1,5 +1,5 @@
 /* *********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.8.104
+ * z-Domain Control Loop Designer, Version 0.9.9.262
  * *********************************************************************************
  * 4p4z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -7,16 +7,16 @@
  *
  *  Controller Type:    4P4Z - Advanced High-Q Compensator
  *  Sampling Frequency: 500000 Hz
- *  Fixed Point Format: 15
+ *  Fixed Point Format: Q15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         0.208791
  *
  * *********************************************************************************
- * CGS Version:         2.0.10
- * CGS Date:            05/20/2020
+ * CGS Version:         2.0.12
+ * CGS Date:            07/15/2020
  * *********************************************************************************
- * User:                Yuanzhe
- * Date/Time:           6/18/2020 4:15:56 PM
+ * User:                M91406
+ * Date/Time:           07/22/2020 09:06:11 PM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
@@ -24,7 +24,7 @@
 /* *********************************************************************************
  * Data Arrays:
  * This source file declares the default parameters of the z-domain compensation
- * filter. The cNPNZ_t data structure contains two pointers to A- and B-
+ * filter. The NPNZ16b_t data structure contains two pointers to A- and B-
  * coefficient arrays and two pointers to control and error history arrays.
  *
  * For optimized data processing during DSP computations, these arrays must be
@@ -36,11 +36,11 @@
  * through extern declarations in header file v_loop.h
  * ********************************************************************************/
 
-volatile V_LOOP_CONTROL_LOOP_COEFFICIENTS_t __attribute__((space(xmemory), near)) v_loop_coefficients; // A/B-Coefficients
+volatile struct V_LOOP_CONTROL_LOOP_COEFFICIENTS_s __attribute__((space(xmemory), near)) v_loop_coefficients; // A/B-Coefficients
 volatile uint16_t v_loop_ACoefficients_size = (sizeof(v_loop_coefficients.ACoefficients)/sizeof(v_loop_coefficients.ACoefficients[0])); // A-coefficient array size
 volatile uint16_t v_loop_BCoefficients_size = (sizeof(v_loop_coefficients.BCoefficients)/sizeof(v_loop_coefficients.BCoefficients[0])); // B-coefficient array size
 
-volatile V_LOOP_CONTROL_LOOP_HISTORIES_t __attribute__((space(ymemory), far)) v_loop_histories; // Control/Error Histories
+volatile struct V_LOOP_CONTROL_LOOP_HISTORIES_s __attribute__((space(ymemory), far)) v_loop_histories; // Control/Error Histories
 volatile uint16_t v_loop_ControlHistory_size = (sizeof(v_loop_histories.ControlHistory)/sizeof(v_loop_histories.ControlHistory[0])); // Control history array size
 volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHistory)/sizeof(v_loop_histories.ErrorHistory[0])); // Error history array size
 
@@ -48,11 +48,11 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * Pole&Zero Placement:
  * *********************************************************************************
  *
- *    fP0:    85 Hz
- *    fP1:    30000 Hz
+ *    fP0:    95 Hz
+ *    fP1:    23800 Hz
  *    fP2:    217400 Hz
  *    fP3:    250000 Hz
- *    fZ1:    3060 Hz
+ *    fZ1:    2060 Hz
  *    fZ2:    8440 Hz
  *    fZ3:    25250 Hz
  *
@@ -61,25 +61,25 @@ volatile uint16_t v_loop_ErrorHistory_size = (sizeof(v_loop_histories.ErrorHisto
  * ********************************************************************************/
 volatile int32_t v_loop_ACoefficients [4] =
 {
-    0x00005397, // Coefficient A1 will be multiplied with controller output u(n-1)
-    0x0000FAAD, // Coefficient A2 will be multiplied with controller output u(n-2)
-    0x0000F33D, // Coefficient A3 will be multiplied with controller output u(n-3)
-    0x0000FE80  // Coefficient A4 will be multiplied with controller output u(n-4)
+    0x0000573E, // Coefficient A1 will be multiplied with controller output u(n-1)
+    0x0000F867, // Coefficient A2 will be multiplied with controller output u(n-2)
+    0x0000F1FD, // Coefficient A3 will be multiplied with controller output u(n-3)
+    0x0000FE60  // Coefficient A4 will be multiplied with controller output u(n-4)
 };
 
 volatile int32_t v_loop_BCoefficients [5] =
 {
-    0x0000466A, // Coefficient B0 will be multiplied with error input e(n-0)
-    0x00009035, // Coefficient B1 will be multiplied with error input e(n-1)
-    0x0000E5E8, // Coefficient B2 will be multiplied with error input e(n-2)
-    0x00006FDF, // Coefficient B3 will be multiplied with error input e(n-3)
-    0x0000D3C2  // Coefficient B4 will be multiplied with error input e(n-4)
+    0x00002FA6, // Coefficient B0 will be multiplied with error input e(n-0)
+    0x0000B3C6, // Coefficient B1 will be multiplied with error input e(n-1)
+    0x0000EEB5, // Coefficient B2 will be multiplied with error input e(n-2)
+    0x00004C43, // Coefficient B3 will be multiplied with error input e(n-3)
+    0x0000E1AF  // Coefficient B4 will be multiplied with error input e(n-4)
 };
 
 // Coefficient normalization factors
 volatile int16_t v_loop_pre_scaler = 3;
 volatile int16_t v_loop_post_shift_A = -1;
-volatile int16_t v_loop_post_shift_B = -1;
+volatile int16_t v_loop_post_shift_B = -2;
 volatile fractional v_loop_post_scaler = 0x0000;
 
 // P-Term Coefficient for Plant Measurements
@@ -91,8 +91,8 @@ volatile int16_t v_loop_agc_factor_default = 0x7FFF;
 volatile int16_t v_loop_agc_scaler_default = 0x0000;
 
 
-// User-defined cNPNZ_t controller data object
-volatile cNPNZ16b_t v_loop; // user-controller data object
+// User-defined NPNZ16b_t controller data object
+volatile struct NPNZ16b_s v_loop; // user-controller data object
 
 /* ********************************************************************************/
 
@@ -101,7 +101,7 @@ volatile cNPNZ16b_t v_loop; // user-controller data object
  * Summary: Initializes controller coefficient arrays and normalization
  *
  * Parameters:
- *     - cNPNZ16b_t* controller
+ *     - struct NPNZ16b_s* controller
  *
  * Returns:
  *     - uint16_t:  0->failure
@@ -118,12 +118,12 @@ volatile cNPNZ16b_t v_loop; // user-controller data object
  * target registers, output minima and maxima and further, design-dependent
  * settings, need to be specified in user code.
  * ********************************************************************************/
-volatile uint16_t v_loop_Initialize(volatile cNPNZ16b_t* controller)
+volatile uint16_t v_loop_Initialize(volatile struct NPNZ16b_s* controller)
 {
     volatile uint16_t i=0;
 
     // Initialize controller data structure at runtime with pre-defined default values
-    controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
+    controller->status.value = NPNZ16_CONTROL_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
     
     controller->Filter.ptrACoefficients = &v_loop_coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array
     controller->Filter.ptrBCoefficients = &v_loop_coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array

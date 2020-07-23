@@ -1,5 +1,5 @@
 /* *********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.8.104
+ * z-Domain Control Loop Designer, Version 0.9.9.262
  * *********************************************************************************
  * 4p4z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -7,16 +7,16 @@
  *
  *  Controller Type:    4P4Z - Advanced High-Q Compensator
  *  Sampling Frequency: 500000 Hz
- *  Fixed Point Format: 15
+ *  Fixed Point Format: Q15
  *  Scaling Mode:       3 - Dual Bit-Shift Scaling
  *  Input Gain:         0.208791
  *
  * *********************************************************************************
- * CGS Version:         2.0.10
- * CGS Date:            05/20/2020
+ * CGS Version:         2.0.12
+ * CGS Date:            07/15/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           06/18/2020 7:22:12 PM
+ * Date/Time:           07/22/2020 09:06:11 PM
  * ********************************************************************************/
 
 #ifndef __SPECIAL_FUNCTION_LAYER_V_LOOP_H__
@@ -31,7 +31,7 @@
 
 /* *******************************************************************************
  * Data Arrays:
- * The cNPNZ_t data structure contains pointers to coefficient, control and error
+ * The NPNZ16b_t data structure contains pointers to coefficient, control and error
  * history arrays. The pointer target objects (variables and arrays) are defined
  * in controller source file v_loop.c
  *
@@ -42,13 +42,13 @@
  * This X/Y-memory placement is covered by the declarations used in controller
  * source file v_loop.c
  * ******************************************************************************/
-typedef struct
+typedef struct V_LOOP_CONTROL_LOOP_COEFFICIENTS_s
 {
     volatile int32_t ACoefficients[4]; // A-Coefficients
     volatile int32_t BCoefficients[5]; // B-Coefficients
 } __attribute__((packed)) V_LOOP_CONTROL_LOOP_COEFFICIENTS_t;
 
-typedef struct
+typedef struct V_LOOP_CONTROL_LOOP_HISTORIES_s
 {
     volatile fractional ControlHistory[4];  // Control History Array
     volatile fractional ErrorHistory[5];  // Error History Array
@@ -58,13 +58,13 @@ typedef struct
 extern volatile int16_t v_loop_pterm_factor;
 extern volatile int16_t v_loop_pterm_scaler;
 
-//Adaptive Gain Control Coefficient
+// Adaptive Gain Control Coefficient
 extern volatile int16_t v_loop_agc_factor_default;
 extern volatile int16_t v_loop_agc_scaler_default;
 
 
-// User-defined cNPNZ_t controller data object
-extern volatile cNPNZ16b_t v_loop; // user-controller data object
+// User-defined NPNZ16b_s controller data object
+extern volatile struct NPNZ16b_s v_loop; // user-controller data object
 
 /* *******************************************************************************
  * Function call prototypes for initialization routines and control loops
@@ -72,24 +72,24 @@ extern volatile cNPNZ16b_t v_loop; // user-controller data object
 
 // Initialization of v_loop controller object
 extern volatile uint16_t v_loop_Initialize( // v_loop initialization function call
-        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+        volatile struct NPNZ16b_s* controller // Pointer to nPnZ data type object
     );
 
 // Clears the 4P4Z controller output and error histories
 extern void v_loop_Reset( // v_loop reset function call (Assembly)
-        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+        volatile struct NPNZ16b_s* controller // Pointer to nPnZ data type object
     );
 
 // Loads user-defined values into 4P4Z controller output and error histories
 extern void v_loop_Precharge( // v_loop history pre-charge function call (Assembly)
-        volatile cNPNZ16b_t* controller, // Pointer to nPnZ data type object
+        volatile struct NPNZ16b_s* controller, // Pointer to nPnZ data type object
         volatile fractional ctrl_input, // user-defined, constant error history value
         volatile fractional ctrl_output // user-defined, constant control output history value
     );
 
 // Calls the v_loop control loop
 extern void v_loop_Update( // Calls the 4P4Z controller (Assembly)
-        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+        volatile struct NPNZ16b_s* controller // Pointer to nPnZ data type object
     );
 
 // Calls the v_loop P-Term controller during measurements of plant transfer functions
@@ -97,7 +97,7 @@ extern void v_loop_Update( // Calls the 4P4Z controller (Assembly)
 // THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
 // DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
 extern void v_loop_PTermUpdate( // Calls the P-Term controller (Assembly)
-        volatile cNPNZ16b_t* controller // Pointer to nPnZ data type object
+        volatile struct NPNZ16b_s* controller // Pointer to nPnZ data type object
     );
 
 
