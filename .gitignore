@@ -38,6 +38,9 @@ Makefile-genesis.properties
 # Misc
 .svn
 *.bak
+
+#Exclude informal profect directories
+docs/
 test_results/
 
 
