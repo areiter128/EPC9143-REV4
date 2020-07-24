@@ -1,5 +1,5 @@
 /* *********************************************************************************
- * z-Domain Control Loop Designer, Version 0.9.9.262
+ * z-Domain Control Loop Designer, Version 0.9.9.312
  * *********************************************************************************
  * 4p4z controller function declarations and compensation filter coefficients
  * derived for following operating conditions:
@@ -16,7 +16,7 @@
  * CGS Date:            07/15/2020
  * *********************************************************************************
  * User:                M91406
- * Date/Time:           07/22/2020 09:06:11 PM
+ * Date/Time:           07/24/2020 11:19:06 AM
  * ********************************************************************************/
 
 #include "./pwr_control/drivers/v_loop.h"
