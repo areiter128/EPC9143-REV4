@@ -33,8 +33,8 @@
 #define	BUCK_CONVERTER_STATE_MACHINE_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-#include <stdint.h>
-#include <stdbool.h>
+#include <stdint.h> // include standard integer data types
+#include <stdbool.h> // include standard boolean data types
 
 
 // ==============================================================================================
@@ -43,27 +43,31 @@
 
 // POWER CONVERTER FUNCTION API
 
-extern volatile uint16_t drv_BuckConverter_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drv_BuckConverter_Execute(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drv_BuckConverter_Start(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drv_BuckConverter_Stop(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drv_BuckConverter_Suspend(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
-extern volatile uint16_t drv_BuckConverter_Resume(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+//extern volatile uint16_t drv_BuckConverter_Initialize(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Execute(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Start(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Stop(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Suspend(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
+extern volatile uint16_t drv_BuckConverter_Resume(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
 
 // POWER CONVERTER PERIPHERAL CONFIGURATION ROUTINES
     
-extern volatile uint16_t buckPWM_ModuleInitialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t buckPWM_ModuleInitialize(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
 
-extern volatile uint16_t buckPWM_VMC_Initialize(volatile BUCK_POWER_CONTROLLER_t* buckInstance);
+extern volatile uint16_t buckPWM_VMC_Initialize(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
 extern volatile uint16_t buckPWM_Start(volatile uint16_t pwmInstance);
 extern volatile uint16_t buckPWM_Stop(volatile uint16_t pwmInstance);
 extern volatile uint16_t buckPWM_Suspend(volatile uint16_t pwmInstance);
 extern volatile uint16_t buckPWM_Resume(volatile uint16_t pwmInstance);
 
 extern volatile uint16_t buckADC_ModuleInitialize(void);
-extern volatile uint16_t buckADC_Channel_Initialize(volatile BUCK_ADC_INPUT_SETTINGS_t* adcInstance);
+extern volatile uint16_t buckADC_Channel_Initialize(volatile struct BUCK_ADC_INPUT_SETTINGS_s* adcInstance);
 extern volatile uint16_t buckADC_Start(void);
     
+extern volatile uint16_t buckGPIO_Initialize(volatile struct BUCK_POWER_CONTROLLER_s* buckInstance);
+extern volatile uint16_t buckGPIO_Set(volatile struct BUCK_GPIO_INSTANCE_s* buckGPIOInstance);
+extern volatile uint16_t buckGPIO_Clear(volatile struct BUCK_GPIO_INSTANCE_s* buckGPIOInstance);
+extern volatile bool buckGPIO_GetPinState(volatile struct BUCK_GPIO_INSTANCE_s* buckGPIOInstance);
 
 #ifdef	__cplusplus
 }

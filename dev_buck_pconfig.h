@@ -44,37 +44,75 @@ extern "C" {
 #define ADC_POWRUP_TIMEOUT  5000
     
 // GENERIC GPIO INSTANCE SPECIAL FUNCTION REGISTER SET
-#ifndef P33C_GPIO_INSTANCE_t
-    typedef struct {
-        volatile uint16_t ANSELx;   // ANSELx: ANALOG SELECT FOR PORTx REGISTER
-        volatile uint16_t TRISx;    // TRISx: OUTPUT ENABLE FOR PORTx REGISTER
-        volatile uint16_t PORTx;    // PORTx: INPUT DATA FOR PORTx REGISTER
-        volatile uint16_t LATx;     // LATx: OUTPUT DATA FOR PORTx REGISTER
-        volatile uint16_t ODCx;     // ODCx: OPEN-DRAIN ENABLE FOR PORTx REGISTER
-        volatile uint16_t CNPUx;    // CNPUx: CHANGE NOTIFICATION PULL-UP ENABLE FOR PORTx REGISTER
-        volatile uint16_t CNPDx;    // CNPDx: CHANGE NOTIFICATION PULL-DOWN ENABLE FOR PORTx REGISTER
-        volatile uint16_t CNCONx;   // CNCONx: CHANGE NOTIFICATION CONTROL FOR PORTx REGISTER
-        volatile uint16_t CNEN0x;   // CNEN0x: CHANGE NOTIFICATION INTERRUPT ENABLE FOR PORTx REGISTER
-        volatile uint16_t CNSTATx;  // CNSTATx: CHANGE NOTIFICATION STATUS FOR PORTx REGISTER
-        volatile uint16_t CNEN1x;   // CNEN1x: CHANGE NOTIFICATION EDGE SELECT FOR PORTx REGISTER
-        volatile uint16_t CNFx;     // CNFx: CHANGE NOTIFICATION INTERRUPT FLAG FOR PORTx REGISTER
-    } P33C_GPIO_INSTANCE_t; // GPIO REGISTER SET
+// DO NOT REORDER ELEMENTS AS THEY MAP ONTO DEVICE REGISTER MEMORY !!!
+#ifndef P33C_GPIO_INSTANCE_s
+    typedef struct P33C_GPIO_INSTANCE_s {
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }ANSELx; // ANSELx: ANALOG SELECT FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }TRISx; // TRISx: OUTPUT ENABLE FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }PORTx; // PORTx: INPUT DATA FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }LATx; // LATx: OUTPUT DATA FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }ODCx; // ODCx: OPEN-DRAIN ENABLE FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNPUx; // CNPUx: CHANGE NOTIFICATION PULL-UP ENABLE FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNPDx; // CNPDx: CHANGE NOTIFICATION PULL-DOWN ENABLE FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNCONx; // CNCONx: CHANGE NOTIFICATION CONTROL FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNEN0x; // CNEN0x: CHANGE NOTIFICATION INTERRUPT ENABLE FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNSTATx; // CNSTATx: CHANGE NOTIFICATION STATUS FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNEN1x; // CNEN1x: CHANGE NOTIFICATION EDGE SELECT FOR PORTx REGISTER
+        union {   
+            volatile struct tagLATABITS bits; // Register bit-field
+            volatile uint16_t value; // 16-bit wide register value
+        }CNFx; // CNFx: CHANGE NOTIFICATION INTERRUPT FLAG FOR PORTx REGISTER
+    } __attribute__((packed)) obj_P33C_GPIO_INSTANCE_t; // GPIO REGISTER SET
     #define P33C_GPIO_SFR_OFFSET  ((volatile uint16_t)&ANSELB - (volatile uint16_t)&ANSELA)
 #endif
 
+
 // GENERIC PDM DAC MODULE SPECIAL FUNCTION REGISTER SET
-#ifndef P33C_DAC_MODULE_t
-    typedef struct {
-        volatile uint16_t DACCTRL1L;    // DACCTRL1L: DAC CONTROL 1 REGISTER LOW
+#ifndef P33C_DAC_MODULE_s
+    typedef struct P33C_DAC_MODULE_s{
+        volatile uint16_t DACCTRL1L;    // DAC CONTROL 1 REGISTER LOW
         volatile unsigned : 16;         // (reserved)
         volatile uint16_t DACCTRL2L;    // DACCTRL2L: DAC CONTROL 2 REGISTER LOW
         volatile uint16_t DACCTRL2H;    // DACCTRL2H: DAC CONTROL 2 REGISTER HIGH
-    } __attribute__((packed)) P33C_DAC_MODULE_t; // PDM DAC MODULE REGISTER SET
+    } __attribute__((packed)) obj_P33C_DAC_MODULE_t; // PDM DAC MODULE REGISTER SET
 #endif
 
 // GENERIC PDM DAC INSTANCE SPECIAL FUNCTION REGISTER SET
-#ifndef P33C_DAC_INSTANCE_t    
-    typedef struct {
+#ifndef P33C_DAC_INSTANCE_s    
+    typedef struct P33C_DAC_INSTANCE_s{
         volatile uint16_t DACxCONL; // DACxCONL: DACx CONTROL LOW REGISTER
         volatile uint16_t DACxCONH; // DACxCONH: DACx CONTROL HIGH REGISTER
         volatile uint16_t DACxDATL; // DACxDATL: DACx DATA LOW REGISTER
@@ -82,69 +120,8 @@ extern "C" {
         volatile uint16_t SLPxCONL; // SLPxCONL: DACx SLOPE CONTROL LOW REGISTER
         volatile uint16_t SLPxCONH; // SLPxCONH: DACx SLOPE CONTROL HIGH REGISTER
         volatile uint16_t SLPxDAT;  // SLPxDAT:  DACx SLOPE DATA REGISTER
-    } __attribute__((packed)) P33C_DAC_INSTANCE_t; // PDM DAC INSTANCE REGISTER SET
+    } __attribute__((packed)) obj_P33C_DAC_INSTANCE_t; // PDM DAC INSTANCE REGISTER SET
     #define P33C_DAC_SFR_OFFSET  ((volatile uint16_t)&DAC2CONL - (volatile uint16_t)&DAC1CONL)
-#endif
-
-// GENERIC PWM MODULE SPECIAL FUNCTION REGISTER SET
-#ifndef P33C_PWM_MODULE_t     
-    typedef struct {
-        volatile uint16_t PCLKCON;  // PCLKCON: PWM CLOCK CONTROL REGISTER
-        volatile uint16_t FSCL;     // FSCL: FREQUENCY SCALE REGISTER
-        volatile uint16_t FSMINPER; // FSMINPER: FREQUENCY SCALING MINIMUM PERIOD REGISTER
-        volatile uint16_t MPHASE;   // MPHASE: MASTER PHASE REGISTER
-        volatile uint16_t MDC;      // MDC: MASTER DUTY CYCLE REGISTER
-        volatile uint16_t MPER;     // MPER: MASTER PERIOD REGISTER
-        volatile uint16_t LFSR;     // LFSR: LINEAR FEEDBACK SHIFT REGISTER
-        volatile uint16_t CMBTRIGL; // CMBTRIGL: COMBINATIONAL TRIGGER REGISTER LOW
-        volatile uint16_t CMBTRIGH; // CMBTRIGH: COMBINATIONAL TRIGGER REGISTER HIGH
-        volatile uint16_t LOGCONA;  // LOGCONy: COMBINATORIAL PWM LOGIC CONTROL REGISTER y
-        volatile uint16_t LOGCONB;  // LOGCONy: COMBINATORIAL PWM LOGIC CONTROL REGISTER y
-        volatile uint16_t LOGCONC;  // LOGCONy: COMBINATORIAL PWM LOGIC CONTROL REGISTER y
-        volatile uint16_t LOGCOND;  // LOGCONy: COMBINATORIAL PWM LOGIC CONTROL REGISTER y
-        volatile uint16_t LOGCONE;  // LOGCONy: COMBINATORIAL PWM LOGIC CONTROL REGISTER y
-        volatile uint16_t LOGCONF;  // LOGCONy: COMBINATORIAL PWM LOGIC CONTROL REGISTER y
-        volatile uint16_t PWMEVTA;  // PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y
-        volatile uint16_t PWMEVTB;  // PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y
-        volatile uint16_t PWMEVTC;  // PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y
-        volatile uint16_t PWMEVTD;  // PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y
-        volatile uint16_t PWMEVTE;  // PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y
-        volatile uint16_t PWMEVTF;  // PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y
-    } __attribute__((packed)) P33C_PWM_MODULE_t; // PWM MODULE REGISTER SET
-#endif
-
-// GENERIC PWM GENERATOR SPECIAL FUNCTION REGISTER SET 
-#ifndef P33C_PWM_INSTANCE_t     
-    typedef struct {
-        volatile uint16_t PGxCONL;  // PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
-        volatile uint16_t PGxCONH;  // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
-        volatile uint16_t PGxSTAT;  // PGxSTAT: PWM GENERATOR x STATUS REGISTER
-        volatile uint16_t PGxIOCONL; // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER LOW
-        volatile uint16_t PGxIOCONH; // PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER HIGH
-        volatile uint16_t PGxEVTL;  // PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
-        volatile uint16_t PGxEVTH;  // PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
-        volatile uint16_t PGxFPCIL; // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER LOW
-        volatile uint16_t PGxFPCIH; // PGxFPCIH: PWM GENERATOR x FAULT PCI REGISTER HIGH
-        volatile uint16_t PGxCLPCIL; // PGxCLPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER LOW
-        volatile uint16_t PGxCLPCIH; // PGxCLPCIH: PWM GENERATOR x CURRENT LIMIT PCI REGISTER HIGH
-        volatile uint16_t PGxFFPCIL; // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER LOW
-        volatile uint16_t PGxFFPCIH; // PGxFFPCIH: PWM GENERATOR x FEED FORWARD PCI REGISTER HIGH
-        volatile uint16_t PGxSPCIL; // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER LOW
-        volatile uint16_t PGxSPCIH; // PGxSPCIH: PWM GENERATOR x SOFTWARE PCI REGISTER HIGH
-        volatile uint16_t PGxLEBL;  // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW
-        volatile uint16_t PGxLEBH;  // PGxLEBH: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
-        volatile uint16_t PGxPHASE; // PGxPHASE: PWM GENERATOR x PHASE REGISTER
-        volatile uint16_t PGxDC;    // PGxDC: PWM GENERATOR x DUTY CYCLE REGISTER
-        volatile uint16_t PGxDCA;   // PGxDCA: PWM GENERATOR x DUTY CYCLE ADJUSTMENT REGISTER
-        volatile uint16_t PGxPER;   // PGxPER: PWM GENERATOR x PERIOD REGISTER
-        volatile uint16_t PGxTRIGA; // PGxTRIGA: PWM GENERATOR x TRIGGER A REGISTER
-        volatile uint16_t PGxTRIGB; // PGxTRIGB: PWM GENERATOR x TRIGGER B REGISTER
-        volatile uint16_t PGxTRIGC; // PGxTRIGC: PWM GENERATOR x TRIGGER C REGISTER
-        volatile uint16_t PGxDTL;   // PGxDTL: PWM GENERATOR x DEAD-TIME REGISTER LOW
-        volatile uint16_t PGxDTH;   // PGxDTH: PWM GENERATOR x DEAD-TIME REGISTER HIGH
-        volatile uint16_t PGxCAP;   // PGxCAP: PWM GENERATOR x CAPTURE REGISTER
-    } __attribute__((packed)) P33C_PWM_INSTANCE_t; // PWM INSTANCE REGISTER SET
-    #define P33C_PWM_SFR_OFFSET  ((volatile uint16_t)&PG2CONL - (volatile uint16_t)&PG1CONL)
 #endif
     
 #define P33C_PGxCONL_PWM_ON     0x8000  // control bit in PGxCONL enabling/disabling the PWM generator
@@ -518,6 +495,55 @@ extern "C" {
                           ||||||||||||||| _ BIT  0: 
                           ||||||||||||||||  */
 #define REG_PGxDCA      0b0000000000000000
+
+ 
+/* @@pwmConfigDispose
+ * ********************************************************************************
+ * Summary:
+ *   Default RESET configuration of one PWM generator channel SFRs
+ * 
+ * Data type:
+ *   struct P33C_PG_SFRSET_s:
+ *      PWM module base Special Function Register (SFR) set
+ *
+ * Description:
+ *   Default configuration of the PWM generator SFRs with all its registers 
+ *   being reset to their default state when the device comes out of RESET.
+ *   Programmers can use this template to reset (dispose) a previously used
+ *   PWM generator when it's not used anymore or to secure a known startup
+ *   condition before writing individual configurations to its SFRs.
+ * 
+ * *******************************************************************************/
+
+volatile struct P33C_PWM_GENERATOR_s pgConfigBuckPWM = {
+        .PGxCONL.value = REG_PGxCONL, // PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW
+        .PGxCONH.value = REG_PGxCONH, // PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH
+        .PGxSTAT.value = 0x0000, // PGxSTAT: PWM GENERATOR x STATUS REGISTER
+        .PGxIOCONL.value = REG_PGxIOCONL, // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER LOW
+        .PGxIOCONH.value = REG_PGxIOCONH, // PGxIOCONL: PWM GENERATOR x I/O CONTROL REGISTER HIGH
+        .PGxEVTL.value = REG_PGxEVTL, // PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW
+        .PGxEVTH.value = REG_PGxEVTH, // PGxEVTH: PWM GENERATOR x EVENT REGISTER HIGH
+        .PGxFPCIL.value = REG_PGxFPCIL, // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER LOW
+        .PGxFPCIH.value = REG_PGxFPCIH, // PGxFPCIL: PWM GENERATOR x FAULT PCI REGISTER HIGH
+        .PGxCLPCIL.value = REG_PGxCLPCIL, // PGxLCPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER LOW
+        .PGxCLPCIH.value = REG_PGxCLPCIH, // PGxLCPCIL: PWM GENERATOR x CURRENT LIMIT PCI REGISTER HIGH
+        .PGxFFPCIL.value = REG_PGxFFPCIL, // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER LOW
+        .PGxFFPCIH.value = REG_PGxFFPCIH, // PGxFFPCIL: PWM GENERATOR x FEED FORWARD PCI REGISTER HIGH
+        .PGxSPCIL.value = REG_PGxSPCIL, // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER LOW
+        .PGxSPCIH.value = REG_PGxSPCIH, // PGxSPCIL: PWM GENERATOR x SOFTWARE PCI REGISTER HIGH
+        .PGxLEBL.value = REG_PGxLEBL, // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER LOW
+        .PGxLEBH.value = REG_PGxLEBH, // PGxLEBL: PWM GENERATOR x LEADING-EDGE BLANKING REGISTER HIGH
+        .PGxPHASE.value = 0x0000, // PGxPHASE=0
+        .PGxDC.value = 0x0000, // PGxDC=0
+        .PGxDCA.value = 0x0000, // PGxDCA=0
+        .PGxPER.value = 0x0000, // PGxPER=0
+        .PGxTRIGA.value = 0x0000, // PGxTRIGA=0
+        .PGxTRIGB.value = 0x0000, // PGxTRIGB=0
+        .PGxTRIGC.value = 0x0000, // PGxTRIGC=0
+        .PGxDTL.value = 0x0000, // DTL=0
+        .PGxDTH.value = 0x0000, // DTH=0
+        .PGxCAP.value = 0x0000 // CAP=0
+    };
 
 
 /* DACxCONL: DACx CONTROL REGISTER LOW
